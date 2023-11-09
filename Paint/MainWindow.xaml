@@ -73,6 +73,32 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="TransparentFocusToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="#535353" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#eaeaea"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="#eaeaea"/>
+                    <Setter Property="BorderThickness" Value="1" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="TransparentPluginStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Cursor" Value="Hand" />
@@ -139,12 +165,12 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="42" />
-            <RowDefinition Height="125" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
         <!--Action box-->
-        <DockPanel Grid.Row="0" Background="#f3f3f3" LastChildFill="False">
+        <DockPanel Grid.Row="0" Background="#FFECF6F6" LastChildFill="False">
         
             <!--File button - Toggle file menu-->
             <ToggleButton x:Name="fileButton" DockPanel.Dock="Left" Style="{StaticResource TransparentToggleButtonStyle}" Margin="8 5 5 5"
@@ -199,14 +225,14 @@
                 <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                            Height="25">
                     <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
+                        <ScaleTransform ScaleX="0.6" />
                     </Separator.RenderTransform>
                 </Separator>
             </StackPanel>
 
             <!--Save button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" Margin="5 5 5 5"
-                    Width="32" ToolTip="Save">
+                    Width="32" ToolTip="Save (Ctrl+S)">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -220,14 +246,14 @@
                 <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                            Height="25">
                     <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
+                        <ScaleTransform ScaleX="0.6" />
                     </Separator.RenderTransform>
                 </Separator>
             </StackPanel>
             
             <!--Undo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Undo">
+                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -238,7 +264,7 @@
             
             <!--Redo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Redo">
+                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -249,163 +275,288 @@
         </DockPanel>
         
         <!--Toolbox-->
-        <Grid Grid.Row="1" Background="#f9f9f9">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <!--Selection-->
-            <DockPanel Grid.Column="0">
-                <!--Select title-->
-                <TextBlock Text="Selection" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,15" />
-                
-                <!--Select button-->
-                <Button DockPanel.Dock="Top" Style="{StaticResource TransparentFocusStyle}"
-                    Margin="5,10,5,5" Width="45" ToolTip="Select" Height="45">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </Button.Resources>
-                    <Image Source="./Resources/select.png" Width="38" Height="38" />
-                </Button>
-            </DockPanel>
+        <Border Grid.Row="1" Background="#FFFCFCFC" BorderThickness="0.6" BorderBrush="#FFD7D7D7">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <!--Separator-->
-            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
-                           Height="115">
-                    <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
-                    </Separator.RenderTransform>
-                </Separator>
-            </StackPanel>
+                <!--Selection-->
+                <DockPanel Grid.Column="0">
+                    <!--Select title-->
+                    <TextBlock Text="Selection" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
 
-            <!--Image-->
-            <DockPanel Grid.Column="2">
-                <!--Image title-->
-                <TextBlock Text="Image" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,15" />
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <!--Rotate button-->
-                    <Button Style="{StaticResource TransparentFocusStyle}"
-                    Margin="5,10,5,5" Width="37" ToolTip="Rotate" Height="37">
+                    <!--Select button-->
+                    <Button DockPanel.Dock="Top" Style="{StaticResource TransparentFocusStyle}"
+                    Margin="5,8,5,0" Width="37" ToolTip="Select" Height="37">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
                             </Style>
                         </Button.Resources>
-                        <Image Source="./Resources/rotate.png" Width="30" Height="30" />
+                        <Image Source="./Resources/selection.png" Width="26" Height="26" />
                     </Button>
+                </DockPanel>
 
-                    <!--Flip button-->
-                    <Button DockPanel.Dock="Left" Style="{StaticResource TransparentFocusStyle}"
-                    Margin="5,14,5,5" Width="37" ToolTip="Flip" Height="37">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                        <Image Source="./Resources/flip.png" Width="28" Height="28" />
-                    </Button>
+                <!--Separator-->
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                    <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                           Height="86">
+                        <Separator.RenderTransform>
+                            <ScaleTransform ScaleX="0.6" />
+                        </Separator.RenderTransform>
+                    </Separator>
                 </StackPanel>
-            </DockPanel>
-            
-            <!--Separator-->
-            <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
-                           Height="115">
-                    <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
-                    </Separator.RenderTransform>
-                </Separator>
-            </StackPanel>
 
-            <!--Stroke-->
-            <DockPanel Grid.Column="4">
-                <!--Stroke title-->
-                <TextBlock Text="Stroke" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,15" />
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <!--Stroke type button-->
-                    <Button Style="{StaticResource TransparentFocusStyle}"
-                        Margin="5,10,5,5" Width="37" ToolTip="Stroke type" Height="37">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                        <Image Source="./Resources/stroke-type.png" Width="30" Height="30" />
-                    </Button>
+                <!--Rotate & Flip-->
+                <DockPanel Grid.Column="2">
+                    <!--Rotate & Flip title-->
+                    <TextBlock Text="Rotate &amp; Flip" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
 
-                    <!--Stroke size button-->
-                    <Button DockPanel.Dock="Left" Style="{StaticResource TransparentFocusStyle}"
-                        Margin="5,10,5,5" Width="37" ToolTip="Stroke size" Height="37">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                        <Image Source="./Resources/stroke-size.png" Width="28" Height="28" />
-                    </Button>
+                        <!--Rotate button - Toggle rotate menu-->
+                        <ToggleButton x:Name="rotateButton" Style="{StaticResource TransparentToggleButtonStyle}" 
+                                  Margin="5,5,5,0" Width="34" ToolTip="Rotate" Height="34" Click="rotateButton_Click">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/rotate-right.png" Width="27" Height="27" />
+                        </ToggleButton>
+
+                        <!--Drop down menu for Rotate button-->
+                        <Popup x:Name="popupRotate" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=rotateButton}">
+                            <UserControl Background="Transparent">
+                                <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                    <StackPanel Background="Transparent">
+                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <Image DockPanel.Dock="Left" Source="./Resources/rotate-right.png" Width="18" Height="18"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Rotate right 90°" Margin="12 0 0 0" FontSize="14" />
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <Image DockPanel.Dock="Left" Source="./Resources/rotate-left.png" Width="18" Height="18"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Rotate left 90°" Margin="12 0 0 0" FontSize="14" />
+                                            </DockPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </UserControl>
+                        </Popup>
+
+                        <!--Flip button - Toggle flip menu-->
+                        <ToggleButton x:Name="flipButton" Style="{StaticResource TransparentToggleButtonStyle}" 
+                                  Margin="5,9,5,0" Width="34" ToolTip="Flip" Height="34" Click="flipButton_Click">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/flip-horizontal.png" Width="27" Height="27" />
+                        </ToggleButton>
+
+                        <!--Drop down menu for Flip button-->
+                        <Popup x:Name="popupFlip" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=flipButton}">
+                            <UserControl Background="Transparent">
+                                <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                    <StackPanel Background="Transparent">
+                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <Image DockPanel.Dock="Left" Source="./Resources/flip-horizontal.png" Width="18" Height="18"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Flip horizontal" Margin="12 0 0 0" FontSize="14" />
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <Image DockPanel.Dock="Left" Source="./Resources/flip-vertical.png" Width="18" Height="18"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Flip vertical" Margin="12 0 0 0" FontSize="14" />
+                                            </DockPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </UserControl>
+                        </Popup>
+                    </StackPanel>
+                </DockPanel>
+
+                <!--Separator-->
+                <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Center">
+                    <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                           Height="86">
+                        <Separator.RenderTransform>
+                            <ScaleTransform ScaleX="0.6" />
+                        </Separator.RenderTransform>
+                    </Separator>
                 </StackPanel>
-            </DockPanel>
 
-            <!--Separator-->
-            <StackPanel Orientation="Horizontal" Grid.Column="5" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
-                           Height="115">
-                    <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
-                    </Separator.RenderTransform>
-                </Separator>
-            </StackPanel>
+                <!--Stroke-->
+                <DockPanel Grid.Column="4">
+                    <!--Stroke title-->
+                    <TextBlock Text="Stroke" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
 
-            <!--Color-->
-            <DockPanel Grid.Column="6">
-                <!--Color title-->
-                <TextBlock Text="Color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,15" />
+                        <!--Stroke type button - Toggle stroke type menu-->
+                        <ToggleButton x:Name="strokeTypeButton" Style="{StaticResource TransparentToggleButtonStyle}" 
+                                  Margin="5,5,5,0" Width="34" ToolTip="Stroke type" Height="34" Click="strokeTypeButton_Click">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/stroke-type.png" Width="27" Height="27" />
+                        </ToggleButton>
 
-                <!--Color picker-->
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <!--Drop down menu for Stroke type button-->
+                        <Popup x:Name="popupStrokeType" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=strokeTypeButton}">
+                            <UserControl Background="Transparent">
+                                <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                    <StackPanel Background="Transparent">
+                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="Solid" FontSize="14" Width="80" />
+                                                <Line DockPanel.Dock="Right" Stroke="#FF262626"
+                                                  StrokeThickness="1" X1="0" X2="100" HorizontalAlignment="Right" 
+                                                  VerticalAlignment="Center" Margin="0,1,0,0"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="Dashed" FontSize="14" Width="80" />
+                                                <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="4 4" Height="1.5"
+                                                       SnapsToDevicePixels="True" DockPanel.Dock="Right" Width="120" 
+                                                       HorizontalAlignment="Right"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="Dotted" FontSize="14" Width="80" />
+                                                <Rectangle Stroke="#FF262626" StrokeThickness="0.5" StrokeDashArray="3.2 3.2" Height="1.5"
+                                                       SnapsToDevicePixels="True" DockPanel.Dock="Right" Width="300" 
+                                                       HorizontalAlignment="Right"/>
+                                            </DockPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </UserControl>
+                        </Popup>
+
+                        <!--Stroke size button - Toggle stroke size menu-->
+                        <ToggleButton x:Name="strokeSizeButton" Style="{StaticResource TransparentToggleButtonStyle}" 
+                                  Margin="5,5,5,0" Width="34" ToolTip="Stroke type" Height="34" Click="strokeSizeButton_Click">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/stroke-size.png" Width="27" Height="27" />
+                        </ToggleButton>
+
+                        <!--Drop down menu for Stroke size button-->
+                        <Popup x:Name="popupStrokeSize" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=strokeSizeButton}">
+                            <UserControl Background="Transparent">
+                                <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                    <StackPanel Background="Transparent">
+                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="1px" FontSize="14" />
+                                                <Line DockPanel.Dock="Right" Stroke="#FF565656"
+                                                  StrokeThickness="1" X1="0" X2="125" HorizontalAlignment="Right" 
+                                                  VerticalAlignment="Center" Margin="0,1,0,0"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="3px" FontSize="14" />
+                                                <Line DockPanel.Dock="Right" Stroke="#FF565656"
+                                                  StrokeThickness="3" X1="0" X2="125" HorizontalAlignment="Right" 
+                                                  VerticalAlignment="Center" Margin="0,3,0,0"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="5px" FontSize="14" />
+                                                <Line DockPanel.Dock="Right" Stroke="#FF565656"
+                                                  StrokeThickness="5" X1="0" X2="125" HorizontalAlignment="Right" 
+                                                  VerticalAlignment="Center" Margin="0,5,0,0"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="8px" FontSize="14" />
+                                                <Line DockPanel.Dock="Right" Stroke="#FF565656"
+                                                  StrokeThickness="8" X1="0" X2="125" HorizontalAlignment="Right" 
+                                                  VerticalAlignment="Center" Margin="0,7,0,0"/>
+                                            </DockPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </UserControl>
+                        </Popup>
+                    </StackPanel>
+                </DockPanel>
+
+                <!--Separator-->
+                <StackPanel Orientation="Horizontal" Grid.Column="5" HorizontalAlignment="Center">
+                    <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                           Height="86">
+                        <Separator.RenderTransform>
+                            <ScaleTransform ScaleX="0.6" />
+                        </Separator.RenderTransform>
+                    </Separator>
                 </StackPanel>
-            </DockPanel>
 
-            <!--Separator-->
-            <StackPanel Orientation="Horizontal" Grid.Column="7" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
-                           Height="115">
-                    <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.5" />
-                    </Separator.RenderTransform>
-                </Separator>
-            </StackPanel>
+                <!--Color-->
+                <DockPanel Grid.Column="6">
+                    <!--Color title-->
+                    <TextBlock Text="Color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
 
-            <!--Shapes & Text-->
-            <DockPanel Grid.Column="8">
-                <!--Shapes & Text title-->
-                <TextBlock Text="Shapes &amp; Text" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,15" />
-                <StackPanel x:Name="shapes_StackPanel" Height="80" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="15,10,15,5"
+                    <!--Color picker-->
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    </StackPanel>
+                </DockPanel>
+
+                <!--Separator-->
+                <StackPanel Orientation="Horizontal" Grid.Column="7" HorizontalAlignment="Center">
+                    <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                           Height="86">
+                        <Separator.RenderTransform>
+                            <ScaleTransform ScaleX="0.6" />
+                        </Separator.RenderTransform>
+                    </Separator>
+                </StackPanel>
+
+                <!--Shapes & Text-->
+                <DockPanel Grid.Column="8">
+                    <!--Shapes & Text title-->
+                    <TextBlock Text="Shapes &amp; Text" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="15,0,15,18" />
+                    <StackPanel x:Name="shapes_StackPanel" Height="80" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="15,10,15,0"
                             VerticalAlignment="Center" Orientation="Horizontal">
-                </StackPanel>
-            </DockPanel>
-        </Grid>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+        </Border>
         
-        <Grid Grid.Row="2" Background="#f3f3f3" >
-            <Canvas x:Name="canvas" Margin="100 40 100 40" Background="#fff" />
-            <Border Background="Transparent" Margin="100 40 100 40"  MouseDown="canvas_MouseDown"
-                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove"/>
+
+        <Grid Grid.Row="2" Background="#FFECF6F6" >
+            <Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" />
+            <Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
+                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800"/>
         </Grid>
     </Grid>
 </Window>
