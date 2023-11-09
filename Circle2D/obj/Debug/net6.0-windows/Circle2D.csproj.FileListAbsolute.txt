@@ -1,0 +1,15 @@
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\bin\Debug\net6.0-windows\Circle2D.deps.json
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\bin\Debug\net6.0-windows\Circle2D.dll
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\bin\Debug\net6.0-windows\Circle2D.pdb
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\bin\Debug\net6.0-windows\Contract.dll
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\bin\Debug\net6.0-windows\Contract.pdb
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.csproj.AssemblyReference.cache
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.GeneratedMSBuildEditorConfig.editorconfig
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.AssemblyInfoInputs.cache
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.AssemblyInfo.cs
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.csproj.CoreCompileInputs.cache
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.csproj.CopyComplete
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.dll
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\refint\Circle2D.dll
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\Circle2D.pdb
+D:\DaiHoc\LapTrinhWindows\BTNhom\Paint\Paint\Circle2D\obj\Debug\net6.0-windows\ref\Circle2D.dll

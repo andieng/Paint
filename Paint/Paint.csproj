@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\circle.png" />
+    <None Remove="Resources\dry-clean.png" />
+    <None Remove="Resources\ellipse.png" />
+    <None Remove="Resources\flip.png" />
+    <None Remove="Resources\import-image.png" />
+    <None Remove="Resources\import-objects.png" />
+    <None Remove="Resources\jpg-file.png" />
+    <None Remove="Resources\line.png" />
+    <None Remove="Resources\paint-32x32.png" />
+    <None Remove="Resources\paint-64x64.png" />
+    <None Remove="Resources\rectangle.png" />
+    <None Remove="Resources\redo.png" />
+    <None Remove="Resources\rotate.png" />
+    <None Remove="Resources\save.png" />
+    <None Remove="Resources\select.png" />
+    <None Remove="Resources\square-shapes.png" />
+    <None Remove="Resources\square.png" />
+    <None Remove="Resources\stroke-size.png" />
+    <None Remove="Resources\stroke-type.png" />
+    <None Remove="Resources\text.png" />
+    <None Remove="Resources\undo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\import-image.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Circle2D\Circle2D.csproj" />
+    <ProjectReference Include="..\Contract\Contract.csproj" />
+    <ProjectReference Include="..\Ellipse2D\Ellipse2D.csproj" />
+    <ProjectReference Include="..\Line2D\Line2D.csproj" />
+    <ProjectReference Include="..\Rectangle2D\Rectangle2D.csproj" />
+    <ProjectReference Include="..\Square2D\Square2D.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\circle.png" />
+    <Resource Include="Resources\ellipse.png" />
+    <Resource Include="Resources\flip.png" />
+    <Resource Include="Resources\import-objects.png" />
+    <Resource Include="Resources\jpg-file.png" />
+    <Resource Include="Resources\line.png" />
+    <Resource Include="Resources\paint-32x32.png" />
+    <Resource Include="Resources\paint-64x64.png" />
+    <Resource Include="Resources\rectangle.png" />
+    <Resource Include="Resources\redo.png" />
+    <Resource Include="Resources\rotate.png" />
+    <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\select.png" />
+    <Resource Include="Resources\square-shapes.png" />
+    <Resource Include="Resources\square.png" />
+    <Resource Include="Resources\stroke-size.png" />
+    <Resource Include="Resources\stroke-type.png" />
+    <Resource Include="Resources\text.png" />
+    <Resource Include="Resources\undo.png" />
+  </ItemGroup>
+
+</Project>
