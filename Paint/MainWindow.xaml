@@ -135,7 +135,7 @@
             <Setter Property="Padding" Value="7" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="BorderBrush" Value="#e5e5e5" />
-            <Setter Property="Background" Value="#f9f9f9" />
+            <Setter Property="Background" Value="#FFFDFDFD" />
             <Setter Property="BorderThickness" Value="0.8" />
         </Style>
 
@@ -282,8 +282,8 @@
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="110" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="110" />
-                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="165" />
+                    <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="250" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
@@ -408,6 +408,17 @@
                     <TextBlock Text="Stroke" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
+                        
+                        <!--Stroke type button - Toggle stroke type menu-->
+                        <ToggleButton x:Name="noStrokeButton" Style="{StaticResource TransparentToggleButtonStyle}" 
+                                  Margin="5,5,5,0" Width="34" ToolTip="Stroke type" Height="34">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/close.png" Width="20" Height="20" />
+                        </ToggleButton>
 
                         <!--Stroke type button - Toggle stroke type menu-->
                         <ToggleButton x:Name="strokeTypeButton" Style="{StaticResource TransparentToggleButtonStyle}" 
@@ -423,29 +434,37 @@
                         <!--Drop down menu for Stroke type button-->
                         <Popup x:Name="popupStrokeType" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=strokeTypeButton}">
                             <UserControl Background="Transparent">
-                                <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                <Border Style="{StaticResource PopUpBorderStyle}" Width="260">
                                     <StackPanel Background="Transparent">
                                         <Button Style="{StaticResource PopUpButtonStyle}">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
-                                                <TextBlock DockPanel.Dock="Left" Text="Solid" FontSize="14" Width="80" />
+                                                <TextBlock DockPanel.Dock="Left" Text="Solid" FontSize="13" Width="110" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF262626"
-                                                  StrokeThickness="1" X1="0" X2="100" HorizontalAlignment="Right" 
+                                                  StrokeThickness="1" X1="0" X2="120" HorizontalAlignment="Right" 
                                                   VerticalAlignment="Center" Margin="0,1,0,0"/>
                                             </DockPanel>
                                         </Button>
                                         <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
-                                                <TextBlock DockPanel.Dock="Left" Text="Dashed" FontSize="14" Width="80" />
-                                                <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="4 4" Height="1.5"
+                                                <TextBlock DockPanel.Dock="Left" Text="Dashed" FontSize="13" Width="110" />
+                                                <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="4 6.1" Height="1.5"
                                                        SnapsToDevicePixels="True" DockPanel.Dock="Right" Width="120" 
                                                        HorizontalAlignment="Right"/>
                                             </DockPanel>
                                         </Button>
                                         <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
-                                                <TextBlock DockPanel.Dock="Left" Text="Dotted" FontSize="14" Width="80" />
-                                                <Rectangle Stroke="#FF262626" StrokeThickness="0.5" StrokeDashArray="3.2 3.2" Height="1.5"
+                                                <TextBlock DockPanel.Dock="Left" Text="Dotted" FontSize="13" Width="110" />
+                                                <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="1 5" Height="1.5"
                                                        SnapsToDevicePixels="True" DockPanel.Dock="Right" Width="300" 
+                                                       HorizontalAlignment="Right"/>
+                                            </DockPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                            <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                                <TextBlock DockPanel.Dock="Left" Text="Dashed-dotted" FontSize="13" Width="110" />
+                                                <Rectangle Stroke="#FF262626" StrokeThickness="1.8" StrokeDashArray="4 2 1 2" Height="1.5"
+                                                       SnapsToDevicePixels="True" DockPanel.Dock="Right" Width="200" 
                                                        HorizontalAlignment="Right"/>
                                             </DockPanel>
                                         </Button>

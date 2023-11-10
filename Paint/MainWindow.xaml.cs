@@ -244,11 +244,16 @@ namespace Paint
             // Generate next object (same shape)
             _preview = _shapeFactory.Create(_selectedShapeName);
 
+            redrawCanvas();
+        }
+
+        private void redrawCanvas()
+        {
             // Remove all objects
             canvas.Children.Clear();
 
             // Draw all objects in list
-            foreach(var shape in _shapes)
+            foreach (var shape in _shapes)
             {
                 var element = shape.Draw();
                 canvas.Children.Add(element);

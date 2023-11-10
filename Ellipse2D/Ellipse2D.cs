@@ -30,7 +30,7 @@ namespace Ellipse2D
                 Width = width,
                 Height = height,
                 StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Red)
+                Stroke = new SolidColorBrush(Colors.Red),
             };
             Canvas.SetLeft(ellipse, left);
             Canvas.SetTop(ellipse, top);

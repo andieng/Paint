@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Resources\circle.png" />
+    <None Remove="Resources\close.png" />
     <None Remove="Resources\cursor.png" />
     <None Remove="Resources\dry-clean.png" />
     <None Remove="Resources\ellipse.png" />
@@ -37,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\close.png" />
     <Resource Include="Resources\flip-horizontal.png" />
     <Resource Include="Resources\flip-vertical.png" />
     <Resource Include="Resources\import-image.png" />
