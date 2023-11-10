@@ -254,7 +254,7 @@
             
             <!--Undo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)">
+                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -265,7 +265,7 @@
             
             <!--Redo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)">
+                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

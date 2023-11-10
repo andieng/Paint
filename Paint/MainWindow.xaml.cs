@@ -11,6 +11,8 @@ using Line2D;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls.Primitives;
+using System.Security.Cryptography;
+using System.Linq;
 
 namespace Paint
 {
@@ -28,7 +30,7 @@ namespace Paint
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
         private Color _colorStroke;
         private Color _colorFill;
-
+        private int _undoNum = 0;
 
         public MainWindow()
         {
@@ -356,6 +358,27 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorFill = selectedColor;
+            }
+        }
+
+        private void undoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(_shapes.Count > 0 && canvas.Children.Count>0)
+            {
+                var lastIndex = _shapes.Count - 1 - _undoNum;
+                canvas.Children.RemoveAt(lastIndex);
+                _undoNum++;
+            }
+        }
+
+        private void redoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_undoNum > 0)
+            {
+                var nextIndex = _shapes.Count - _undoNum;
+                UIElement redoItem = _shapes.ElementAt(nextIndex).Draw();
+                canvas.Children.Add(redoItem);
+                _undoNum--;
             }
         }
 
