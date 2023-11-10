@@ -11,7 +11,8 @@ namespace Ellipse2D
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
-
+        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorFill { get; set; }
         public string Name => "Ellipse";
 
         public UIElement Draw()
@@ -30,7 +31,8 @@ namespace Ellipse2D
                 Width = width,
                 Height = height,
                 StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Red),
+                Stroke = ColorStroke,
+                Fill = ColorFill,
             };
             Canvas.SetLeft(ellipse, left);
             Canvas.SetTop(ellipse, top);

@@ -38,6 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Syncfusion.Shared.WPF" Version="23.1.44" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\flip-horizontal.png" />
     <Resource Include="Resources\flip-vertical.png" />

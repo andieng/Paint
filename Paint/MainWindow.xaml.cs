@@ -26,6 +26,9 @@ namespace Paint
         string _selectedShapeName = "";
         //Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
+        private Color _colorStroke;
+        private Color _colorFill;
+
 
         public MainWindow()
         {
@@ -181,7 +184,7 @@ namespace Paint
             {
                 string name = (string)button.Tag;
                 _selectedShapeName = name;
-                _preview = _shapeFactory.Create(_selectedShapeName);
+                _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke,_colorFill);
             }
         }
 
@@ -200,7 +203,7 @@ namespace Paint
             {
                 _isDrawing = true;
                 Point pos = e.GetPosition(canvas);
-
+                
                 _preview.HandleStart(pos.X, pos.Y);
             }
         }
@@ -242,7 +245,7 @@ namespace Paint
             _shapes.Add(_preview);
 
             // Generate next object (same shape)
-            _preview = _shapeFactory.Create(_selectedShapeName);
+            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, _colorFill);
 
             redrawCanvas();
         }
@@ -339,5 +342,22 @@ namespace Paint
                 strokeSizeButton.IsChecked = false;
             };
         }
+
+        private void ColorPickerStroke_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is Color selectedColor)
+            {
+                _colorStroke = selectedColor;
+            }
+        }
+
+        private void ColorPickerFill_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is Color selectedColor)
+            {
+                _colorFill = selectedColor;
+            }
+        }
+
     }
 }

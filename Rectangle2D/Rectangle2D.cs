@@ -11,7 +11,8 @@ namespace Rectangle2D
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
-
+        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorFill { get; set; }
         public string Name => "Rectangle";
 
         public UIElement Draw()
@@ -30,7 +31,8 @@ namespace Rectangle2D
                 Width = width,
                 Height = height,
                 StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Red)
+                Stroke = ColorStroke,
+                Fill = ColorFill,
             };
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect, top);
