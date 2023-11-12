@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:local="clr-namespace:Paint"
         mc:Ignorable="d"
         Icon="./Resources/paint-32x32.png"
@@ -253,7 +254,7 @@
             
             <!--Undo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)">
+                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -264,7 +265,7 @@
             
             <!--Redo button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)">
+                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -539,13 +540,18 @@
                 </StackPanel>
 
                 <!--Color-->
-                <DockPanel Grid.Column="6">
-                    <!--Color title-->
+				<DockPanel Grid.Column="6">
+					<!--Color title-->
                     <TextBlock Text="Color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
 
-                    <!--Color picker-->
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <!--Color picker stroke-->
+					<syncfusion:ColorPicker Width="45" Height="45" Margin="30,0,0,0" x:Name="colorPickerStroke" ColorChanged="ColorPickerStroke_ColorChanged"
+                         Color="Yellow"/>
+					<!--Color picker fill-->
+					<syncfusion:ColorPicker Width="45" Height="45" Margin="30,0,0,0" x:Name="colorPickerFill" ColorChanged="ColorPickerFill_ColorChanged"
+                         Color="White"/>
+					<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
                     </StackPanel>
                 </DockPanel>
 

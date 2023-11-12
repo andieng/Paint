@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Paint
 {
@@ -41,12 +42,14 @@ namespace Paint
             return _prototypes;
         }
 
-        public IShape Create(string shapeName)
+        public IShape Create(string shapeName, Color colorStroke, Color colorFill)
         {
             IShape shape = null;
             if (_prototypes.ContainsKey(shapeName))
             {
                 shape = _prototypes[shapeName].Clone();
+                shape.ColorStroke = new SolidColorBrush(colorStroke);
+                shape.ColorFill = new SolidColorBrush(colorFill);
             }
             return shape;
         }

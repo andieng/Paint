@@ -11,6 +11,8 @@ using Line2D;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls.Primitives;
+using System.Security.Cryptography;
+using System.Linq;
 
 namespace Paint
 {
@@ -26,6 +28,9 @@ namespace Paint
         string _selectedShapeName = "";
         //Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
+        private Color _colorStroke;
+        private Color _colorFill;
+        private int _undoNum = 0;
 
         public MainWindow()
         {
@@ -181,7 +186,7 @@ namespace Paint
             {
                 string name = (string)button.Tag;
                 _selectedShapeName = name;
-                _preview = _shapeFactory.Create(_selectedShapeName);
+                _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke,_colorFill);
             }
         }
 
@@ -200,7 +205,7 @@ namespace Paint
             {
                 _isDrawing = true;
                 Point pos = e.GetPosition(canvas);
-
+                
                 _preview.HandleStart(pos.X, pos.Y);
             }
         }
@@ -242,7 +247,7 @@ namespace Paint
             _shapes.Add(_preview);
 
             // Generate next object (same shape)
-            _preview = _shapeFactory.Create(_selectedShapeName);
+            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, _colorFill);
 
             redrawCanvas();
         }
@@ -339,5 +344,43 @@ namespace Paint
                 strokeSizeButton.IsChecked = false;
             };
         }
+
+        private void ColorPickerStroke_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is Color selectedColor)
+            {
+                _colorStroke = selectedColor;
+            }
+        }
+
+        private void ColorPickerFill_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is Color selectedColor)
+            {
+                _colorFill = selectedColor;
+            }
+        }
+
+        private void undoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(_shapes.Count > 0 && canvas.Children.Count>0)
+            {
+                var lastIndex = _shapes.Count - 1 - _undoNum;
+                canvas.Children.RemoveAt(lastIndex);
+                _undoNum++;
+            }
+        }
+
+        private void redoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_undoNum > 0)
+            {
+                var nextIndex = _shapes.Count - _undoNum;
+                UIElement redoItem = _shapes.ElementAt(nextIndex).Draw();
+                canvas.Children.Add(redoItem);
+                _undoNum--;
+            }
+        }
+
     }
 }

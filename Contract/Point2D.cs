@@ -8,6 +8,10 @@ namespace Contract
     {
         public double X { get; set; }
         public double Y { get; set; }
+
+        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorFill { get; set; }
+
         public string Name => "Point";
 
         public void HandleEnd(double x, double y)
@@ -31,7 +35,7 @@ namespace Contract
                 X2 = X,
                 Y2 = Y,
                 StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Red)
+                Stroke = ColorStroke,
             };
         }
 

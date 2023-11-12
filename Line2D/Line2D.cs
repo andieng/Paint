@@ -10,7 +10,8 @@ namespace Line2D
     {
         private Point2D _start = new Point2D();
         private Point2D _end = new Point2D();
-
+        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorFill { get; set; }
         public string Name => "Line";
 
         public void HandleEnd(double x, double y)
@@ -33,7 +34,7 @@ namespace Line2D
                 X2 = _end.X,
                 Y2 = _end.Y,
                 StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Red)
+                Stroke = ColorStroke,
             };
         }
 
