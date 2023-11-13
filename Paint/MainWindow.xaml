@@ -312,8 +312,8 @@
             </StackPanel>
             
             <!--Undo button-->
-            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click">
+            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" x:Name="undoButton"
+                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click" IsEnabled="False">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -323,8 +323,8 @@
             </Button>
             
             <!--Redo button-->
-            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click">
+            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" x:Name="redoButton"
+                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click" IsEnabled="False">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

@@ -38,10 +38,10 @@ namespace Paint
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
         private Color _colorStroke;
         private Color _colorFill;
-        private int _undoNum = 0;
         private bool _isFilled = false;
         private bool _hasStroke = true;
         private int _strokeSize = 1;
+        private Stack<IShape> _undoStack = new Stack<IShape>();
 
         public MainWindow()
         {
@@ -197,7 +197,6 @@ namespace Paint
 
                 // Remove all objects
                 canvas.Children.Clear();
-
                 // Draw all old objects
                 foreach (var shape in _shapes)
                 {
@@ -207,6 +206,10 @@ namespace Paint
 
                 // Draw preview object
                 canvas.Children.Add(_preview.Draw());
+                //clear undo stack
+                _undoStack.Clear();
+                undoButton.IsEnabled = true;
+                redoButton.IsEnabled = false;
             }
         }
 
@@ -361,20 +364,23 @@ namespace Paint
         {
             if(_shapes.Count > 0 && canvas.Children.Count>0)
             {
-                var lastIndex = _shapes.Count - 1 - _undoNum;
+                var lastIndex = _shapes.Count - 1;
+                _undoStack.Push(_shapes[lastIndex]);
                 canvas.Children.RemoveAt(lastIndex);
-                _undoNum++;
+                _shapes.RemoveAt(lastIndex);
+                redoButton.IsEnabled = true;
             }
         }
 
         private void redoButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_undoNum > 0)
+            if (_undoStack.Count > 0)
             {
-                var nextIndex = _shapes.Count - _undoNum;
-                UIElement redoItem = _shapes.ElementAt(nextIndex).Draw();
+                //var nextIndex = _shapes.Count - _undoNum;
+                IShape shape = _undoStack.Pop();
+                UIElement redoItem = shape.Draw();
                 canvas.Children.Add(redoItem);
-                _undoNum--;
+                _shapes.Add(shape);
             }
         }
 
