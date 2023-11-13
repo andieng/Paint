@@ -13,14 +13,17 @@
     <None Remove="Resources\cursor.png" />
     <None Remove="Resources\dry-clean.png" />
     <None Remove="Resources\ellipse.png" />
+    <None Remove="Resources\fill.png" />
     <None Remove="Resources\flip-horizontal.png" />
     <None Remove="Resources\flip-vertical.png" />
     <None Remove="Resources\import-image.png" />
     <None Remove="Resources\import-objects.png" />
     <None Remove="Resources\jpg-file.png" />
     <None Remove="Resources\line.png" />
+    <None Remove="Resources\no-stroke.png" />
     <None Remove="Resources\paint-32x32.png" />
     <None Remove="Resources\paint-64x64.png" />
+    <None Remove="Resources\picture.png" />
     <None Remove="Resources\rectangle.png" />
     <None Remove="Resources\redo.png" />
     <None Remove="Resources\rotate-left.png" />
@@ -31,18 +34,22 @@
     <None Remove="Resources\selection.png" />
     <None Remove="Resources\square-shapes.png" />
     <None Remove="Resources\square.png" />
+    <None Remove="Resources\stroke-active.png" />
     <None Remove="Resources\stroke-size.png" />
     <None Remove="Resources\stroke-type.png" />
+    <None Remove="Resources\stroke.png" />
     <None Remove="Resources\text.png" />
     <None Remove="Resources\undo.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Syncfusion.Shared.WPF" Version="23.1.44" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\fill.png" />
     <Resource Include="Resources\flip-horizontal.png" />
     <Resource Include="Resources\flip-vertical.png" />
     <Resource Include="Resources\import-image.png" />
@@ -63,8 +70,10 @@
     <Resource Include="Resources\import-objects.png" />
     <Resource Include="Resources\jpg-file.png" />
     <Resource Include="Resources\line.png" />
+    <Resource Include="Resources\no-stroke.png" />
     <Resource Include="Resources\paint-32x32.png" />
     <Resource Include="Resources\paint-64x64.png" />
+    <Resource Include="Resources\picture.png" />
     <Resource Include="Resources\rectangle.png" />
     <Resource Include="Resources\redo.png" />
     <Resource Include="Resources\rotate-left.png" />
@@ -74,8 +83,10 @@
     <Resource Include="Resources\selection.png" />
     <Resource Include="Resources\square-shapes.png" />
     <Resource Include="Resources\square.png" />
+    <Resource Include="Resources\stroke-active.png" />
     <Resource Include="Resources\stroke-size.png" />
     <Resource Include="Resources\stroke-type.png" />
+    <Resource Include="Resources\stroke.png" />
     <Resource Include="Resources\text.png" />
     <Resource Include="Resources\undo.png" />
   </ItemGroup>

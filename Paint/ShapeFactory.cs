@@ -42,7 +42,7 @@ namespace Paint
             return _prototypes;
         }
 
-        public IShape Create(string shapeName, Color colorStroke, Color colorFill)
+        public IShape Create(string shapeName, Color colorStroke, Color colorFill, int strokeSize)
         {
             IShape shape = null;
             if (_prototypes.ContainsKey(shapeName))
@@ -50,6 +50,7 @@ namespace Paint
                 shape = _prototypes[shapeName].Clone();
                 shape.ColorStroke = new SolidColorBrush(colorStroke);
                 shape.ColorFill = new SolidColorBrush(colorFill);
+                shape.StrokeSize = strokeSize;
             }
             return shape;
         }

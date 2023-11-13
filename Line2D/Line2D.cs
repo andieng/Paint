@@ -12,6 +12,7 @@ namespace Line2D
         private Point2D _end = new Point2D();
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
+        public int StrokeSize { get; set; }
         public string Name => "Line";
 
         public void HandleEnd(double x, double y)
@@ -33,7 +34,7 @@ namespace Line2D
                 Y1 = _start.Y,
                 X2 = _end.X,
                 Y2 = _end.Y,
-                StrokeThickness = 1,
+                StrokeThickness = StrokeSize,
                 Stroke = ColorStroke,
             };
         }

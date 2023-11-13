@@ -8,8 +8,9 @@ namespace Contract
     public interface IShape
     {
         string Name { get; }
-        public SolidColorBrush ColorStroke { get; set; }
-        public SolidColorBrush ColorFill { get; set; }
+        int StrokeSize { get; set; }
+        SolidColorBrush ColorStroke { get; set; }
+        SolidColorBrush ColorFill { get; set; }
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);
         UIElement Draw();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Paint
 {
@@ -13,5 +7,9 @@ namespace Paint
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NHaF5cWWdCf1FpRGNGfV5yd0VPalhZTnVaUiweQnxTdEZiWH5ccXRUQWVZUUx1WQ==");
+        }
     }
 }

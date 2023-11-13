@@ -11,6 +11,7 @@ namespace Contract
 
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
+        public int StrokeSize { get; set; }
 
         public string Name => "Point";
 
@@ -34,7 +35,7 @@ namespace Contract
                 Y1 = Y,
                 X2 = X,
                 Y2 = Y,
-                StrokeThickness = 1,
+                StrokeThickness = StrokeSize,
                 Stroke = ColorStroke,
             };
         }

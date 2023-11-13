@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Icon="./Resources/paint-32x32.png"
         Loaded="Window_Loaded"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="PATE Paint" Height="750" Width="1000">
     <Window.Resources>
         <Style x:Key="TransparentStyle" TargetType="{x:Type Button}">
@@ -44,6 +45,89 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#eaeaea"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToggleButtonDisableStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#eaeaea"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToggleButtonActiveStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="#eaeaea"/>
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#535353" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#535353" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF0F0F0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToggleButtonPluginDisableStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="Gray">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#eaeaea"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToggleButtonPluginActiveStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="#eaeaea"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#535353" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#535353" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF0F0F0"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -96,33 +180,6 @@
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="Background" Value="#eaeaea"/>
                     <Setter Property="BorderThickness" Value="1" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="TransparentPluginStyle" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#FF737373" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                    <Setter Property="BorderBrush" Value="#535353" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -202,18 +259,20 @@
                                     <TextBlock DockPanel.Dock="Left" Text="Import image" Margin="12 0 0 0" FontSize="14" />
                                 </DockPanel>
                             </Button>
-                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                            <Button x:Name="saveObjectsButton" Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0"
+                                    Click="saveObjectsButton_Click">
                                 <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                     <Image DockPanel.Dock="Left" Source="./Resources/square-shapes.png" Width="18" Height="18"/>
                                     <TextBlock DockPanel.Dock="Right" Text="Ctrl+D" FontSize="13" Style="{StaticResource ToolTextStyle}" />
                                     <TextBlock DockPanel.Dock="Left" Text="Save drawn objects" Margin="12 0 0 0" FontSize="14" />
                                 </DockPanel>
                             </Button>
-                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                            <Button x:Name="saveImageButton" Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0"
+                                    Click="saveImageButton_Click">
                                 <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
-                                    <Image DockPanel.Dock="Left" Source="./Resources/jpg-file.png" Width="18" Height="18"/>
+                                    <Image DockPanel.Dock="Left" Source="./Resources/picture.png" Width="18" Height="18"/>
                                     <TextBlock DockPanel.Dock="Right" Text="Ctrl+S" FontSize="13" Style="{StaticResource ToolTextStyle}" />
-                                    <TextBlock DockPanel.Dock="Left" Text="Save as JPG picture" Margin="12 0 0 0" FontSize="14" />
+                                    <TextBlock DockPanel.Dock="Left" Text="Save as image" Margin="12 0 0 0" FontSize="14" />
                                 </DockPanel>
                             </Button>
                         </StackPanel>
@@ -233,7 +292,7 @@
 
             <!--Save button-->
             <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" Margin="5 5 5 5"
-                    Width="32" ToolTip="Save (Ctrl+S)">
+                    Width="32" ToolTip="Save (Ctrl+S)" Click="saveImageButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -283,10 +342,10 @@
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="110" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="165" />
-                    <ColumnDefinition Width="8" />
-                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="227" />
                     <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -297,15 +356,16 @@
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
 
                     <!--Select button-->
-                    <Button DockPanel.Dock="Top" Style="{StaticResource TransparentFocusStyle}"
-                    Margin="5,8,5,0" Width="37" ToolTip="Select" Height="37">
-                        <Button.Resources>
+                    <ToggleButton x:Name="selectToggleButton" DockPanel.Dock="Top" Style="{StaticResource ToggleButtonDisableStyle}"
+                                  Margin="5,8,5,0" Width="37" ToolTip="Select" Height="37" Checked="selectToggleButton_Checked"
+                                  Unchecked="selectToggleButton_Unchecked">
+                        <ToggleButton.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"/>
                             </Style>
-                        </Button.Resources>
+                        </ToggleButton.Resources>
                         <Image Source="./Resources/selection.png" Width="26" Height="26" />
-                    </Button>
+                    </ToggleButton>
                 </DockPanel>
 
                 <!--Separator-->
@@ -410,15 +470,16 @@
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
                         
-                        <!--Stroke type button - Toggle stroke type menu-->
-                        <ToggleButton x:Name="noStrokeButton" Style="{StaticResource TransparentToggleButtonStyle}" 
-                                  Margin="5,5,5,0" Width="34" ToolTip="Stroke type" Height="34">
+                        <!--Stroke button-->
+                        <ToggleButton x:Name="strokeToggleButton" Style="{StaticResource ToggleButtonActiveStyle}" 
+                                      Margin="5,5,5,0" Width="34" Height="34" Checked="strokeToggleButton_Checked"
+                                      IsChecked="True" Unchecked="strokeToggleButton_Unchecked" Click="strokeToggleButton_Click">
                             <ToggleButton.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"/>
                                 </Style>
                             </ToggleButton.Resources>
-                            <Image Source="./Resources/close.png" Width="20" Height="20" />
+                            <Image Source="./Resources/stroke.png" Width="27" Height="27" />
                         </ToggleButton>
 
                         <!--Stroke type button - Toggle stroke type menu-->
@@ -526,6 +587,11 @@
                                 </Border>
                             </UserControl>
                         </Popup>
+
+                        <!--Color picker stroke-->
+                        <syncfusion:ColorPicker Width="45" Height="34" Margin="12,5,5,0" x:Name="colorPickerStroke"
+                                                ColorChanged="ColorPickerStroke_ColorChanged" BorderThickness="1"
+                                                Color="Yellow" Cursor="Hand" BorderBrush="#FFAEAEAE"/>
                     </StackPanel>
                 </DockPanel>
 
@@ -539,19 +605,26 @@
                     </Separator>
                 </StackPanel>
 
-                <!--Color-->
+                <!--Fill-->
 				<DockPanel Grid.Column="6">
-					<!--Color title-->
-                    <TextBlock Text="Color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+					<!--Fill title-->
+                    <TextBlock Text="Fill" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
-
-                    <!--Color picker stroke-->
-					<syncfusion:ColorPicker Width="45" Height="45" Margin="30,0,0,0" x:Name="colorPickerStroke" ColorChanged="ColorPickerStroke_ColorChanged"
-                         Color="Yellow"/>
-					<!--Color picker fill-->
-					<syncfusion:ColorPicker Width="45" Height="45" Margin="30,0,0,0" x:Name="colorPickerFill" ColorChanged="ColorPickerFill_ColorChanged"
-                         Color="White"/>
-					<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!--Fill button-->
+                        <ToggleButton x:Name="fillToggleButton" Style="{StaticResource ToggleButtonDisableStyle}" 
+                                      Margin="5,5,5,0" Width="34" Height="34" Checked="fillToggleButton_Checked"
+                                      Unchecked="fillToggleButton_Unchecked" Click="fillToggleButton_Click">
+                            <ToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </ToggleButton.Resources>
+                            <Image Source="./Resources/fill.png" Width="27" Height="27" />
+                        </ToggleButton>
+                        <syncfusion:ColorPicker Width="45" Height="34" Margin="20,5,5,0" x:Name="colorPickerFill"
+                                                ColorChanged="ColorPickerFill_ColorChanged" BorderThickness="1"
+                                                Cursor="Hand" BorderBrush="#FFAEAEAE"/>
                     </StackPanel>
                 </DockPanel>
 
@@ -570,18 +643,23 @@
                     <!--Shapes & Text title-->
                     <TextBlock Text="Shapes &amp; Text" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="15,0,15,18" />
-                    <StackPanel x:Name="shapes_StackPanel" Height="80" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="15,10,15,0"
-                            VerticalAlignment="Center" Orientation="Horizontal">
-                    </StackPanel>
+                    <ItemsControl x:Name="shapesItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel x:Name="shapesStackPanel" Height="80" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="0,10,0,0"
+                                            VerticalAlignment="Center" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </DockPanel>
             </Grid>
         </Border>
         
 
         <Grid Grid.Row="2" Background="#FFECF6F6" >
-            <Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" />
+            <Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" HorizontalAlignment="Center" />
             <Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
-                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800"/>
+                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
         </Grid>
     </Grid>
 </Window>

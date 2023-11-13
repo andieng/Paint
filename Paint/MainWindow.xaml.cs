@@ -13,6 +13,14 @@ using System.Reflection;
 using System.Windows.Controls.Primitives;
 using System.Security.Cryptography;
 using System.Linq;
+using System.ComponentModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using System.Reflection.Metadata;
+using Microsoft.Win32;
+using Paint.Keys;
+using System.Threading.Tasks;
 
 namespace Paint
 {
@@ -22,122 +30,54 @@ namespace Paint
     public partial class MainWindow : Window
     {
 
-        bool _isDrawing = false;
-        List<IShape> _shapes = new List<IShape>();
-        IShape? _preview;
-        string _selectedShapeName = "";
-        //Dictionary<string, IShape> _prototypes = new Dictionary<string, IShape>();
+        private bool _isDrawing = false;
+        private List<IShape> _shapes = new List<IShape>();
+        private IShape? _preview;
+        private string _selectedShapeName = "";
+        private ToggleButton? _selectedShapeBtn;
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
         private Color _colorStroke;
         private Color _colorFill;
         private int _undoNum = 0;
+        private bool _isFilled = false;
+        private bool _hasStroke = true;
+        private int _strokeSize = 1;
 
         public MainWindow()
         {
             InitializeComponent();
+            HotkeysManager.SetupSystemHook();
+
+            // Save drawn objects hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.D, saveObjects));
+
+            // Save as JPG picture hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.S, saveImage));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.DataContext = this;
             createShapeButtons();
-            //var exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            //var dlls = new DirectoryInfo(exeFolder).GetFiles("*.dll");
-
-            //foreach(var dll in dlls) 
-            //{
-            //    var assembly = Assembly.LoadFile(dll.FullName);
-            //    var types = assembly.GetTypes();
-                
-            //    foreach(var type in types)
-            //    {
-            //        if (type.IsClass)
-            //        {
-            //            if (typeof(IShape).IsAssignableFrom(type))
-            //            {
-            //                var shape = Activator.CreateInstance(type) as IShape;
-            //                if (shape != null)
-            //                {
-            //                    if (!_prototypes.ContainsKey(shape.Name))
-            //                    {
-            //                        _prototypes.Add(shape.Name, shape);
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //// Create buttons for selecting shapes
-            //foreach(var item in _prototypes)
-            //{
-            //    var shape = item.Value as IShape;
-            //    Button button;
-
-            //    // Basic shapes: line, rectangle, ellipse, square, circle
-            //    if (isBasicShape(shape))
-            //    {
-            //        button = new Button()
-            //        {
-            //            ToolTip = shape.Name,
-            //            Style = Resources["TransparentFocusStyle"] as Style,
-            //            Margin = new Thickness(10, 0, 0, 0),
-            //            Height = 35,
-            //            Width = 35,
-            //            Content = new Image()
-            //            {
-            //                Source = new BitmapImage(new Uri($"./Resources/{shape.Name.ToLower()}.png", UriKind.Relative)),
-            //                Width = 23,
-            //                Height = 23,
-            //            },
-            //            Tag = shape.Name
-            //        };
-            //    }
-            //    else
-            //    {
-            //        button = new Button()
-            //        {
-            //            ToolTip = shape.Name,
-            //            Style = Resources["TransparentPluginStyle"] as Style,
-            //            Margin = new Thickness(18, 0, 0, 0),
-            //            Height = 28,
-            //            Content = new TextBlock()
-            //            {
-            //                Text = shape.Name,
-            //                Margin = new Thickness(12, 0, 12, 0),
-            //            },
-            //            Tag = shape.Name
-            //        };
-            //    }
-
-            //    // Make rounded button
-            //    var style = new Style
-            //    {
-            //        TargetType = typeof(Border),
-            //        Setters = { new Setter { Property = Border.CornerRadiusProperty, Value = new CornerRadius(5) } }
-            //    };
-            //    button.Resources.Add(style.TargetType, style);
-
-            //    button.Click += prototypeButton_Click;
-            //    shapes_StackPanel.Children.Add(button);
-            //}
         }
 
         private void createShapeButtons()
         {
             var prototypes = _shapeFactory.GetPrototypes();
+            List<ToggleButton> btnList = new List<ToggleButton>();
             foreach (var item in prototypes)
             {
                 var shape = item.Value as IShape;
-                Button button;
+                ToggleButton button;
 
                 // Basic shapes: line, rectangle, ellipse, square, circle
                 if (isBasicShape(shape))
                 {
-                    button = new Button()
+                    button = new ToggleButton()
                     {
                         ToolTip = shape.Name,
-                        Style = Resources["TransparentFocusStyle"] as Style,
-                        Margin = new Thickness(10, 0, 0, 0),
+                        Style = Resources["ToggleButtonDisableStyle"] as Style,
+                        Margin = new Thickness(15, 0, 0, 0),
                         Height = 35,
                         Width = 35,
                         Content = new Image()
@@ -146,23 +86,23 @@ namespace Paint
                             Width = 23,
                             Height = 23,
                         },
-                        Tag = shape.Name
+                        Tag = shape
                     };
                 }
                 else
                 {
-                    button = new Button()
+                    button = new ToggleButton()
                     {
                         ToolTip = shape.Name,
-                        Style = Resources["TransparentPluginStyle"] as Style,
-                        Margin = new Thickness(18, 0, 0, 0),
+                        Style = Resources["ToggleButtonPluginDisableStyle"] as Style,
+                        Margin = new Thickness(23, 0, 0, 0),
                         Height = 28,
                         Content = new TextBlock()
                         {
                             Text = shape.Name,
                             Margin = new Thickness(12, 0, 12, 0),
                         },
-                        Tag = shape.Name
+                        Tag = shape
                     };
                 }
 
@@ -173,20 +113,58 @@ namespace Paint
                     Setters = { new Setter { Property = Border.CornerRadiusProperty, Value = new CornerRadius(5) } }
                 };
                 button.Resources.Add(style.TargetType, style);
+                button.Checked += prototypeButton_Checked;
+                button.Unchecked += prototypeButton_Unchecked;
+                btnList.Add(button);
+            }
+            shapesItemsControl.ItemsSource = btnList;
+        }
 
-                button.Click += prototypeButton_Click;
-                shapes_StackPanel.Children.Add(button);
+        private void prototypeButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var button = sender as ToggleButton;
+            if (button != null)
+            {
+                if (_selectedShapeBtn != null)
+                {
+                    _selectedShapeBtn.IsChecked = false;
+                }
+                _selectedShapeBtn = button;
+                selectToggleButton.IsChecked = false;
+
+                var shape = (IShape)button.Tag;
+                _selectedShapeName = shape.Name;
+                createPreviewShape();
+                if (isBasicShape(shape))
+                {
+                    button.Style = Resources["ToggleButtonActiveStyle"] as Style;
+                }
+                else
+                {
+                    button.Style = Resources["ToggleButtonPluginActiveStyle"] as Style;
+                }
             }
         }
 
-        private void prototypeButton_Click(object sender, RoutedEventArgs e)
+        private void prototypeButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as ToggleButton;
             if (button != null)
             {
-                string name = (string)button.Tag;
-                _selectedShapeName = name;
-                _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke,_colorFill);
+                _selectedShapeName = "";
+                _preview = null;
+
+                var shape = (IShape)button.Tag;
+                if (isBasicShape(shape))
+                {
+                    button.Style = Resources["ToggleButtonDisableStyle"] as Style;
+                }
+                else
+                {
+                    button.Style = Resources["ToggleButtonPluginDisableStyle"] as Style;
+                }
+
+                _selectedShapeBtn = null;
             }
         }
 
@@ -247,9 +225,25 @@ namespace Paint
             _shapes.Add(_preview);
 
             // Generate next object (same shape)
-            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, _colorFill);
+            createPreviewShape();
 
             redrawCanvas();
+        }
+
+        private void createPreviewShape()
+        {
+            Color colorFill = Colors.Transparent;
+            int strokeSize = 0;
+            if (_hasStroke)
+            {
+                strokeSize = _strokeSize;
+            }
+            if (_isFilled)
+            {
+                colorFill = _colorFill;
+            }
+
+            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize);
         }
 
         private void redrawCanvas()
@@ -350,6 +344,7 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorStroke = selectedColor;
+                createPreviewShape();
             }
         }
 
@@ -358,6 +353,7 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorFill = selectedColor;
+                createPreviewShape();
             }
         }
 
@@ -382,5 +378,182 @@ namespace Paint
             }
         }
 
+        private void strokeToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            // User choose to remove stroke
+            var strokeBtn = sender as ToggleButton;
+            if (strokeBtn != null)
+            {
+                strokeBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
+                strokeBtn.ToolTip = "Remove stroke";
+            }
+        }
+
+        private void strokeToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // User choose to add stroke
+            var strokeBtn = sender as ToggleButton;
+            if (strokeBtn != null)
+            {
+                strokeBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
+                strokeBtn.ToolTip = "Add stroke";
+            }
+        }
+
+        private void strokeToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _hasStroke = !_hasStroke;
+            createPreviewShape();
+        }
+
+        private void fillToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            // User choose to remove stroke
+            var fillBtn = sender as ToggleButton;
+            if (fillBtn != null)
+            {
+                fillBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
+                fillBtn.ToolTip = "Remove fill";
+            }
+        }
+
+        private void fillToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // User choose to add stroke
+            var fillBtn = sender as ToggleButton;
+            if (fillBtn != null)
+            {
+                fillBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
+                fillBtn.ToolTip = "Fill shape";
+            }
+        }
+        private void fillToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isFilled = !_isFilled;
+            createPreviewShape();
+        }
+
+        private void selectToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var selectToggleBtn = sender as ToggleButton;
+            if (selectToggleBtn != null)
+            {
+                // Uncheck current shape button -> change focus to selection button
+                if (_selectedShapeBtn != null)
+                {
+                    _selectedShapeBtn.IsChecked = false;
+                }
+                selectToggleBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            }
+        }
+
+        private void selectToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var selectToggleBtn = sender as ToggleButton;
+            if (selectToggleBtn != null)
+            {
+                selectToggleBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
+            }
+        }
+
+        private void saveObjectsButton_Click(object sender, RoutedEventArgs e)
+        {
+            saveObjects();
+        }
+
+        private async void saveObjects()
+        {
+            await Task.Delay(100);
+            var settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+            var serializedShapeList = JsonConvert.SerializeObject(_shapes, settings);
+            var dialog = new SaveFileDialog();
+
+            dialog.Filter = "JSON (*.json)|*.json";
+            bool? result = dialog.ShowDialog();
+            if (result ?? true)
+            {
+                string path = dialog.FileName;
+                File.WriteAllText(path, serializedShapeList);
+            }
+        }
+
+        private void saveImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            saveImage();
+        }
+
+        private async void saveImage()
+        {
+            await Task.Delay(100);
+            var dialog = new SaveFileDialog();
+
+            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp| JPG (*.jpg)|*.jpg";
+            bool? result = dialog.ShowDialog();
+            if (result ?? true)
+            {
+                string filename = dialog.FileName;
+                string extension = System.IO.Path.GetExtension(filename);
+                var bitmapSrc = GetRenderTargetBitmapFromControl(canvas);
+
+                switch(extension) 
+                {
+                    case ".png":
+                        PngBitmapEncoder pngEncoder = new PngBitmapEncoder();
+                        pngEncoder.Frames.Add(BitmapFrame.Create(bitmapSrc));
+
+                        using (FileStream file = File.Create(filename))
+                        {
+                            pngEncoder.Save(file);
+                        }
+                        break;
+                    case ".jpeg":
+                        JpegBitmapEncoder jpegEncoder = new JpegBitmapEncoder();
+                        jpegEncoder.Frames.Add(BitmapFrame.Create(bitmapSrc));
+
+                        using (FileStream file = File.Create(filename))
+                        {
+                            jpegEncoder.Save(file);
+                        }
+                        break;
+                    case ".bmp":
+                        BmpBitmapEncoder bitmapEncoder = new BmpBitmapEncoder();
+                        bitmapEncoder.Frames.Add(BitmapFrame.Create(bitmapSrc));
+
+                        using (FileStream file = File.Create(filename))
+                        {
+                            bitmapEncoder.Save(file);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private static BitmapSource GetRenderTargetBitmapFromControl(Visual targetControl, double dpi = 96)
+        {
+            if (targetControl == null) return null;
+
+            var bounds = VisualTreeHelper.GetDescendantBounds(targetControl);
+            var renderTargetBitmap = new RenderTargetBitmap((int)(bounds.Width * dpi / 96.0),
+                                                            (int)(bounds.Height * dpi / 96.0),
+                                                            dpi,
+                                                            dpi,
+                                                            PixelFormats.Pbgra32);
+
+            var drawingVisual = new DrawingVisual();
+
+            using (var drawingContext = drawingVisual.RenderOpen())
+            {
+                var visualBrush = new VisualBrush(targetControl);
+                drawingContext.DrawRectangle(visualBrush, null, new Rect(new Point(), bounds.Size));
+            }
+
+            renderTargetBitmap.Render(drawingVisual);
+            return renderTargetBitmap;
+        }
     }
 }
