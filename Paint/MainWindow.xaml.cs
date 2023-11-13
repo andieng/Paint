@@ -268,7 +268,7 @@ namespace Paint
             {
                 return true;
             }
-                if (s.Name == (nameof(Shapes.Rectangle)))
+            if (s.Name == (nameof(Shapes.Rectangle)))
             {
                 return true;
             }
@@ -472,7 +472,7 @@ namespace Paint
             await Task.Delay(100);
             var settings = new JsonSerializerSettings()
             {
-                TypeNameHandling = TypeNameHandling.Objects
+                TypeNameHandling = TypeNameHandling.All
             };
             var serializedShapeList = JsonConvert.SerializeObject(_shapes, settings);
             var dialog = new SaveFileDialog();
@@ -481,8 +481,8 @@ namespace Paint
             bool? result = dialog.ShowDialog();
             if (result ?? true)
             {
-                string path = dialog.FileName;
-                File.WriteAllText(path, serializedShapeList);
+                string filename = dialog.FileName;
+                File.WriteAllText(filename, serializedShapeList);
             }
         }
 
@@ -496,7 +496,7 @@ namespace Paint
             await Task.Delay(100);
             var dialog = new SaveFileDialog();
 
-            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp| JPG (*.jpg)|*.jpg";
+            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp";
             bool? result = dialog.ShowDialog();
             if (result ?? true)
             {
@@ -560,6 +560,76 @@ namespace Paint
 
             renderTargetBitmap.Render(drawingVisual);
             return renderTargetBitmap;
+        }
+
+        private void importImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            //loadImage();
+        }
+
+        private async void loadImage()
+        {
+            await Task.Delay(100);
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp";
+            bool? result = dialog.ShowDialog();
+            if (result ?? true)
+            {
+                string filename = dialog.FileName;
+                //ImageBrush brush = new ImageBrush();
+                //brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Absolute));
+                //canvas.Background = brush;
+
+                Image img;
+                img = new Image();
+                img.Source = new BitmapImage(new Uri(filename, UriKind.Absolute));
+                Canvas.SetLeft(img, 150);
+                Canvas.SetTop(img, 130);
+                canvas.Children.Add(img);
+            }
+        }
+
+        private void importObjectsButton_Click(object sender, RoutedEventArgs e)
+        {
+            //loadObjects();
+        }
+
+        private async void loadObjects()
+        {
+            await Task.Delay(100);
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "JSON (*.json)|*.json";
+            bool? result = dialog.ShowDialog();
+
+            var settings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+            if (result ?? true)
+            {
+                string json = File.ReadAllText(dialog.FileName);
+                var deserializedShapeList = JsonConvert.DeserializeObject<List<IShape>>(json, settings);
+                if (deserializedShapeList != null)
+                {
+                    //foreach(var shape in deserializedShapeList)
+                    //{
+                    //    var createdShape = _shapeFactory.Create(shape.Name, colorBrushToDrawingColor(shape.ColorStroke), 
+                    //                colorBrushToDrawingColor(shape.ColorFill), shape.StrokeSize);
+                    //    _shapes.Add(createdShape);
+                    //}
+                    _shapes = deserializedShapeList;
+                    redrawCanvas();
+                }
+            }
+        }
+
+        private Color colorBrushToDrawingColor(SolidColorBrush br)
+        {
+            return Color.FromArgb(
+                br.Color.A,
+                br.Color.R,
+                br.Color.G,
+                br.Color.B);
         }
     }
 }

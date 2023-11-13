@@ -245,14 +245,14 @@
                 <UserControl Background="Transparent">
                     <Border Style="{StaticResource PopUpBorderStyle}" Width="280">
                         <StackPanel Background="Transparent">
-                            <Button Style="{StaticResource PopUpButtonStyle}">
+                            <Button Style="{StaticResource PopUpButtonStyle}" Click="importObjectsButton_Click">
                                 <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                     <Image DockPanel.Dock="Left" Source="./Resources/import-objects.png" Width="18" Height="18"/>
                                     <TextBlock DockPanel.Dock="Right" Text="Ctrl+O" FontSize="13" Style="{StaticResource ToolTextStyle}" />
                                     <TextBlock DockPanel.Dock="Left" Text="Import drawn objects" Margin="12 0 0 0" FontSize="14" />
                                 </DockPanel>
                             </Button>
-                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="importImageButton_Click">
                                 <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                     <Image DockPanel.Dock="Left" Source="./Resources/import-image.png" Width="18" Height="18"/>
                                     <TextBlock DockPanel.Dock="Right" Text="Ctrl+I" FontSize="13" Style="{StaticResource ToolTextStyle}" />
