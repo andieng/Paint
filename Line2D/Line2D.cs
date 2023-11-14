@@ -10,6 +10,31 @@ namespace Line2D
     {
         private Point2D _start = new Point2D();
         private Point2D _end = new Point2D();
+
+        public Point2D Start
+        {
+            get => _start;
+            set
+            {
+                if (_start != value)
+                {
+                    _start = value;
+                }
+            }
+        }
+
+        public Point2D End
+        {
+            get => _end;
+            set
+            {
+                if (_end != value)
+                {
+                    _end = value;
+                }
+            }
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }

@@ -25,6 +25,7 @@
     <None Remove="Resources\paint-64x64.png" />
     <None Remove="Resources\picture.png" />
     <None Remove="Resources\rectangle.png" />
+    <None Remove="Resources\redo-disable.png" />
     <None Remove="Resources\redo.png" />
     <None Remove="Resources\rotate-left.png" />
     <None Remove="Resources\rotate-right.png" />
@@ -39,6 +40,7 @@
     <None Remove="Resources\stroke-type.png" />
     <None Remove="Resources\stroke.png" />
     <None Remove="Resources\text.png" />
+    <None Remove="Resources\undo-disable.png" />
     <None Remove="Resources\undo.png" />
   </ItemGroup>
 
@@ -75,6 +77,7 @@
     <Resource Include="Resources\paint-64x64.png" />
     <Resource Include="Resources\picture.png" />
     <Resource Include="Resources\rectangle.png" />
+    <Resource Include="Resources\redo-disable.png" />
     <Resource Include="Resources\redo.png" />
     <Resource Include="Resources\rotate-left.png" />
     <Resource Include="Resources\rotate-right.png" />
@@ -88,6 +91,7 @@
     <Resource Include="Resources\stroke-type.png" />
     <Resource Include="Resources\stroke.png" />
     <Resource Include="Resources\text.png" />
+    <Resource Include="Resources\undo-disable.png" />
     <Resource Include="Resources\undo.png" />
   </ItemGroup>
 

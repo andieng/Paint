@@ -11,6 +11,31 @@ namespace Ellipse2D
     {
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
+
+        public Point2D LeftTop
+        {
+            get => _leftTop;
+            set
+            {
+                if (_leftTop != value)
+                {
+                    _leftTop = value;
+                }
+            }
+        }
+
+        public Point2D RightBottom
+        {
+            get => _rightBottom;
+            set
+            {
+                if (_rightBottom != value)
+                {
+                    _rightBottom = value;
+                }
+            }
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }

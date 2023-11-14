@@ -580,18 +580,18 @@ namespace Paint
                 //brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Absolute));
                 //canvas.Background = brush;
 
-                Image img;
-                img = new Image();
-                img.Source = new BitmapImage(new Uri(filename, UriKind.Absolute));
-                Canvas.SetLeft(img, 150);
-                Canvas.SetTop(img, 130);
-                canvas.Children.Add(img);
+                //Image img;
+                //img = new Image();
+                //img.Source = new BitmapImage(new Uri(filename, UriKind.Absolute));
+                //Canvas.SetLeft(img, 150);
+                //Canvas.SetTop(img, 130);
+                //canvas.Children.Add(img);
             }
         }
 
         private void importObjectsButton_Click(object sender, RoutedEventArgs e)
         {
-            //loadObjects();
+            loadObjects();
         }
 
         private async void loadObjects()
@@ -611,25 +611,10 @@ namespace Paint
                 var deserializedShapeList = JsonConvert.DeserializeObject<List<IShape>>(json, settings);
                 if (deserializedShapeList != null)
                 {
-                    //foreach(var shape in deserializedShapeList)
-                    //{
-                    //    var createdShape = _shapeFactory.Create(shape.Name, colorBrushToDrawingColor(shape.ColorStroke), 
-                    //                colorBrushToDrawingColor(shape.ColorFill), shape.StrokeSize);
-                    //    _shapes.Add(createdShape);
-                    //}
-                    _shapes = deserializedShapeList;
+                    _shapes.AddRange(deserializedShapeList);
                     redrawCanvas();
                 }
             }
-        }
-
-        private Color colorBrushToDrawingColor(SolidColorBrush br)
-        {
-            return Color.FromArgb(
-                br.Color.A,
-                br.Color.R,
-                br.Color.G,
-                br.Color.B);
         }
     }
 }
