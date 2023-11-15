@@ -82,5 +82,25 @@ namespace Ellipse2D
         {
             return new Ellipse2D();
         }
+
+        public bool ContainsPoint(double x, double y)
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            double centerX = left + width / 2;
+            double centerY = top + height / 2;
+
+            double radiusX = width / 2;
+            double radiusY = height / 2;
+
+            return (Math.Pow((x - centerX) / radiusX, 2) + Math.Pow((y - centerY) / radiusY, 2)) <= 1;
+        }
     }
 }

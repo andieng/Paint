@@ -21,6 +21,7 @@ using System.Reflection.Metadata;
 using Microsoft.Win32;
 using Paint.Keys;
 using System.Threading.Tasks;
+using Circle2D;
 
 namespace Paint
 {
@@ -40,8 +41,10 @@ namespace Paint
         private Color _colorFill;
         private bool _isFilled = false;
         private bool _hasStroke = true;
-        private int _strokeSize = 1;
+        private int _strokeSize = 5;
         private Stack<IShape> _undoStack = new Stack<IShape>();
+        private bool _isSelecting = false;
+        private IShape _selectionFrame;
 
         public MainWindow()
         {
@@ -176,15 +179,36 @@ namespace Paint
             Square = 4,
             Circle = 5
         }
-
-        private void canvas_MouseDown(object sender, MouseButtonEventArgs e) 
+        private void CreateSelectionFrame(Point position)
         {
-            if (_preview != null)
+            /*_selectionFrame = _shapeFactory.Create("Rectangle", Colors.Black, Colors.Transparent, 1);*/
+
+            foreach (IShape shape in _shapes)
             {
-                _isDrawing = true;
+                if (shape.ContainsPoint(position.X, position.Y))
+                {
+                    MessageBox.Show($"Hit the shape name: {shape.Name}");
+                    break;
+                }
+            }
+        }
+
+        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_isSelecting)
+            {
                 Point pos = e.GetPosition(canvas);
-                
-                _preview.HandleStart(pos.X, pos.Y);
+                CreateSelectionFrame(pos);
+            }
+            else
+            {
+                if (_preview != null)
+                {
+                    Point pos = e.GetPosition(canvas);
+                    _isDrawing = true;
+                    _preview.HandleStart(pos.X, pos.Y);
+
+                }
             }
         }
 
@@ -449,6 +473,8 @@ namespace Paint
                 {
                     _selectedShapeBtn.IsChecked = false;
                 }
+                _isSelecting = true;
+                _isDrawing = false;
                 selectToggleBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
             }
         }
@@ -458,6 +484,7 @@ namespace Paint
             var selectToggleBtn = sender as ToggleButton;
             if (selectToggleBtn != null)
             {
+                _isSelecting = false;
                 selectToggleBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
             }
         }

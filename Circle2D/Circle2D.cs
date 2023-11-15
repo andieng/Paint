@@ -97,5 +97,25 @@ namespace Circle2D
         {
             return new Circle2D();
         }
+
+        public bool ContainsPoint(double x, double y)
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            double centerX = left + width / 2;
+            double centerY = top + height / 2;
+
+            double distance = Math.Sqrt(Math.Pow(x - centerX, 2) + Math.Pow(y - centerY, 2));
+            double radius = Math.Min((_rightBottom.X - _leftTop.X) / 2, (_rightBottom.Y - _leftTop.Y) / 2);
+
+            return distance <= radius;
+        }
     }
 }

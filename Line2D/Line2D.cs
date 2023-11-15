@@ -68,5 +68,13 @@ namespace Line2D
         {
             return new Line2D();
         }
+
+        public bool ContainsPoint(double x, double y)
+        {
+            double distance = Math.Abs((_end.Y - _start.Y) * x - (_end.X - _start.X) * y + _end.X * _start.Y - _end.Y * _start.X)
+                             / Math.Sqrt(Math.Pow(_end.Y - _start.Y, 2) + Math.Pow(_end.X - _start.X, 2));
+
+            return distance <= StrokeSize;
+        }
     }
 }

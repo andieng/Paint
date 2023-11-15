@@ -81,5 +81,16 @@ namespace Rectangle2D
         {
             return new Rectangle2D();
         }
+
+        public bool ContainsPoint(double x, double y)
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            return x >= left && x <= right && y >= top && y <= bottom;
+        }
     }
 }
