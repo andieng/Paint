@@ -702,7 +702,7 @@
                         <!--Color picker stroke-->
                         <syncfusion:ColorPicker Width="45" Height="34" Margin="12,5,5,0" x:Name="colorPickerStroke"
                                                 ColorChanged="ColorPickerStroke_ColorChanged" BorderThickness="1"
-                                                Color="Yellow" Cursor="Hand" BorderBrush="#FFAEAEAE"/>
+                                                Cursor="Hand" BorderBrush="#FFAEAEAE" Color="Blue"/>
                     </StackPanel>
                 </DockPanel>
 

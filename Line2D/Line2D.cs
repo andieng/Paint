@@ -76,5 +76,26 @@ namespace Line2D
 
             return distance <= StrokeSize;
         }
+
+        public double GetTop()
+        {
+            return Math.Min(_start.Y, _end.Y) - StrokeSize / 2;
+        }
+
+        public double GetLeft()
+        {
+            return Math.Min(_start.X, _end.X) - StrokeSize / 2;
+        }
+
+        public double GetWidth()
+        {
+            return Math.Abs(_end.X - _start.X) + StrokeSize;
+        }
+
+        public double GetHeight()
+        {
+            return Math.Abs(_end.Y - _start.Y) + StrokeSize;
+        }
+
     }
 }

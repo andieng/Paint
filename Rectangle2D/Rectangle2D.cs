@@ -92,5 +92,27 @@ namespace Rectangle2D
 
             return x >= left && x <= right && y >= top && y <= bottom;
         }
+        public double GetTop()
+        {
+            return Math.Min(_rightBottom.Y, _leftTop.Y); ;
+        }
+        public double GetLeft()
+        {
+            return Math.Min(_rightBottom.X, _leftTop.X);
+        }
+        public double GetWidth()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+
+            return right - left;
+        }
+        public double GetHeight()
+        {
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            return bottom - top;
+        }
     }
 }

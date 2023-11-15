@@ -44,7 +44,7 @@ namespace Paint
         private int _strokeSize = 5;
         private Stack<IShape> _undoStack = new Stack<IShape>();
         private bool _isSelecting = false;
-        private IShape _selectionFrame;
+        private Rectangle _selectionFrame;
 
         public MainWindow()
         {
@@ -181,13 +181,30 @@ namespace Paint
         }
         private void CreateSelectionFrame(Point position)
         {
-            /*_selectionFrame = _shapeFactory.Create("Rectangle", Colors.Black, Colors.Transparent, 1);*/
+            if (_selectionFrame != null)
+            {
+                canvas.Children.Remove(_selectionFrame);
+                _selectionFrame = null;
+            }
 
             foreach (IShape shape in _shapes)
             {
                 if (shape.ContainsPoint(position.X, position.Y))
                 {
-                    MessageBox.Show($"Hit the shape name: {shape.Name}");
+                    _selectionFrame = new Rectangle()
+                    {
+                        Stroke = Brushes.Black,
+                        StrokeDashArray = new DoubleCollection() { 2, 2 },
+                        StrokeThickness = 1,
+                        StrokeDashCap = PenLineCap.Round, 
+                        Width = shape.GetWidth(), 
+                        Height = shape.GetHeight(), 
+                    };
+
+                    Canvas.SetLeft(_selectionFrame, shape.GetLeft());
+                    Canvas.SetTop(_selectionFrame, shape.GetTop());
+
+                    canvas.Children.Add(_selectionFrame);
                     break;
                 }
             }

@@ -14,6 +14,10 @@ namespace Contract
         void HandleStart(double x, double y);
         void HandleEnd(double x, double y);
         bool ContainsPoint(double x, double y);
+        double GetTop();
+        double GetLeft();
+        double GetWidth();
+        double GetHeight();
         UIElement Draw();
         IShape Clone();
     }
