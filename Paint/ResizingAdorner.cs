@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using System;
 using System.Windows.Controls;
 using System.Xml.Linq;
+using System.Reflection.Metadata;
 
 namespace Paint
 {
@@ -71,7 +72,23 @@ namespace Paint
         {
             if (AdornedElement is Line line)
             {
-                
+                double lineX1 = line.X1;
+                double lineY1 = line.Y1;
+                double lineX2 = line.X2;
+                double lineY2 = line.Y2;
+
+                double left = Math.Min(lineX1, lineX2);
+                double right = Math.Max(lineX1, lineX2);
+                double top = Math.Min(lineY1, lineY2);
+                double bottom = Math.Max(lineY1, lineY2);
+
+                double newLeft = left + e.HorizontalChange;
+                double newTop = top + e.VerticalChange;
+
+                line.X1 = lineX1 < lineX2 ? (newLeft < right ? newLeft : right) : (newLeft > right ? newLeft : right);
+                line.X2 = lineX2 < lineX1 ? (newLeft < right ? newLeft : right) : (newLeft > right ? newLeft : right);
+                line.Y1 = lineY1 < lineY2 ? (newTop < bottom ? newTop : bottom) : (newTop > bottom ? newTop : bottom);
+                line.Y2 = lineY2 < lineY1 ? (newTop < bottom ? newTop : bottom) : (newTop > bottom ? newTop : bottom);
             }
             else
             {
@@ -95,53 +112,122 @@ namespace Paint
 
         private void HandleTopRight(object sender, DragDeltaEventArgs e)
         {
-            var element = (FrameworkElement)AdornedElement;
-            double oldWidth = element.ActualWidth;
-            double oldHeight = element.ActualHeight;
-
-            Canvas.SetTop(element, Canvas.GetTop(element) + e.VerticalChange);
-
-            double newWidth = oldWidth + e.HorizontalChange;
-            double newHeight = oldHeight - e.VerticalChange;
-
-            if (newWidth > 0 && newHeight > 0)
+            if (AdornedElement is Line line)
             {
-                element.Width = newWidth;
-                element.Height = newHeight;
+                double lineX1 = line.X1;
+                double lineY1 = line.Y1;
+                double lineX2 = line.X2;
+                double lineY2 = line.Y2;
+
+                double left = Math.Min(lineX1, lineX2);
+                double right = Math.Max(lineX1, lineX2);
+                double top = Math.Min(lineY1, lineY2);
+                double bottom = Math.Max(lineY1, lineY2);
+
+                double newRight = right + e.HorizontalChange;
+                double newTop = top + e.VerticalChange;
+
+                line.X1 = lineX1 > lineX2 ? (newRight > left ? newRight : left) : (newRight < left ? newRight : left);
+                line.X2 = lineX2 > lineX1 ? (newRight > left ? newRight : left) : (newRight < left ? newRight : left);
+                line.Y1 = lineY1 < lineY2 ? (newTop < bottom ? newTop : bottom) : (newTop > bottom ? newTop : bottom);
+                line.Y2 = lineY2 < lineY1 ? (newTop < bottom ? newTop : bottom) : (newTop > bottom ? newTop : bottom);
+            }
+            else
+            {
+                var element = (FrameworkElement)AdornedElement;
+                double oldWidth = element.ActualWidth;
+                double oldHeight = element.ActualHeight;
+
+                Canvas.SetTop(element, Canvas.GetTop(element) + e.VerticalChange);
+
+                double newWidth = oldWidth + e.HorizontalChange;
+                double newHeight = oldHeight - e.VerticalChange;
+
+                if (newWidth > 0 && newHeight > 0)
+                {
+                    element.Width = newWidth;
+                    element.Height = newHeight;
+                }
             }
         }
 
         private void HandleBottomLeft(object sender, DragDeltaEventArgs e)
         {
-            var element = (FrameworkElement)AdornedElement;
-            double oldWidth = element.ActualWidth;
-            double oldHeight = element.ActualHeight;
-
-            Canvas.SetLeft(element, Canvas.GetLeft(element) + e.HorizontalChange);
-
-            double newWidth = oldWidth - e.HorizontalChange;
-            double newHeight = oldHeight + e.VerticalChange;
-
-            if (newWidth > 0 && newHeight > 0)
+            if (AdornedElement is Line line)
             {
-                element.Width = newWidth;
-                element.Height = newHeight;
+                double lineX1 = line.X1;
+                double lineY1 = line.Y1;
+                double lineX2 = line.X2;
+                double lineY2 = line.Y2;
+
+                double left = Math.Min(lineX1, lineX2);
+                double right = Math.Max(lineX1, lineX2);
+                double top = Math.Min(lineY1, lineY2);
+                double bottom = Math.Max(lineY1, lineY2);
+
+                double newLeft = left + e.HorizontalChange;
+                double newBottom = bottom + e.VerticalChange;
+
+                line.X1 = lineX1 < lineX2 ? (newLeft < right ? newLeft : right) : (newLeft > right ? newLeft : right);
+                line.X2 = lineX2 < lineX1 ? (newLeft < right ? newLeft : right) : (newLeft > right ? newLeft : right);
+                line.Y1 = lineY1 > lineY2 ? (newBottom > top ? newBottom : top) : (newBottom < top ? newBottom : top);
+                line.Y2 = lineY2 > lineY1 ? (newBottom > top ? newBottom : top) : (newBottom < top ? newBottom : top);
+            }
+            else
+            {
+                var element = (FrameworkElement)AdornedElement;
+                double oldWidth = element.ActualWidth;
+                double oldHeight = element.ActualHeight;
+
+                Canvas.SetLeft(element, Canvas.GetLeft(element) + e.HorizontalChange);
+
+                double newWidth = oldWidth - e.HorizontalChange;
+                double newHeight = oldHeight + e.VerticalChange;
+
+                if (newWidth > 0 && newHeight > 0)
+                {
+                    element.Width = newWidth;
+                    element.Height = newHeight;
+                }
             }
         }
 
         private void HandleBottomRight(object sender, DragDeltaEventArgs e)
         {
-            var element = (FrameworkElement)AdornedElement;
-            double oldWidth = element.ActualWidth;
-            double oldHeight = element.ActualHeight;
-
-            double newWidth = oldWidth + e.HorizontalChange;
-            double newHeight = oldHeight + e.VerticalChange;
-
-            if (newWidth > 0 && newHeight > 0)
+            if (AdornedElement is Line line)
             {
-                element.Width = newWidth;
-                element.Height = newHeight;
+                double lineX1 = line.X1;
+                double lineY1 = line.Y1;
+                double lineX2 = line.X2;
+                double lineY2 = line.Y2;
+
+                double left = Math.Min(lineX1, lineX2);
+                double right = Math.Max(lineX1, lineX2);
+                double top = Math.Min(lineY1, lineY2);
+                double bottom = Math.Max(lineY1, lineY2);
+
+                double newRight = right + e.HorizontalChange;
+                double newBottom = bottom + e.VerticalChange;
+
+                line.X1 = lineX1 > lineX2 ? (newRight > left ? newRight : left) : (newRight < left ? newRight : left);
+                line.X2 = lineX2 > lineX1 ? (newRight > left ? newRight : left) : (newRight < left ? newRight : left);
+                line.Y1 = lineY1 > lineY2 ? (newBottom > top ? newBottom : top) : (newBottom < top ? newBottom : top);
+                line.Y2 = lineY2 > lineY1 ? (newBottom > top ? newBottom : top) : (newBottom < top ? newBottom : top);
+            }
+            else
+            {
+                var element = (FrameworkElement)AdornedElement;
+                double oldWidth = element.ActualWidth;
+                double oldHeight = element.ActualHeight;
+
+                double newWidth = oldWidth + e.HorizontalChange;
+                double newHeight = oldHeight + e.VerticalChange;
+
+                if (newWidth > 0 && newHeight > 0)
+                {
+                    element.Width = newWidth;
+                    element.Height = newHeight;
+                }
             }
         }
 
