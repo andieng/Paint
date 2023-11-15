@@ -5,6 +5,8 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Shapes;
 using System;
+using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace Paint
 {
@@ -27,8 +29,8 @@ namespace Paint
 
             Rec = new Rectangle()
             {
-                Stroke = Brushes.Black,
-                StrokeDashArray = new DoubleCollection() { 2, 2 },
+                Stroke = Brushes.Blue,
+                StrokeDashArray = new DoubleCollection() { 5, 5 },
                 StrokeThickness = 1,
                 StrokeDashCap = PenLineCap.Round,
             };
@@ -49,7 +51,7 @@ namespace Paint
 
         private void BuildAdornerCorner(ref Thumb cornerThumb, Cursor customizedCursor)
         {
-            cornerThumb = new Thumb() { Background = Brushes.Black, Height = 10, Width = 10 };
+            cornerThumb = new Thumb() { Background = Brushes.Blue, Height = 7, Width = 7 };
             cornerThumb.Cursor = customizedCursor;
             cornerThumb.Height = cornerThumb.Width = 10;
             cornerThumb.Opacity = 0.5;
@@ -67,33 +69,96 @@ namespace Paint
 
         private void HandleTopLeft(object sender, DragDeltaEventArgs e)
         {
-            // Handle resizing logic for the top-left corner
+            if (AdornedElement is Line line)
+            {
+                
+            }
+            else
+            {
+                var element = (FrameworkElement)AdornedElement;
+                double oldWidth = element.ActualWidth;
+                double oldHeight = element.ActualHeight;
+
+                Canvas.SetLeft(element, Canvas.GetLeft(element) + e.HorizontalChange);
+                Canvas.SetTop(element, Canvas.GetTop(element) + e.VerticalChange);
+
+                double newWidth = oldWidth - e.HorizontalChange;
+                double newHeight = oldHeight - e.VerticalChange;
+
+                if (newWidth > 0 && newHeight > 0)
+                {
+                    element.Width = newWidth;
+                    element.Height = newHeight;
+                }
+            }
         }
 
         private void HandleTopRight(object sender, DragDeltaEventArgs e)
         {
-            // Handle resizing logic for the top-right corner
+            var element = (FrameworkElement)AdornedElement;
+            double oldWidth = element.ActualWidth;
+            double oldHeight = element.ActualHeight;
+
+            Canvas.SetTop(element, Canvas.GetTop(element) + e.VerticalChange);
+
+            double newWidth = oldWidth + e.HorizontalChange;
+            double newHeight = oldHeight - e.VerticalChange;
+
+            if (newWidth > 0 && newHeight > 0)
+            {
+                element.Width = newWidth;
+                element.Height = newHeight;
+            }
         }
 
         private void HandleBottomLeft(object sender, DragDeltaEventArgs e)
         {
-            // Handle resizing logic for the bottom-left corner
+            var element = (FrameworkElement)AdornedElement;
+            double oldWidth = element.ActualWidth;
+            double oldHeight = element.ActualHeight;
+
+            Canvas.SetLeft(element, Canvas.GetLeft(element) + e.HorizontalChange);
+
+            double newWidth = oldWidth - e.HorizontalChange;
+            double newHeight = oldHeight + e.VerticalChange;
+
+            if (newWidth > 0 && newHeight > 0)
+            {
+                element.Width = newWidth;
+                element.Height = newHeight;
+            }
         }
 
         private void HandleBottomRight(object sender, DragDeltaEventArgs e)
         {
-            // Handle resizing logic for the bottom-right corner
+            var element = (FrameworkElement)AdornedElement;
+            double oldWidth = element.ActualWidth;
+            double oldHeight = element.ActualHeight;
+
+            double newWidth = oldWidth + e.HorizontalChange;
+            double newHeight = oldHeight + e.VerticalChange;
+
+            if (newWidth > 0 && newHeight > 0)
+            {
+                element.Width = newWidth;
+                element.Height = newHeight;
+            }
         }
 
         private void HandleRotate(object sender, DragDeltaEventArgs e)
         {
-            // Handle rotation logic
+            var element = (FrameworkElement)AdornedElement;
+            double deltaAngle = Math.Atan2(e.VerticalChange, e.HorizontalChange) * (180.0 / Math.PI);
+
+            RotateTransform rotateTransform = new RotateTransform(deltaAngle, element.ActualWidth / 2, element.ActualHeight / 2);
+            element.RenderTransform = rotateTransform;
         }
 
         private void HandleDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            // Handle logic after dragging is completed
+
         }
+
 
         protected override int VisualChildrenCount
         {
@@ -142,5 +207,4 @@ namespace Paint
             return finalSize;
         }
     }
-
 }

@@ -11,5 +11,15 @@
         <Style x:Key="ToolTextStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="#5f5f5f"/>
         </Style>
+
+        <Style TargetType="Thumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
