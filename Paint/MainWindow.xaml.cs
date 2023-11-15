@@ -212,17 +212,21 @@ namespace Paint
 
             foreach (object obj in _canvasObjects)
             {
-                if (obj.ContainsPoint(position.X, position.Y))
+                if (obj.GetType() != typeof(BitmapImage)) 
                 {
-                    if (index >= 0 && index < canvas.Children.Count)
+                    IShape shape = (IShape)obj;
+                    if (shape.ContainsPoint(position.X, position.Y))
                     {
-                        UIElement selectedElement = canvas.Children[index];
-                        if (selectedElement != null)
+                        if (index >= 0 && index < canvas.Children.Count)
                         {
-                            adornerLayer.Add(new ResizingAdorner(selectedElement));
+                            UIElement selectedElement = canvas.Children[index];
+                            if (selectedElement != null)
+                            {
+                                adornerLayer.Add(new ResizingAdorner(selectedElement));
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
                 index++;
             }
@@ -389,20 +393,36 @@ namespace Paint
 
         private void strokeTypeButton_Click(object sender, RoutedEventArgs e)
         {
+            strokeTypeButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            strokeTypeButton.IsChecked = true;
             popupStrokeType.IsOpen = true;
             popupStrokeType.Closed += (senderClosed, eClosed) =>
             {
+                strokeTypeButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
                 strokeTypeButton.IsChecked = false;
             };
         }
 
+        private void strokeType_Checked(object sender, RoutedEventArgs e)
+        {
+ 
+        }
+
         private void strokeSizeButton_Click(object sender, RoutedEventArgs e)
         {
+            strokeSizeButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            strokeSizeButton.IsChecked = true;
             popupStrokeSize.IsOpen = true;
             popupStrokeSize.Closed += (senderClosed, eClosed) =>
             {
+                strokeSizeButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
                 strokeSizeButton.IsChecked = false;
             };
+        }
+
+        private void strokeSize_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void ColorPickerStroke_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -45,7 +45,6 @@ namespace Rectangle2D
         {
             var left = Math.Min(_rightBottom.X, _leftTop.X);
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
-
             var right = Math.Max(_rightBottom.X, _leftTop.X);
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
