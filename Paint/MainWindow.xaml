@@ -18,7 +18,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -325,7 +325,14 @@
                 <UserControl Background="Transparent">
                     <Border Style="{StaticResource PopUpBorderStyle}" Width="280">
                         <StackPanel Background="Transparent">
-                            <Button Style="{StaticResource PopUpButtonStyle}" Click="importObjectsButton_Click">
+                            <Button Style="{StaticResource PopUpButtonStyle}" Click="newButton_Click">
+                                <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                    <Image DockPanel.Dock="Left" Source="./Resources/new-file.png" Width="18" Height="18"/>
+                                    <TextBlock DockPanel.Dock="Right" Text="Ctrl+N" FontSize="13" Style="{StaticResource ToolTextStyle}" />
+                                    <TextBlock DockPanel.Dock="Left" Text="New" Margin="12 0 0 0" FontSize="14" />
+                                </DockPanel>
+                            </Button>
+                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="importObjectsButton_Click">
                                 <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                     <Image DockPanel.Dock="Left" Source="./Resources/import-objects.png" Width="18" Height="18"/>
                                     <TextBlock DockPanel.Dock="Right" Text="Ctrl+O" FontSize="13" Style="{StaticResource ToolTextStyle}" />
@@ -392,56 +399,59 @@
             </StackPanel>
             
             <!--Undo button-->
-            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" x:Name="undoButton"
-                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click" IsEnabled="False">
+            <Button DockPanel.Dock="Left" x:Name="undoButton" IsEnabled="False"
+                    Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="Transparent" BorderThickness="0">
-                                        <ContentPresenter Name="content"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="Button.IsEnabled" Value="False">
-                                            <Setter TargetName="content" Property="ContentPresenter.Content">
-                                                <Setter.Value>
-                                                    <Image Source="undo-disable.png" Width="20" Height="20" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
                     </Style>
                 </Button.Resources>
-                <Image Source="./Resources/undo.png" Width="20" Height="20" />
-            </Button>
-            
-            <!--Redo button-->
-            <Button DockPanel.Dock="Left" x:Name="redoButton" Style="{StaticResource TransparentStyle}"
-                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click" IsEnabled="False">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                    <Style TargetType="Button">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentStyle}">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Image Source="./Resources/undo-disable.png" Width="20" Height="20" />
+                            </Setter.Value>
+                        </Setter>
                         <Style.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
+                            <Trigger Property="IsEnabled" Value="True">
                                 <Setter Property="Content">
                                     <Setter.Value>
-                                        <Image Source="./Resources/redo-disable.png" Width="20" Height="20" />
+                                        <Image Source="./Resources/undo.png" Width="20" Height="20" />
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
+                </Button.Style>
+            </Button>
+            
+            <!--Redo button-->
+            <Button DockPanel.Dock="Left" x:Name="redoButton" IsEnabled="False"
+                    Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
                 </Button.Resources>
-                <Image Source="./Resources/redo.png" Width="20" Height="20" />
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentStyle}">
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <Image Source="./Resources/redo-disable.png" Width="20" Height="20" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Image Source="./Resources/redo.png" Width="20" Height="20" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
             </Button>
         </DockPanel>
         

@@ -31,7 +31,7 @@ namespace Paint
     {
 
         private bool _isDrawing = false;
-        private List<IShape> _shapes = new List<IShape>();
+        private List<object> _canvasObjects = new List<object>();
         private IShape? _preview;
         private string _selectedShapeName = "";
         private ToggleButton? _selectedShapeBtn;
@@ -41,7 +41,7 @@ namespace Paint
         private bool _isFilled = false;
         private bool _hasStroke = true;
         private int _strokeSize = 1;
-        private Stack<IShape> _undoStack = new Stack<IShape>();
+        private Stack<object> _undoStack = new Stack<object>();
 
         public MainWindow()
         {
@@ -53,11 +53,19 @@ namespace Paint
 
             // Save as JPG picture hotkey
             HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.S, saveImage));
+
+            // New hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.N, resetCanvas));
+
+            // Undo hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.Z, undo));
+
+            // Redo hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.Y, redo));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = this;
             createShapeButtons();
         }
 
@@ -190,23 +198,24 @@ namespace Paint
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDrawing)
+            if (_isDrawing && _preview != null)
             {
                 Point pos = e.GetPosition(canvas);
                 _preview.HandleEnd(pos.X, pos.Y);
 
                 // Remove all objects
                 canvas.Children.Clear();
+
                 // Draw all old objects
-                foreach (var shape in _shapes)
+                foreach (var obj in _canvasObjects)
                 {
-                    UIElement element = shape.Draw();
-                    canvas.Children.Add(element);
+                    addObjectToCanvas(obj);
                 }
 
-                // Draw preview object
+                // Add preview object
                 canvas.Children.Add(_preview.Draw());
-                //clear undo stack
+
+                // Clear undo stack
                 _undoStack.Clear();
                 undoButton.IsEnabled = true;
                 redoButton.IsEnabled = false;
@@ -225,12 +234,29 @@ namespace Paint
             // Add last object to list
             Point pos = e.GetPosition(canvas);
             _preview.HandleEnd(pos.X, pos.Y);
-            _shapes.Add(_preview);
+            _canvasObjects.Add(_preview);
 
-            // Generate next object (same shape)
+            // Generate next object
             createPreviewShape();
 
             redrawCanvas();
+        }
+
+        private void addObjectToCanvas(object obj)
+        {
+            UIElement element;
+            if (obj.GetType() == typeof(BitmapImage))
+            {
+                Image img = new Image();
+                img.Source = (BitmapImage) obj;
+                element = img;
+            }
+            else
+            {
+                var shape = (IShape)obj;
+                element = shape.Draw();
+            }
+            canvas.Children.Add(element);
         }
 
         private void createPreviewShape()
@@ -255,10 +281,9 @@ namespace Paint
             canvas.Children.Clear();
 
             // Draw all objects in list
-            foreach (var shape in _shapes)
+            foreach (var obj in _canvasObjects)
             {
-                var element = shape.Draw();
-                canvas.Children.Add(element);
+                addObjectToCanvas(obj);
             }
         }
 
@@ -362,25 +387,48 @@ namespace Paint
 
         private void undoButton_Click(object sender, RoutedEventArgs e)
         {
-            if(_shapes.Count > 0 && canvas.Children.Count>0)
+            undo();
+        }
+
+        private async void undo()
+        {
+            await Task.Delay(100);
+            if (_canvasObjects.Count > 0 && canvas.Children.Count > 0)
             {
-                var lastIndex = _shapes.Count - 1;
-                _undoStack.Push(_shapes[lastIndex]);
+                var lastIndex = _canvasObjects.Count - 1;
+                _undoStack.Push(_canvasObjects[lastIndex]);
                 canvas.Children.RemoveAt(lastIndex);
-                _shapes.RemoveAt(lastIndex);
+                _canvasObjects.RemoveAt(lastIndex);
                 redoButton.IsEnabled = true;
+
+                // Disable when not able to undo
+                if (_canvasObjects.Count == 0)
+                {
+                    undoButton.IsEnabled = false;
+                }
             }
         }
 
         private void redoButton_Click(object sender, RoutedEventArgs e)
         {
+            redo();
+        }
+
+        private async void redo()
+        {
+            await Task.Delay(100);
             if (_undoStack.Count > 0)
             {
-                //var nextIndex = _shapes.Count - _undoNum;
-                IShape shape = _undoStack.Pop();
-                UIElement redoItem = shape.Draw();
-                canvas.Children.Add(redoItem);
-                _shapes.Add(shape);
+                object obj = _undoStack.Pop();
+                _canvasObjects.Add(obj);
+                addObjectToCanvas(obj);
+                undoButton.IsEnabled = true;
+
+                // Disable when not able to redo
+                if (_undoStack.Count == 0)
+                {
+                    redoButton.IsEnabled = false;
+                }
             }
         }
 
@@ -474,7 +522,7 @@ namespace Paint
             {
                 TypeNameHandling = TypeNameHandling.All
             };
-            var serializedShapeList = JsonConvert.SerializeObject(_shapes, settings);
+            var serializedObjectList = JsonConvert.SerializeObject(_canvasObjects, settings);
             var dialog = new SaveFileDialog();
 
             dialog.Filter = "JSON (*.json)|*.json";
@@ -482,7 +530,7 @@ namespace Paint
             if (result ?? true)
             {
                 string filename = dialog.FileName;
-                File.WriteAllText(filename, serializedShapeList);
+                File.WriteAllText(filename, serializedObjectList);
             }
         }
 
@@ -564,7 +612,7 @@ namespace Paint
 
         private void importImageButton_Click(object sender, RoutedEventArgs e)
         {
-            //loadImage();
+            loadImage();
         }
 
         private async void loadImage()
@@ -576,16 +624,11 @@ namespace Paint
             if (result ?? true)
             {
                 string filename = dialog.FileName;
-                //ImageBrush brush = new ImageBrush();
-                //brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Absolute));
-                //canvas.Background = brush;
-
-                //Image img;
-                //img = new Image();
-                //img.Source = new BitmapImage(new Uri(filename, UriKind.Absolute));
-                //Canvas.SetLeft(img, 150);
-                //Canvas.SetTop(img, 130);
-                //canvas.Children.Add(img);
+                var bitmap = new BitmapImage(new Uri(filename, UriKind.Absolute));
+                Image img = new Image();
+                img.Source = bitmap;
+                _canvasObjects.Add(bitmap);
+                canvas.Children.Add(img);
             }
         }
 
@@ -608,13 +651,46 @@ namespace Paint
             if (result ?? true)
             {
                 string json = File.ReadAllText(dialog.FileName);
-                var deserializedShapeList = JsonConvert.DeserializeObject<List<IShape>>(json, settings);
-                if (deserializedShapeList != null)
+                var deserializedObjectList = JsonConvert.DeserializeObject<List<object>>(json, settings);
+                if (deserializedObjectList != null)
                 {
-                    _shapes.AddRange(deserializedShapeList);
-                    redrawCanvas();
+                    for (int i = 0; i < deserializedObjectList.Count; i++)
+                    {
+                        if (deserializedObjectList[i].GetType() == typeof(string))
+                        {
+                            try
+                            {
+                                var uri = new Uri((string)deserializedObjectList[i], UriKind.Absolute);
+                                deserializedObjectList[i] = new BitmapImage(uri);
+                            }
+                            catch (Exception e)
+                            {
+                                deserializedObjectList[i] = null;
+                            }
+                        }
+                        if (deserializedObjectList[i] != null)
+                        {
+                            addObjectToCanvas(deserializedObjectList[i]);
+                        }
+                    }
+                    deserializedObjectList.RemoveAll(item => item == null);
+                    _canvasObjects.AddRange(deserializedObjectList);
+                    undoButton.IsEnabled = true;
                 }
             }
+        }
+
+        private void newButton_Click(object sender, RoutedEventArgs e)
+        {
+            resetCanvas();
+        }
+
+        private void resetCanvas()
+        {
+            _isDrawing = false;
+            _canvasObjects.Clear();
+            _undoStack.Clear();
+            canvas.Children.Clear();
         }
     }
 }

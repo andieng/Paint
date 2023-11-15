@@ -18,8 +18,8 @@
     <None Remove="Resources\flip-vertical.png" />
     <None Remove="Resources\import-image.png" />
     <None Remove="Resources\import-objects.png" />
-    <None Remove="Resources\jpg-file.png" />
     <None Remove="Resources\line.png" />
+    <None Remove="Resources\new-file.png" />
     <None Remove="Resources\no-stroke.png" />
     <None Remove="Resources\paint-32x32.png" />
     <None Remove="Resources\paint-64x64.png" />
@@ -31,11 +31,9 @@
     <None Remove="Resources\rotate-right.png" />
     <None Remove="Resources\rotate.png" />
     <None Remove="Resources\save.png" />
-    <None Remove="Resources\select.png" />
     <None Remove="Resources\selection.png" />
     <None Remove="Resources\square-shapes.png" />
     <None Remove="Resources\square.png" />
-    <None Remove="Resources\stroke-active.png" />
     <None Remove="Resources\stroke-size.png" />
     <None Remove="Resources\stroke-type.png" />
     <None Remove="Resources\stroke.png" />
@@ -70,8 +68,8 @@
     <Resource Include="Resources\circle.png" />
     <Resource Include="Resources\ellipse.png" />
     <Resource Include="Resources\import-objects.png" />
-    <Resource Include="Resources\jpg-file.png" />
     <Resource Include="Resources\line.png" />
+    <Resource Include="Resources\new-file.png" />
     <Resource Include="Resources\no-stroke.png" />
     <Resource Include="Resources\paint-32x32.png" />
     <Resource Include="Resources\paint-64x64.png" />
@@ -82,11 +80,9 @@
     <Resource Include="Resources\rotate-left.png" />
     <Resource Include="Resources\rotate-right.png" />
     <Resource Include="Resources\save.png" />
-    <Resource Include="Resources\select.png" />
     <Resource Include="Resources\selection.png" />
     <Resource Include="Resources\square-shapes.png" />
     <Resource Include="Resources\square.png" />
-    <Resource Include="Resources\stroke-active.png" />
     <Resource Include="Resources\stroke-size.png" />
     <Resource Include="Resources\stroke-type.png" />
     <Resource Include="Resources\stroke.png" />
