@@ -22,6 +22,7 @@ using Microsoft.Win32;
 using Paint.Keys;
 using System.Threading.Tasks;
 using Circle2D;
+using System.Windows.Documents;
 
 namespace Paint
 {
@@ -179,19 +180,35 @@ namespace Paint
             Square = 4,
             Circle = 5
         }
+
         private void CreateSelectionFrame(Point position)
         {
-            if (_selectionFrame != null)
+            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            int index = 0;
+
+            foreach (IShape shape in _shapes)
             {
-                canvas.Children.Remove(_selectionFrame);
-                _selectionFrame = null;
+                UIElement selectedElement = canvas.Children[index];
+                Adorner[] toRemoveArray = adornerLayer.GetAdorners(selectedElement);
+                if (toRemoveArray != null)
+                {
+                    for (int x = 0; x < toRemoveArray.Length; x++)
+                    {
+                        adornerLayer.Remove(toRemoveArray[x]);
+                    }
+                }
+                index++;
             }
+
+            index = 0;
+
+            var adornersOfStackPanel = adornerLayer.GetAdorners(canvas);
 
             foreach (IShape shape in _shapes)
             {
                 if (shape.ContainsPoint(position.X, position.Y))
                 {
-                    _selectionFrame = new Rectangle()
+                    /*_selectionFrame = new Rectangle()
                     {
                         Stroke = Brushes.Black,
                         StrokeDashArray = new DoubleCollection() { 2, 2 },
@@ -202,11 +219,21 @@ namespace Paint
                     };
 
                     Canvas.SetLeft(_selectionFrame, shape.GetLeft());
-                    Canvas.SetTop(_selectionFrame, shape.GetTop());
+                    Canvas.SetTop(_selectionFrame, shape.GetTop());*/
 
-                    canvas.Children.Add(_selectionFrame);
+                    if (index >= 0 && index < canvas.Children.Count)
+                    {
+                        UIElement selectedElement = canvas.Children[index];
+                        if (selectedElement != null)
+                        {
+                            adornerLayer.Add(new ResizingAdorner(selectedElement));
+                        }
+                    }
+
+                    /*canvas.Children.Add(_selectionFrame);*/
                     break;
                 }
+                index++;
             }
         }
 
