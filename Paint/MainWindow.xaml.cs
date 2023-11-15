@@ -235,11 +235,10 @@ namespace Paint
             Point pos = e.GetPosition(canvas);
             _preview.HandleEnd(pos.X, pos.Y);
             _canvasObjects.Add(_preview);
+            addObjectToCanvas(_preview);
 
             // Generate next object
             createPreviewShape();
-
-            redrawCanvas();
         }
 
         private void addObjectToCanvas(object obj)
@@ -273,18 +272,6 @@ namespace Paint
             }
 
             _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize);
-        }
-
-        private void redrawCanvas()
-        {
-            // Remove all objects
-            canvas.Children.Clear();
-
-            // Draw all objects in list
-            foreach (var obj in _canvasObjects)
-            {
-                addObjectToCanvas(obj);
-            }
         }
 
         private bool isBasicShape(IShape s)
