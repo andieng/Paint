@@ -43,7 +43,7 @@ namespace Paint
         private Color _colorFill;
         private bool _isFilled = false;
         private bool _hasStroke = true;
-        private int _strokeSize = 5;
+        private int _strokeSize = 1;
         private Stack<object> _undoStack = new Stack<object>();
         private bool _isSelecting = false;
         private Rectangle _selectionFrame;
@@ -253,6 +253,7 @@ namespace Paint
                 {
                     Point pos = e.GetPosition(canvas);
                     _isDrawing = true;
+                    _preview.StrokeSize = _strokeSize;
                     _preview.HandleStart(pos.X, pos.Y);
 
                 }
@@ -430,7 +431,16 @@ namespace Paint
 
         private void strokeSize_Checked(object sender, RoutedEventArgs e)
         {
-
+            if (sender is RadioButton strokeSizeRadioButton && strokeSizeRadioButton.IsChecked == true)
+            {
+                if (strokeSizeRadioButton.Name == "oneThicknessButton")
+                    _strokeSize = 1; 
+                else if (strokeSizeRadioButton.Name == "threeThicknessButton")
+                    _strokeSize = 3;
+                else if (strokeSizeRadioButton.Name == "fiveThicknessButton")
+                    _strokeSize = 5;
+                else _strokeSize = 8;
+            }
         }
 
         private void ColorPickerStroke_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -672,7 +672,7 @@
                             <UserControl Background="Transparent">
                                 <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
                                     <StackPanel Background="Transparent">
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
+                                        <RadioButton x:Name="oneThicknessButton" Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeSizeGroup" Checked="strokeSize_Checked" IsChecked="True">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="1px" FontSize="14" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF565656"
@@ -680,7 +680,7 @@
                                                   VerticalAlignment="Center" Margin="0,1,0,0"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
+                                        <RadioButton x:Name="threeThicknessButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="3px" FontSize="14" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF565656"
@@ -688,7 +688,7 @@
                                                   VerticalAlignment="Center" Margin="0,3,0,0"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
+                                        <RadioButton x:Name="fiveThicknessButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8,5,8,5">
                                                 <TextBlock DockPanel.Dock="Left" Text="5px" FontSize="14" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF565656"
@@ -696,7 +696,7 @@
                                                   VerticalAlignment="Center" Margin="0,5,0,0"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
+                                        <RadioButton x:Name="eightThicknessButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0,8,0,0" GroupName="strokeSizeGroup" Checked="strokeSize_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="8px" FontSize="14" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF565656"
