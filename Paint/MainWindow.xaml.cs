@@ -23,6 +23,7 @@ using Paint.Keys;
 using System.Threading.Tasks;
 using Circle2D;
 using System.Windows.Documents;
+using System.Windows.Media.Converters;
 
 namespace Paint
 {
@@ -46,6 +47,7 @@ namespace Paint
         private Stack<object> _undoStack = new Stack<object>();
         private bool _isSelecting = false;
         private Rectangle _selectionFrame;
+        private bool isPreviewAdded = false;
 
         public MainWindow()
         {
@@ -66,6 +68,12 @@ namespace Paint
 
             // Redo hotkey
             HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.Y, redo));
+
+            // Import objects hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.O, loadObjects));
+
+            // Import image hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.I, loadImage));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -258,17 +266,15 @@ namespace Paint
                 Point pos = e.GetPosition(canvas);
                 _preview.HandleEnd(pos.X, pos.Y);
 
-                // Remove all objects
-                canvas.Children.Clear();
-
-                // Draw all old objects
-                foreach (var obj in _canvasObjects)
+                if (isPreviewAdded)
                 {
-                    addObjectToCanvas(obj);
+                    // Remove previous preview drawing on canvas
+                    canvas.Children.RemoveAt(canvas.Children.Count - 1);
                 }
 
                 // Add preview object
                 canvas.Children.Add(_preview.Draw());
+                isPreviewAdded = true;
 
                 // Clear undo stack
                 _undoStack.Clear();
@@ -290,10 +296,12 @@ namespace Paint
             Point pos = e.GetPosition(canvas);
             _preview.HandleEnd(pos.X, pos.Y);
             _canvasObjects.Add(_preview);
+            canvas.Children.RemoveAt(canvas.Children.Count - 1);
             addObjectToCanvas(_preview);
 
             // Generate next object
             createPreviewShape();
+            isPreviewAdded = false;
         }
 
         private void addObjectToCanvas(object obj)
