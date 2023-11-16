@@ -44,9 +44,9 @@ namespace Paint
         private bool _isFilled = false;
         private bool _hasStroke = true;
         private int _strokeSize = 1;
+        private double[] _strokeDashArray;
         private Stack<object> _undoStack = new Stack<object>();
         private bool _isSelecting = false;
-        private Rectangle _selectionFrame;
         private bool isPreviewAdded = false;
 
         public MainWindow()
@@ -254,6 +254,8 @@ namespace Paint
                     Point pos = e.GetPosition(canvas);
                     _isDrawing = true;
                     _preview.StrokeSize = _strokeSize;
+                    if(_hasStroke)
+                        _preview.StrokeDashArray = _strokeDashArray;
                     _preview.HandleStart(pos.X, pos.Y);
 
                 }
@@ -414,7 +416,67 @@ namespace Paint
 
         private void strokeType_Checked(object sender, RoutedEventArgs e)
         {
- 
+            if (sender is RadioButton strokeTypeRadioButton && strokeTypeRadioButton.IsChecked == true)
+            {
+                _hasStroke = true;
+
+                if (strokeTypeRadioButton.Name == "solidStrokeButton")
+                    _strokeDashArray = null;
+                else if (strokeTypeRadioButton.Name == "dashedStrokeButton")
+                {
+                    switch (_strokeSize)
+                    {
+                        case 1:
+                            _strokeDashArray = new double[] { 12, 8 };
+                            break;
+                        case 3:
+                            _strokeDashArray = new double[] { 10, 6 };
+                            break;
+                        case 5:
+                            _strokeDashArray = new double[] { 8, 4 };
+                            break;
+                        case 8:
+                            _strokeDashArray = new double[] { 7, 3 };
+                            break;
+                    }
+                }
+                else if (strokeTypeRadioButton.Name == "dottedStrokeButton")
+                {
+                    switch (_strokeSize)
+                    {
+                        case 1:
+                            _strokeDashArray = new double[] { 1, 3 };
+                            break;
+                        case 3:
+                            _strokeDashArray = new double[] { 1, 2 };
+                            break;
+                        case 5:
+                            _strokeDashArray = new double[] { 1, 1.5 };
+                            break;
+                        case 8:
+                            _strokeDashArray = new double[] { 1, 1.25 };
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (_strokeSize)
+                    {
+                        case 1:
+                            _strokeDashArray = new double[] { 9, 6, 1, 6 };
+                            break;
+                        case 3:
+                            _strokeDashArray = new double[] { 8, 4, 1, 4 };
+                            break;
+                        case 5:
+                            _strokeDashArray = new double[] { 7, 3, 1, 3 };
+                            break;
+                        case 8:
+                            _strokeDashArray = new double[] { 6, 2.4, 1, 2.4 };
+                            break;
+                    }
+                }
+            }
         }
 
         private void strokeSizeButton_Click(object sender, RoutedEventArgs e)

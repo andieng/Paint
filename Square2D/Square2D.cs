@@ -39,6 +39,7 @@ namespace Square2D
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
+        public double[] StrokeDashArray { get; set; }
         public string Name => "Square";
 
         public UIElement Draw()
@@ -59,6 +60,7 @@ namespace Square2D
                 StrokeThickness = StrokeSize,
                 Stroke = ColorStroke,
                 Fill = ColorFill,
+                StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
             Canvas.SetLeft(square, left);
             Canvas.SetTop(square, top);

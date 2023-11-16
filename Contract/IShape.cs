@@ -9,6 +9,7 @@ namespace Contract
     {
         string Name { get; }
         int StrokeSize { get; set; }
+        double[] StrokeDashArray { get; set; }
         SolidColorBrush ColorStroke { get; set; }
         SolidColorBrush ColorFill { get; set; }
         void HandleStart(double x, double y);

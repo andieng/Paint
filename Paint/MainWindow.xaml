@@ -619,7 +619,7 @@
                             <UserControl Background="Transparent">
                                 <Border Style="{StaticResource PopUpBorderStyle}" Width="260">
                                     <StackPanel Background="Transparent">
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
+                                        <RadioButton x:Name="solidStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="Solid" FontSize="13" Width="110" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF262626"
@@ -627,7 +627,7 @@
                                                   VerticalAlignment="Center" Margin="0,1,0,0"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
+                                        <RadioButton x:Name="dashedStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="Dashed" FontSize="13" Width="110" />
                                                 <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="4 6.1" Height="1.5"
@@ -635,7 +635,7 @@
                                                        HorizontalAlignment="Right"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
+                                        <RadioButton x:Name="dottedStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="Dotted" FontSize="13" Width="110" />
                                                 <Rectangle Stroke="#FF262626" StrokeThickness="2" StrokeDashArray="1 5" Height="1.5"
@@ -643,7 +643,7 @@
                                                        HorizontalAlignment="Right"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
+                                        <RadioButton x:Name="dashedDottedStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" Margin="0 5 0 0" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="Dashed-dotted" FontSize="13" Width="110" />
                                                 <Rectangle Stroke="#FF262626" StrokeThickness="1.8" StrokeDashArray="4 2 1 2" Height="1.5"

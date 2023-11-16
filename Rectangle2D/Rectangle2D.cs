@@ -39,6 +39,7 @@ namespace Rectangle2D
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
+        public double[] StrokeDashArray { get; set; }
         public string Name => "Rectangle";
 
         public UIElement Draw()
@@ -58,6 +59,7 @@ namespace Rectangle2D
                 StrokeThickness = StrokeSize,
                 Stroke = ColorStroke,
                 Fill = ColorFill,
+                StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect, top);
