@@ -50,6 +50,7 @@ namespace Paint
         private bool isPreviewAdded = false;
         private Rectangle _selectionFrame;
         private IShape _selectedShape;
+        private int _indexOfSelectedShape;
         bool isDragging = false;
         Point offset;
 
@@ -250,6 +251,7 @@ namespace Paint
                 }
                 index++;
             }*/
+            _indexOfSelectedShape = 0;
             foreach (object obj in _canvasObjects)
             {
                 if (obj.GetType() != typeof(BitmapImage))
@@ -276,6 +278,7 @@ namespace Paint
                         break;
                     }
                 }
+                _indexOfSelectedShape++;
             }
         }
 
@@ -283,14 +286,14 @@ namespace Paint
         {
             if (_selectionFrame != null && _selectedShape!= null)
             {
-                _selectionFrame.MouseLeftButtonDown += (sender, e) =>
+                _selectionFrame.MouseDown += (sender, e) =>
                 {
                     isDragging = true;
                     offset = e.GetPosition(_selectionFrame);
                     _selectionFrame.CaptureMouse();
                 };
 
-                _selectionFrame.MouseLeftButtonUp += (sender, e) =>
+                _selectionFrame.MouseUp += (sender, e) =>
                 {
                     isDragging = false;
                     _selectionFrame.ReleaseMouseCapture();
@@ -378,7 +381,6 @@ namespace Paint
                         if (_hasStroke)
                             _preview.StrokeDashArray = _strokeDashArray;
                         _preview.HandleStart(pos.X, pos.Y);
-
                     }
                 }
             }
@@ -386,11 +388,7 @@ namespace Paint
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isSelecting)
-            {
-                
-            }
-            else if (_isDrawing && _preview != null)
+            if (_isDrawing && _preview != null)
             {
                 Point pos = e.GetPosition(canvas);
                 _preview.HandleEnd(pos.X, pos.Y);

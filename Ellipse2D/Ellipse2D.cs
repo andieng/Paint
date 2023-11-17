@@ -129,8 +129,22 @@ namespace Ellipse2D
         }
         public void ChangePosition(double x, double y)
         {
-            Canvas.SetLeft(_ellipse, x + 2.5);
-            Canvas.SetTop(_ellipse, y + 2.5);
+            if (_ellipse != null)
+            {
+                double width = GetWidth();
+                double height = GetHeight();
+
+                double newLeft = x + 2.5;
+                double newTop = y + 2.5;
+
+                Canvas.SetLeft(_ellipse, newLeft);
+                Canvas.SetTop(_ellipse, newTop);
+
+                _leftTop.X = newLeft;
+                _leftTop.Y = newTop;
+                _rightBottom.X = newLeft + width;
+                _rightBottom.Y = newTop + height;
+            }
         }
     }
 }

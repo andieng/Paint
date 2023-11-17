@@ -119,8 +119,22 @@ namespace Rectangle2D
 
         public void ChangePosition(double x, double y)
         {
-            Canvas.SetLeft(_rectangle, x + 2.5);
-            Canvas.SetTop(_rectangle, y + 2.5);
+            if (_rectangle != null)
+            {
+                double width = GetWidth();
+                double height = GetHeight();
+
+                double newLeft = x + 2.5;
+                double newTop = y + 2.5;
+
+                Canvas.SetLeft(_rectangle, newLeft);
+                Canvas.SetTop(_rectangle, newTop);
+
+                _leftTop.X = newLeft;
+                _leftTop.Y = newTop;
+                _rightBottom.X = newLeft + width;
+                _rightBottom.Y = newTop + height;
+            }
         }
     }
 }

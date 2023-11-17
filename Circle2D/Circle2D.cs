@@ -145,8 +145,22 @@ namespace Circle2D
 
         public void ChangePosition(double x, double y)
         {
-            Canvas.SetLeft(_circle, x + 2.5);
-            Canvas.SetTop(_circle, y + 2.5);
+            if (_circle != null)
+            {
+                double width = GetWidth();
+                double height = GetHeight();
+
+                double newLeft = x + 2.5;
+                double newTop = y + 2.5;
+
+                Canvas.SetLeft(_circle, newLeft);
+                Canvas.SetTop(_circle, newTop);
+
+                _leftTop.X = newLeft;
+                _leftTop.Y = newTop;
+                _rightBottom.X = newLeft + width;
+                _rightBottom.Y = newTop + height;
+            }
         }
     }
 }
