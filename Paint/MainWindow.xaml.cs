@@ -746,25 +746,51 @@ namespace Paint
             }
         }
 
+        private void UncheckAllRadioButtons()
+        {
+            if (_hasStroke && oneThicknessButton != null)
+            {
+                oneThicknessButton.IsChecked = false;
+                threeThicknessButton.IsChecked = false;
+                fiveThicknessButton.IsChecked = false;
+                eightThicknessButton.IsChecked = false;
+
+                solidStrokeButton.IsChecked = false;
+                dashedStrokeButton.IsChecked = false;
+                dottedStrokeButton.IsChecked = false;
+                dashedDottedStrokeButton.IsChecked = false;
+            }
+        }
+
         private void strokeToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            // User choose to remove stroke
             var strokeBtn = sender as ToggleButton;
             if (strokeBtn != null)
             {
                 strokeBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
                 strokeBtn.ToolTip = "Remove stroke";
+
+                _strokeDashArray = null;
+                _strokeSize = 1;
+                if (!_hasStroke && oneThicknessButton != null)
+                {
+                    oneThicknessButton.IsChecked = true;
+                    solidStrokeButton.IsChecked = true;
+                }
             }
         }
 
         private void strokeToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            // User choose to add stroke
             var strokeBtn = sender as ToggleButton;
             if (strokeBtn != null)
             {
                 strokeBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
                 strokeBtn.ToolTip = "Add stroke";
+
+                _strokeDashArray = null;
+                _strokeSize = 0;
+                UncheckAllRadioButtons();
             }
         }
 
