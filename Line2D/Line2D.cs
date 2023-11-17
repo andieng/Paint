@@ -149,6 +149,29 @@ namespace Line2D
 
         public void ChangePosition(double x, double y)
         {
+            double width = Math.Abs(_end.X - _start.X);
+            double height = Math.Abs(_end.Y - _start.Y);
+
+            _start.X += x;
+            _start.Y += y;
+            _end.X = _start.X + width;
+            _end.Y = _start.Y + height;
+
+            double newLeft = Math.Min(_start.X, _end.X);
+            double newTop = Math.Min(_start.Y, _end.Y);
+
+            _start.X = newLeft;
+            _start.Y = newTop;
+            _end.X = newLeft - width;
+            _end.Y = newTop + height;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.Y1 = _start.Y;
+                lineElement.X2 = _end.X;
+                lineElement.Y2 = _end.Y;
+            }
         }
     }
 }

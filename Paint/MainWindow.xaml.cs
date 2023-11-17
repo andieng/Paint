@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Circle2D;
 using System.Windows.Documents;
 using System.Windows.Media.Converters;
+using System.Data;
 
 namespace Paint
 {
@@ -32,7 +33,6 @@ namespace Paint
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private bool _isDrawing = false;
         private List<object> _canvasObjects = new List<object>();
         private IShape? _preview;
@@ -50,10 +50,11 @@ namespace Paint
         private bool isPreviewAdded = false;
         private Rectangle _selectionFrame;
         private IShape _selectedShape;
-        private int _indexOfSelectedShape;
-        bool isDragging = false;
-        Point offset;
+        private bool isDragging = false;
+        private Point offset;
         private Point originalPosition;
+        private Point previousPosition;
+        private Point previous1stPosition;
 
         public MainWindow()
         {
@@ -252,7 +253,6 @@ namespace Paint
                 }
                 index++;
             }*/
-            _indexOfSelectedShape = 0;
             foreach (object obj in _canvasObjects)
             {
                 if (obj.GetType() != typeof(BitmapImage))
@@ -272,6 +272,8 @@ namespace Paint
                         };
                         addEventsToSelectionFrame();
 
+                        previousPosition = position;
+
                         Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
                         Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
                         originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
@@ -280,7 +282,6 @@ namespace Paint
                         break;
                     }
                 }
-                _indexOfSelectedShape++;
             }
         }
 
@@ -305,7 +306,12 @@ namespace Paint
                         Canvas.SetLeft(_selectionFrame, originalPosition.X);
                         Canvas.SetTop(_selectionFrame, originalPosition.Y);
 
-                        _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
+                        if (_selectedShape.Name != "Line")
+                            _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
+                        else
+                        {
+                            _selectedShape.ChangePosition(previousPosition.X - previous1stPosition.X, previousPosition.Y - previous1stPosition.Y);
+                        }
                     }
                     else
                     {
@@ -318,7 +324,11 @@ namespace Paint
                         }
                         else
                         {
-                            _selectedShape.ChangePosition(newX, newY);
+                            double horizontalChange = newPosition.X - previousPosition.X;
+                            double verticalChange = newPosition.Y - previousPosition.Y;
+                            previousPosition = newPosition;
+
+                            _selectedShape.ChangePosition(horizontalChange, verticalChange);
                         }
                     }
                     isDragging = false;
@@ -342,10 +352,11 @@ namespace Paint
                         }
                         else
                         {
-                            /*_selectedShape.ChangePosition(newX, newY);*/
-                            _selectedShape.ChangePosition(newX - Canvas.GetLeft(_selectionFrame), newY - Canvas.GetTop(_selectionFrame));
-                            canvas.Children.Clear(); // Xóa các đối tượng trên Canvas
-                            canvas.Children.Add(_selectedShape.Draw());
+                            double horizontalChange = newPosition.X - previousPosition.X;
+                            double verticalChange = newPosition.Y - previousPosition.Y;
+                            previousPosition = newPosition;
+
+                            _selectedShape.ChangePosition(horizontalChange, verticalChange);
                         }
                     }
                 };
@@ -388,6 +399,7 @@ namespace Paint
             bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
             if (isMouseOverSelectionFrame)
             {
+                previousPosition = e.GetPosition(canvas);
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
                 isDragging = true;
                 offset = e.GetPosition(_selectionFrame);
