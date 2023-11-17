@@ -60,7 +60,7 @@ namespace Line2D
                 ColorFill = colorFill;
                 if (_line != null)
                 {
-                    (_line as Line).Fill = colorFill;
+                    (_line as Line).Stroke = colorFill;
                 }
             }
         }
