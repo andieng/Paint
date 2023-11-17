@@ -12,6 +12,8 @@ namespace Contract
         double[] StrokeDashArray { get; set; }
         SolidColorBrush ColorStroke { get; set; }
         SolidColorBrush ColorFill { get; set; }
+        void UpdateColorStroke(SolidColorBrush colorStroke);
+        void UpdateColorFill(SolidColorBrush colorFill);
         void UpdateStrokeDashArray(double[] dashArray);
         void UpdateStrokeSize(int strokeSize);
         void HandleStart(double x, double y);

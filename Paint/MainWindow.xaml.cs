@@ -672,7 +672,14 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorStroke = selectedColor;
-                createPreviewShape();
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateColorStroke(new SolidColorBrush(selectedColor));
+                }
+                else
+                {
+                    createPreviewShape();
+                }
             }
         }
 
@@ -681,7 +688,14 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorFill = selectedColor;
-                createPreviewShape();
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateColorFill(new SolidColorBrush(selectedColor));
+                }
+                else
+                {
+                    createPreviewShape();
+                }
             }
         }
 

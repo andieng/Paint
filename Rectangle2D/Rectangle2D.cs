@@ -39,6 +39,31 @@ namespace Rectangle2D
 
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
+
+        public void UpdateColorStroke(SolidColorBrush colorStroke)
+        {
+            if (colorStroke != null)
+            {
+                ColorStroke = colorStroke;
+                if (_rectangle != null)
+                {
+                    (_rectangle as Rectangle).Stroke = colorStroke;
+                }
+            }
+        }
+
+        public void UpdateColorFill(SolidColorBrush colorFill)
+        {
+            if (colorFill != null)
+            {
+                ColorFill = colorFill;
+                if (_rectangle != null)
+                {
+                    (_rectangle as Rectangle).Fill = colorFill;
+                }
+            }
+        }
+
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
 

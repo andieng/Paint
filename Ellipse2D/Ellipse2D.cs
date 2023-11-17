@@ -39,6 +39,31 @@ namespace Ellipse2D
 
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
+
+        public void UpdateColorStroke(SolidColorBrush colorStroke)
+        {
+            if (colorStroke != null)
+            {
+                ColorStroke = colorStroke;
+                if (_ellipse != null)
+                {
+                    (_ellipse as Ellipse).Stroke = colorStroke;
+                }
+            }
+        }
+
+        public void UpdateColorFill(SolidColorBrush colorFill)
+        {
+            if (colorFill != null)
+            {
+                ColorFill = colorFill;
+                if (_ellipse != null)
+                {
+                    (_ellipse as Ellipse).Fill = colorFill;
+                }
+            }
+        }
+
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
 
