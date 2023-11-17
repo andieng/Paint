@@ -9,6 +9,7 @@ namespace Circle2D
 {
     public class Circle2D : IShape
     {
+        private UIElement _circle;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 
@@ -53,7 +54,7 @@ namespace Circle2D
             var width = right - left;
             var height = bottom - top;
 
-            var circle = new Ellipse()
+            _circle = new Ellipse()
             {
                 Width = width,
                 Height = height,
@@ -62,10 +63,10 @@ namespace Circle2D
                 Fill = ColorFill,
                 StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
-            Canvas.SetLeft(circle, left);
-            Canvas.SetTop(circle, top);
+            Canvas.SetLeft(_circle, left);
+            Canvas.SetTop(_circle, top);
 
-            return circle;
+            return _circle;
         }
 
         public void HandleEnd(double x, double y)
@@ -140,6 +141,12 @@ namespace Circle2D
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
             return  bottom - top;
+        }
+
+        public void ChangePosition(double x, double y)
+        {
+            Canvas.SetLeft(_circle, x + 2.5);
+            Canvas.SetTop(_circle, y + 2.5);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Rectangle2D
 {
     public class Rectangle2D : IShape
     {
+        private UIElement _rectangle;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 
@@ -52,7 +53,7 @@ namespace Rectangle2D
             var width = right - left;
             var height = bottom - top;
 
-            var rect = new Rectangle()
+            _rectangle = new Rectangle()
             {
                 Width = width,
                 Height = height,
@@ -61,9 +62,9 @@ namespace Rectangle2D
                 Fill = ColorFill,
                 StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
-            Canvas.SetLeft(rect, left);
-            Canvas.SetTop(rect, top);
-            return rect;
+            Canvas.SetLeft(_rectangle, left);
+            Canvas.SetTop(_rectangle, top);
+            return _rectangle;
         }
 
         public void HandleEnd(double x, double y)
@@ -114,6 +115,12 @@ namespace Rectangle2D
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
             return bottom - top;
+        }
+
+        public void ChangePosition(double x, double y)
+        {
+            Canvas.SetLeft(_rectangle, x + 2.5);
+            Canvas.SetTop(_rectangle, y + 2.5);
         }
     }
 }

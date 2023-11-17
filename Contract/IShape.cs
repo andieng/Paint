@@ -19,6 +19,7 @@ namespace Contract
         double GetLeft();
         double GetWidth();
         double GetHeight();
+        void ChangePosition(double x, double y);
         UIElement Draw();
         IShape Clone();
     }

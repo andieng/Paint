@@ -619,7 +619,7 @@
                             <UserControl Background="Transparent">
                                 <Border Style="{StaticResource PopUpBorderStyle}" Width="260">
                                     <StackPanel Background="Transparent">
-                                        <RadioButton x:Name="solidStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeTypeGroup" Checked="strokeType_Checked">
+                                        <RadioButton x:Name="solidStrokeButton" Style="{StaticResource PopUpRadioButtonStyle}" GroupName="strokeTypeGroup" Checked="strokeType_Checked" IsChecked="True">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <TextBlock DockPanel.Dock="Left" Text="Solid" FontSize="13" Width="110" />
                                                 <Line DockPanel.Dock="Right" Stroke="#FF262626"

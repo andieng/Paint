@@ -3,11 +3,14 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
 using Contract;
+using System.Windows.Controls;
+using System.Windows.Media.Media3D;
 
 namespace Line2D
 {
     public class Line2D : IShape
     {
+        private UIElement _line;
         private Point2D _start = new Point2D();
         private Point2D _end = new Point2D();
 
@@ -54,7 +57,7 @@ namespace Line2D
         }
         public UIElement Draw()
         {
-            return new Line()
+            _line = new Line()
             {
                 X1 = _start.X,
                 Y1 = _start.Y,
@@ -64,6 +67,7 @@ namespace Line2D
                 Stroke = ColorStroke,
                 StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
+            return _line;
         }
 
         public IShape Clone()
@@ -99,5 +103,8 @@ namespace Line2D
             return Math.Abs(_end.Y - _start.Y) + StrokeSize;
         }
 
+        public void ChangePosition(double x, double y)
+        {
+        }
     }
 }

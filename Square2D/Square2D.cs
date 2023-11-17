@@ -9,6 +9,7 @@ namespace Square2D
 {
     public class Square2D : IShape
     {
+        private UIElement _square;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 
@@ -53,7 +54,7 @@ namespace Square2D
             var width = right - left;
             var height = bottom - top;
 
-            var square = new Rectangle()
+            _square = new Rectangle()
             {
                 Width = width,
                 Height = height,
@@ -62,9 +63,9 @@ namespace Square2D
                 Fill = ColorFill,
                 StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
-            Canvas.SetLeft(square, left);
-            Canvas.SetTop(square, top);
-            return square;
+            Canvas.SetLeft(_square, left);
+            Canvas.SetTop(_square, top);
+            return _square;
         }
 
         public void HandleEnd(double x, double y)
@@ -132,6 +133,12 @@ namespace Square2D
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
             return bottom - top;
+        }
+
+        public void ChangePosition(double x, double y)
+        {
+            Canvas.SetLeft(_square, x + 2.5);
+            Canvas.SetTop(_square, y + 2.5);
         }
     }
 }

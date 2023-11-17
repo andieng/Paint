@@ -9,6 +9,7 @@ namespace Ellipse2D
 {
     public class Ellipse2D : IShape
     {
+        private UIElement _ellipse;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 
@@ -53,7 +54,7 @@ namespace Ellipse2D
             var width = right - left;
             var height = bottom - top;
 
-            var ellipse = new Ellipse()
+            _ellipse = new Ellipse()
             {
                 Width = width,
                 Height = height,
@@ -62,10 +63,10 @@ namespace Ellipse2D
                 Fill = ColorFill,
                 StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
-            Canvas.SetLeft(ellipse, left);
-            Canvas.SetTop(ellipse, top);
+            Canvas.SetLeft(_ellipse, left);
+            Canvas.SetTop(_ellipse, top);
 
-            return ellipse;
+            return _ellipse;
         }
 
         public void HandleEnd(double x, double y)
@@ -125,6 +126,11 @@ namespace Ellipse2D
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
             return bottom - top;
+        }
+        public void ChangePosition(double x, double y)
+        {
+            Canvas.SetLeft(_ellipse, x + 2.5);
+            Canvas.SetTop(_ellipse, y + 2.5);
         }
     }
 }

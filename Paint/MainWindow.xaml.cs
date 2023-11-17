@@ -48,6 +48,10 @@ namespace Paint
         private Stack<object> _undoStack = new Stack<object>();
         private bool _isSelecting = false;
         private bool isPreviewAdded = false;
+        private Rectangle _selectionFrame;
+        private IShape _selectedShape;
+        bool isDragging = false;
+        Point offset;
 
         public MainWindow()
         {
@@ -197,9 +201,14 @@ namespace Paint
             Circle = 5
         }
 
-        private void CreateSelectionFrame(Point position)
+        private void deleteAllSelectionFrame()
         {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            if (_selectionFrame != null)
+            {
+                canvas.Children.Remove(_selectionFrame);
+                _selectionFrame = null;
+            }
+            /*AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
             int index = 0;
 
             foreach (object obj in _canvasObjects)
@@ -214,13 +223,16 @@ namespace Paint
                     }
                 }
                 index++;
-            }
+            }*/
+        }
 
-            index = 0;
-
+        private void CreateSelectionFrame(Point position)
+        {
+            /*AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            int index = 0;
             foreach (object obj in _canvasObjects)
             {
-                if (obj.GetType() != typeof(BitmapImage)) 
+                if (obj.GetType() != typeof(BitmapImage))
                 {
                     IShape shape = (IShape)obj;
                     if (shape.ContainsPoint(position.X, position.Y))
@@ -237,34 +249,148 @@ namespace Paint
                     }
                 }
                 index++;
+            }*/
+            foreach (object obj in _canvasObjects)
+            {
+                if (obj.GetType() != typeof(BitmapImage))
+                {
+                    IShape shape = (IShape)obj;
+                    if (shape.ContainsPoint(position.X, position.Y))
+                    {
+                        _selectedShape= shape;
+                        _selectionFrame = new Rectangle()
+                        {
+                            Stroke = Brushes.Blue,
+                            StrokeDashArray = new DoubleCollection() { 4, 4 },
+                            StrokeThickness = 1,
+                            StrokeDashCap = PenLineCap.Round,
+                            Width = shape.GetWidth() + 5,
+                            Height = shape.GetHeight() + 5,
+                        };
+                        addEventsToSelectionFrame();
+
+                        Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
+                        Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
+
+                        canvas.Children.Add(_selectionFrame);
+                        break;
+                    }
+                }
             }
+        }
+
+        private void addEventsToSelectionFrame()
+        {
+            if (_selectionFrame != null && _selectedShape!= null)
+            {
+                _selectionFrame.MouseLeftButtonDown += (sender, e) =>
+                {
+                    isDragging = true;
+                    offset = e.GetPosition(_selectionFrame);
+                    _selectionFrame.CaptureMouse();
+                };
+
+                _selectionFrame.MouseLeftButtonUp += (sender, e) =>
+                {
+                    isDragging = false;
+                    _selectionFrame.ReleaseMouseCapture();
+                };
+
+                _selectionFrame.MouseMove += (sender, e) =>
+                {
+                    if (isDragging && _selectedShape!= null)
+                    {
+                        Point newPosition = e.GetPosition(canvas);
+                        double newX = newPosition.X - offset.X;
+                        double newY = newPosition.Y - offset.Y;
+
+                        Canvas.SetLeft(_selectionFrame, newX);
+                        Canvas.SetTop(_selectionFrame, newY);
+                        
+                        if (_selectedShape.Name != "Line")
+                        {
+                            _selectedShape.ChangePosition(newX, newY);
+                        }
+                        else
+                        {
+                            _selectedShape.ChangePosition(newX, newY);
+                        }
+                    }
+                };
+            }
+        }
+
+        private bool IsPointInsideSelectionFrame(Point point)
+        {
+            if (_selectionFrame == null) return false;
+            var left = Canvas.GetLeft(_selectionFrame);
+            var top = Canvas.GetTop(_selectionFrame);
+            var right = left + _selectionFrame.Width;
+            var bottom = top + _selectionFrame.Height;
+
+            return point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_isSelecting)
+           /* AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+            Adorner[] adorners = adornerLayer.GetAdorners(canvas);
+
+            if (adorners != null)
             {
-                Point pos = e.GetPosition(canvas);
-                CreateSelectionFrame(pos);
+                foreach (var adorner in adorners)
+                {
+                    if (adorner is ResizingAdorner resizingAdorner)
+                    {
+                        Point mousePosition = e.GetPosition(canvas);
+                        bool isMouseOverAdorner = resizingAdorner.IsPointInsideSelectionFrame(mousePosition);
+                        if (isMouseOverAdorner)
+                        {
+                            MessageBox.Show("inside adorner mouse down 1");
+                            adorner.CaptureMouse();
+                            break;
+                        }
+                    }
+                }
+            }*/
+            bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
+            if (isMouseOverSelectionFrame)
+            {
+                isDragging = true;
+                offset = e.GetPosition(_selectionFrame);
+                _selectionFrame.CaptureMouse();
             }
             else
             {
-                if (_preview != null)
+                deleteAllSelectionFrame();
+                if (_isSelecting)
                 {
                     Point pos = e.GetPosition(canvas);
-                    _isDrawing = true;
-                    _preview.StrokeSize = _strokeSize;
-                    if(_hasStroke)
-                        _preview.StrokeDashArray = _strokeDashArray;
-                    _preview.HandleStart(pos.X, pos.Y);
+                    CreateSelectionFrame(pos);
+                }
+                else
+                {
+                    if (_preview != null)
+                    {
+                        Point pos = e.GetPosition(canvas);
+                        _isDrawing = true;
+                        _preview.StrokeSize = _strokeSize;
+                        if (_hasStroke)
+                            _preview.StrokeDashArray = _strokeDashArray;
+                        _preview.HandleStart(pos.X, pos.Y);
 
+                    }
                 }
             }
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDrawing && _preview != null)
+            if (_isSelecting)
+            {
+                
+            }
+            else if (_isDrawing && _preview != null)
             {
                 Point pos = e.GetPosition(canvas);
                 _preview.HandleEnd(pos.X, pos.Y);
@@ -495,6 +621,7 @@ namespace Paint
         {
             if (sender is RadioButton strokeSizeRadioButton && strokeSizeRadioButton.IsChecked == true)
             {
+                _hasStroke = true;
                 if (strokeSizeRadioButton.Name == "oneThicknessButton")
                     _strokeSize = 1; 
                 else if (strokeSizeRadioButton.Name == "threeThicknessButton")

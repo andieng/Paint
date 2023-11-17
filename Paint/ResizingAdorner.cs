@@ -16,6 +16,8 @@ namespace Paint
         private VisualCollection visualChildren;
         private Thumb topLeft, topRight, bottomLeft, bottomRight, rotateThumb;
         Rectangle Rec;
+        private Point startPoint;
+        private bool isDragging;
 
         public ResizingAdorner(UIElement adornedElement) : base(adornedElement)
         {
@@ -48,6 +50,45 @@ namespace Paint
             bottomLeft.DragCompleted += HandleDragCompleted;
             bottomRight.DragCompleted += HandleDragCompleted;
             rotateThumb.DragCompleted += HandleDragCompleted;
+
+            this.MouseLeftButtonDown += OnMouseDown;
+            this.MouseMove += OnMouseMove;
+            this.MouseLeftButtonUp += OnMouseUp;
+        }
+
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("inside adorner mouse down");
+            startPoint = e.GetPosition(this);
+            isDragging = true;
+            CaptureMouse();
+            e.Handled = true;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point currentPoint = e.GetPosition(this);
+                double offsetX = currentPoint.X - startPoint.X;
+                double offsetY = currentPoint.Y - startPoint.Y;
+
+                // ...
+
+                startPoint = currentPoint;
+
+                e.Handled = true;
+            }
+        }
+
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+                ReleaseMouseCapture();
+                e.Handled = true;
+            }
         }
 
         private void BuildAdornerCorner(ref Thumb cornerThumb, Cursor customizedCursor)
