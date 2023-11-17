@@ -825,7 +825,10 @@ namespace Paint
                 fillBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
                 fillBtn.ToolTip = "Remove fill";
 
-
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateColorFill(new SolidColorBrush(_colorFill));
+                }
             }
         }
 
@@ -837,6 +840,11 @@ namespace Paint
             {
                 fillBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
                 fillBtn.ToolTip = "Fill shape";
+
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateColorFill(new SolidColorBrush(Colors.Transparent));
+                }
             }
         }
         private void fillToggleButton_Click(object sender, RoutedEventArgs e)
