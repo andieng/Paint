@@ -627,6 +627,11 @@ namespace Paint
                             break;
                     }
                 }
+
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateStrokeDashArray(_strokeDashArray);
+                }
             }
         }
 
@@ -654,6 +659,11 @@ namespace Paint
                 else if (strokeSizeRadioButton.Name == "fiveThicknessButton")
                     _strokeSize = 5;
                 else _strokeSize = 8;
+
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateStrokeSize(_strokeSize);
+                }
             }
         }
 

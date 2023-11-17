@@ -41,6 +41,25 @@ namespace Ellipse2D
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_ellipse != null)
+            {
+                (_ellipse as Ellipse).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_ellipse != null)
+            {
+                (_ellipse as Ellipse).StrokeThickness = strokeSize;
+            }
+        }
+
         public string Name => "Ellipse";
 
         public UIElement Draw()

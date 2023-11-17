@@ -41,6 +41,25 @@ namespace Square2D
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_square != null)
+            {
+                (_square as Rectangle).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_square != null)
+            {
+                (_square as Rectangle).StrokeThickness = strokeSize;
+            }
+        }
+
         public string Name => "Square";
 
         public UIElement Draw()

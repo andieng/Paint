@@ -40,7 +40,27 @@ namespace Circle2D
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_circle != null)
+            {
+                (_circle as Ellipse).StrokeThickness = strokeSize;
+            }
+        }
+
         public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_circle != null)
+            {
+                (_circle as Ellipse).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
         public string Name => "Circle";
 
         public UIElement Draw()

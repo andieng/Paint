@@ -42,6 +42,25 @@ namespace Line2D
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_line != null)
+            {
+                (_line as Line).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_line != null)
+            {
+                (_line as Line).StrokeThickness = strokeSize;
+            }
+        }
+
         public string Name => "Line";
 
         public void HandleEnd(double x, double y)

@@ -41,6 +41,25 @@ namespace Rectangle2D
         public SolidColorBrush ColorFill { get; set; }
         public int StrokeSize { get; set; }
         public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_rectangle != null)
+            {
+                (_rectangle as Rectangle).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_rectangle != null)
+            {
+                (_rectangle as Rectangle).StrokeThickness = strokeSize;
+            }
+        }
+
         public string Name => "Rectangle";
 
         public UIElement Draw()
