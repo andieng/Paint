@@ -342,7 +342,10 @@ namespace Paint
                         }
                         else
                         {
-                            _selectedShape.ChangePosition(newX, newY);
+                            /*_selectedShape.ChangePosition(newX, newY);*/
+                            _selectedShape.ChangePosition(newX - Canvas.GetLeft(_selectionFrame), newY - Canvas.GetTop(_selectionFrame));
+                            canvas.Children.Clear(); // Xóa các đối tượng trên Canvas
+                            canvas.Children.Add(_selectedShape.Draw());
                         }
                     }
                 };
