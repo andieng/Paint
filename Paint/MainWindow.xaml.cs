@@ -770,12 +770,20 @@ namespace Paint
                 strokeBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
                 strokeBtn.ToolTip = "Remove stroke";
 
-                _strokeDashArray = null;
-                _strokeSize = 1;
-                if (!_hasStroke && oneThicknessButton != null)
+                if (_isSelecting)
                 {
-                    oneThicknessButton.IsChecked = true;
-                    solidStrokeButton.IsChecked = true;
+                    _selectedShape.UpdateStrokeSize(1);
+                    _selectedShape.UpdateStrokeDashArray(null);
+                }
+                else
+                {
+                    _strokeDashArray = null;
+                    _strokeSize = 1;
+                    if (!_hasStroke && oneThicknessButton != null)
+                    {
+                        oneThicknessButton.IsChecked = true;
+                        solidStrokeButton.IsChecked = true;
+                    }
                 }
             }
         }
@@ -788,9 +796,17 @@ namespace Paint
                 strokeBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
                 strokeBtn.ToolTip = "Add stroke";
 
-                _strokeDashArray = null;
-                _strokeSize = 0;
-                UncheckAllRadioButtons();
+                if (_isSelecting)
+                {
+                    _selectedShape.UpdateStrokeSize(0);
+                    _selectedShape.UpdateStrokeDashArray(null);
+                }
+                else
+                {
+                    _strokeDashArray = null;
+                    _strokeSize = 0;
+                    UncheckAllRadioButtons();
+                }
             }
         }
 
@@ -808,6 +824,8 @@ namespace Paint
             {
                 fillBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
                 fillBtn.ToolTip = "Remove fill";
+
+
             }
         }
 
