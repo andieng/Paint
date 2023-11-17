@@ -53,6 +53,7 @@ namespace Paint
         private int _indexOfSelectedShape;
         bool isDragging = false;
         Point offset;
+        private Point originalPosition;
 
         public MainWindow()
         {
@@ -273,6 +274,7 @@ namespace Paint
 
                         Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
                         Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
+                        originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
 
                         canvas.Children.Add(_selectionFrame);
                         break;
@@ -295,13 +297,37 @@ namespace Paint
 
                 _selectionFrame.MouseUp += (sender, e) =>
                 {
+                    Point newPosition = e.GetPosition(canvas);
+                    double newX = newPosition.X - offset.X;
+                    double newY = newPosition.Y - offset.Y;
+                    if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
+                    {
+                        Canvas.SetLeft(_selectionFrame, originalPosition.X);
+                        Canvas.SetTop(_selectionFrame, originalPosition.Y);
+
+                        _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
+                    }
+                    else
+                    {
+                        Canvas.SetLeft(_selectionFrame, newX);
+                        Canvas.SetTop(_selectionFrame, newY);
+
+                        if (_selectedShape.Name != "Line")
+                        {
+                            _selectedShape.ChangePosition(newX, newY);
+                        }
+                        else
+                        {
+                            _selectedShape.ChangePosition(newX, newY);
+                        }
+                    }
                     isDragging = false;
                     _selectionFrame.ReleaseMouseCapture();
                 };
 
                 _selectionFrame.MouseMove += (sender, e) =>
                 {
-                    if (isDragging && _selectedShape!= null)
+                    if (isDragging && _selectedShape != null)
                     {
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
@@ -309,7 +335,7 @@ namespace Paint
 
                         Canvas.SetLeft(_selectionFrame, newX);
                         Canvas.SetTop(_selectionFrame, newY);
-                        
+
                         if (_selectedShape.Name != "Line")
                         {
                             _selectedShape.ChangePosition(newX, newY);
@@ -359,6 +385,7 @@ namespace Paint
             bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
             if (isMouseOverSelectionFrame)
             {
+                originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
                 isDragging = true;
                 offset = e.GetPosition(_selectionFrame);
                 _selectionFrame.CaptureMouse();
