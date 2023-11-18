@@ -9,6 +9,7 @@ namespace Square2D
 {
     public class Square2D : IShape
     {
+        private UIElement _square;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 
@@ -38,7 +39,52 @@ namespace Square2D
 
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
+
+        public void UpdateColorStroke(SolidColorBrush colorStroke)
+        {
+            if (colorStroke != null)
+            {
+                ColorStroke = colorStroke;
+                if (_square != null)
+                {
+                    (_square as Rectangle).Stroke = colorStroke;
+                }
+            }
+        }
+
+        public void UpdateColorFill(SolidColorBrush colorFill)
+        {
+            if (colorFill != null)
+            {
+                ColorFill = colorFill;
+                if (_square != null)
+                {
+                    (_square as Rectangle).Fill = colorFill;
+                }
+            }
+        }
+
         public int StrokeSize { get; set; }
+        public double[] StrokeDashArray { get; set; }
+
+        public void UpdateStrokeDashArray(double[] dashArray)
+        {
+            StrokeDashArray = dashArray;
+            if (_square != null)
+            {
+                (_square as Rectangle).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
+            }
+        }
+
+        public void UpdateStrokeSize(int strokeSize)
+        {
+            StrokeSize = strokeSize;
+            if (_square != null)
+            {
+                (_square as Rectangle).StrokeThickness = strokeSize;
+            }
+        }
+
         public string Name => "Square";
 
         public UIElement Draw()
@@ -52,17 +98,18 @@ namespace Square2D
             var width = right - left;
             var height = bottom - top;
 
-            var square = new Rectangle()
+            _square = new Rectangle()
             {
                 Width = width,
                 Height = height,
                 StrokeThickness = StrokeSize,
                 Stroke = ColorStroke,
                 Fill = ColorFill,
+                StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
             };
-            Canvas.SetLeft(square, left);
-            Canvas.SetTop(square, top);
-            return square;
+            Canvas.SetLeft(_square, left);
+            Canvas.SetTop(_square, top);
+            return _square;
         }
 
         public void HandleEnd(double x, double y)
@@ -96,6 +143,60 @@ namespace Square2D
         public IShape Clone()
         {
             return new Square2D();
+        }
+
+        public bool ContainsPoint(double x, double y)
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            return x >= left && x <= right && y >= top && y <= bottom;
+        }
+
+        public double GetTop()
+        {
+            return Math.Min(_rightBottom.Y, _leftTop.Y); ;
+        }
+        public double GetLeft()
+        {
+            return Math.Min(_rightBottom.X, _leftTop.X);
+        }
+        public double GetWidth()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+
+            return right - left;
+        }
+        public double GetHeight()
+        {
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            return bottom - top;
+        }
+
+        public void ChangePosition(double x, double y)
+        {
+            if (_square != null)
+            {
+                double width = GetWidth();
+                double height = GetHeight();
+
+                double newLeft = x + 2.5;
+                double newTop = y + 2.5;
+
+                Canvas.SetLeft(_square, newLeft);
+                Canvas.SetTop(_square, newTop);
+
+                _leftTop.X = newLeft;
+                _leftTop.Y = newTop;
+                _rightBottom.X = newLeft + width;
+                _rightBottom.Y = newTop + height;
+            }
         }
     }
 }
