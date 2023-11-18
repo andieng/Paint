@@ -53,8 +53,6 @@ namespace Paint
         private bool isDragging = false;
         private Point offset;
         private Point originalPosition;
-        private Point previousPosition;
-        private Point previous1stPosition;
 
         public MainWindow()
         {
@@ -211,22 +209,6 @@ namespace Paint
                 canvas.Children.Remove(_selectionFrame);
                 _selectionFrame = null;
             }
-            /*AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-            int index = 0;
-
-            foreach (object obj in _canvasObjects)
-            {
-                UIElement selectedElement = canvas.Children[index];
-                Adorner[] toRemoveArray = adornerLayer.GetAdorners(selectedElement);
-                if (toRemoveArray != null)
-                {
-                    for (int x = 0; x < toRemoveArray.Length; x++)
-                    {
-                        adornerLayer.Remove(toRemoveArray[x]);
-                    }
-                }
-                index++;
-            }*/
         }
 
         private void CreateSelectionFrame(Point position)
@@ -272,8 +254,6 @@ namespace Paint
                         };
                         addEventsToSelectionFrame();
 
-                        previousPosition = position;
-
                         Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
                         Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
                         originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
@@ -306,30 +286,15 @@ namespace Paint
                         Canvas.SetLeft(_selectionFrame, originalPosition.X);
                         Canvas.SetTop(_selectionFrame, originalPosition.Y);
 
-                        if (_selectedShape.Name != "Line")
-                            _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
-                        else
-                        {
-                            _selectedShape.ChangePosition(previousPosition.X - previous1stPosition.X, previousPosition.Y - previous1stPosition.Y);
-                        }
+                        _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
                     }
                     else
                     {
                         Canvas.SetLeft(_selectionFrame, newX);
                         Canvas.SetTop(_selectionFrame, newY);
 
-                        if (_selectedShape.Name != "Line")
-                        {
-                            _selectedShape.ChangePosition(newX, newY);
-                        }
-                        else
-                        {
-                            double horizontalChange = newPosition.X - previousPosition.X;
-                            double verticalChange = newPosition.Y - previousPosition.Y;
-                            previousPosition = newPosition;
+                        _selectedShape.ChangePosition(newX, newY);
 
-                            _selectedShape.ChangePosition(horizontalChange, verticalChange);
-                        }
                     }
                     isDragging = false;
                     _selectionFrame.ReleaseMouseCapture();
@@ -346,18 +311,7 @@ namespace Paint
                         Canvas.SetLeft(_selectionFrame, newX);
                         Canvas.SetTop(_selectionFrame, newY);
 
-                        if (_selectedShape.Name != "Line")
-                        {
-                            _selectedShape.ChangePosition(newX, newY);
-                        }
-                        else
-                        {
-                            double horizontalChange = newPosition.X - previousPosition.X;
-                            double verticalChange = newPosition.Y - previousPosition.Y;
-                            previousPosition = newPosition;
-
-                            _selectedShape.ChangePosition(horizontalChange, verticalChange);
-                        }
+                        _selectedShape.ChangePosition(newX, newY);
                     }
                 };
             }
@@ -376,30 +330,9 @@ namespace Paint
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-           /* AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-            Adorner[] adorners = adornerLayer.GetAdorners(canvas);
-
-            if (adorners != null)
-            {
-                foreach (var adorner in adorners)
-                {
-                    if (adorner is ResizingAdorner resizingAdorner)
-                    {
-                        Point mousePosition = e.GetPosition(canvas);
-                        bool isMouseOverAdorner = resizingAdorner.IsPointInsideSelectionFrame(mousePosition);
-                        if (isMouseOverAdorner)
-                        {
-                            MessageBox.Show("inside adorner mouse down 1");
-                            adorner.CaptureMouse();
-                            break;
-                        }
-                    }
-                }
-            }*/
             bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
             if (isMouseOverSelectionFrame)
             {
-                previousPosition = e.GetPosition(canvas);
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
                 isDragging = true;
                 offset = e.GetPosition(_selectionFrame);

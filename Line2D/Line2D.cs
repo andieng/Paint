@@ -147,23 +147,79 @@ namespace Line2D
             return Math.Abs(_end.Y - _start.Y) + StrokeSize;
         }
 
+        public enum LineDirection
+        {
+            None,
+            TopLeftToBottomRight,
+            BottomLeftToTopRight,
+            TopRightToBottomLeft,
+            BottomRightToTopLeft
+        }
+
+        public LineDirection direction()
+        {
+            if (_start.X < _end.X && _start.Y < _end.Y)
+            {
+                return LineDirection.TopLeftToBottomRight;
+            }
+            else if (_start.X < _end.X && _start.Y > _end.Y)
+            {
+                return LineDirection.BottomLeftToTopRight;
+            }
+            else if (_start.X > _end.X && _start.Y < _end.Y)
+            {
+                return LineDirection.TopRightToBottomLeft;
+            }
+            else if (_start.X > _end.X && _start.Y > _end.Y)
+            {
+                return LineDirection.BottomRightToTopLeft;
+            }
+            else
+            {
+                return LineDirection.None;
+            }
+        }
+
         public void ChangePosition(double x, double y)
         {
+            double halfStroke = StrokeSize / 2.0;
+            double newX = x + 2.5 + halfStroke;
+            double newY = y + 2.5 + halfStroke;
+
+            LineDirection lineDir = direction();
+
             double width = Math.Abs(_end.X - _start.X);
             double height = Math.Abs(_end.Y - _start.Y);
 
-            _start.X += x;
-            _start.Y += y;
-            _end.X = _start.X + width;
-            _end.Y = _start.Y + height;
-
-            double newLeft = Math.Min(_start.X, _end.X);
-            double newTop = Math.Min(_start.Y, _end.Y);
-
-            _start.X = newLeft;
-            _start.Y = newTop;
-            _end.X = newLeft - width;
-            _end.Y = newTop + height;
+            switch (lineDir)
+            {
+                case LineDirection.TopLeftToBottomRight:
+                    _start.X = newX;
+                    _start.Y = newY;
+                    _end.X = newX + width;
+                    _end.Y = newY + height;
+                    break;
+                case LineDirection.BottomLeftToTopRight:
+                    _start.X = newX;
+                    _end.X = newX + width;
+                    _end.Y = newY;
+                    _start.Y = newY + height;
+                    break;
+                case LineDirection.TopRightToBottomLeft:
+                    _start.X = newX + width;
+                    _start.Y = newY;
+                    _end.X = newX;
+                    _end.Y = newY + height;
+                    break;
+                case LineDirection.BottomRightToTopLeft:
+                    _end.X = newX;
+                    _end.Y = newY;
+                    _start.X = newX + width;
+                    _start.Y = newY + height;
+                    break;
+                default:
+                    break;
+            }
 
             if (_line != null && _line is Line lineElement)
             {
