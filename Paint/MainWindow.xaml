@@ -467,6 +467,8 @@
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="140" />
                     <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="90" />
+                    <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -759,8 +761,27 @@
                     </Separator>
                 </StackPanel>
 
-                <!--Shapes & Text-->
                 <DockPanel Grid.Column="8">
+                    <!--Text color title-->
+                    <TextBlock Text="Text color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
+                    <syncfusion:ColorPicker DockPanel.Dock="Top" Width="45" Height="34" Margin="0,5,0,0" x:Name="colorPickerText"
+                                                ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1"
+                                                Cursor="Hand" BorderBrush="#FFAEAEAE"/>
+                </DockPanel>
+
+                <!--Separator-->
+                <StackPanel Orientation="Horizontal" Grid.Column="9" HorizontalAlignment="Center">
+                    <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                           Height="86">
+                        <Separator.RenderTransform>
+                            <ScaleTransform ScaleX="0.6" />
+                        </Separator.RenderTransform>
+                    </Separator>
+                </StackPanel>
+
+                <!--Shapes & Text-->
+                <DockPanel Grid.Column="10">
                     <!--Shapes & Text title-->
                     <TextBlock Text="Shapes &amp; Text" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="15,0,15,18" />

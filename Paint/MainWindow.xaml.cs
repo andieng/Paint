@@ -41,6 +41,7 @@ namespace Paint
         private ShapeFactory _shapeFactory = ShapeFactory.Instance;
         private Color _colorStroke;
         private Color _colorFill;
+        private Color _colorText;
         private bool _isFilled = false;
         private bool _hasStroke = true;
         private int _strokeSize = 1;
@@ -647,6 +648,14 @@ namespace Paint
             }
         }
 
+        private void ColorPickerText_ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is Color selectedColor)
+            {
+                _colorText = selectedColor;
+            }
+        }
+
         private void undoButton_Click(object sender, RoutedEventArgs e)
         {
             undo();
@@ -861,7 +870,7 @@ namespace Paint
             await Task.Delay(100);
             var dialog = new SaveFileDialog();
 
-            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp";
+            dialog.Filter = "Image Files |*.jpg;*.jpeg;*.png;*.bmp;";
             bool? result = dialog.ShowDialog();
             if (result ?? true)
             {
@@ -881,6 +890,7 @@ namespace Paint
                         }
                         break;
                     case ".jpeg":
+                    case ".jpg":
                         JpegBitmapEncoder jpegEncoder = new JpegBitmapEncoder();
                         jpegEncoder.Frames.Add(BitmapFrame.Create(bitmapSrc));
 
@@ -936,7 +946,7 @@ namespace Paint
         {
             await Task.Delay(100);
             var dialog = new OpenFileDialog();
-            dialog.Filter = "PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg| BMP (*.bmp)|*.bmp";
+            dialog.Filter = "Image Files |*.jpg;*.jpeg;*.png;*.bmp;";
             bool? result = dialog.ShowDialog();
             if (result ?? true)
             {
