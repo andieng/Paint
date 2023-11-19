@@ -188,5 +188,61 @@ namespace Rectangle2D
         public void FlipVertically()
         {
         }
+
+        public void RotateRight90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            if (_rectangle != null && _rectangle is Rectangle rectangleElement)
+            {
+                rectangleElement.Width = height;
+                rectangleElement.Height = width;
+
+                Canvas.SetLeft(_rectangle, newLeft);
+                Canvas.SetTop(_rectangle, newTop);
+            }
+        }
+
+        public void RotateLeft90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            if (_rectangle != null && _rectangle is Rectangle rectangleElement)
+            {
+                rectangleElement.Width = height;
+                rectangleElement.Height = width;
+
+                Canvas.SetLeft(_rectangle, newLeft);
+                Canvas.SetTop(_rectangle, newTop);
+            }
+        }
     }
 }

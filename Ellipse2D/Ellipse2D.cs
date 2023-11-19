@@ -199,5 +199,65 @@ namespace Ellipse2D
         {
         }
 
+        public void RotateRight90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            // Tính toán tọa độ mới sau khi quay phải 90 độ
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            // Cập nhật lại vị trí và kích thước cho Ellipse
+            if (_ellipse != null && _ellipse is Ellipse ellipseElement)
+            {
+                ellipseElement.Width = height;
+                ellipseElement.Height = width;
+
+                Canvas.SetLeft(_ellipse, newLeft);
+                Canvas.SetTop(_ellipse, newTop);
+            }
+        }
+
+        public void RotateLeft90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            // Tính toán tọa độ mới sau khi quay trái 90 độ
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            // Cập nhật lại vị trí và kích thước cho Ellipse
+            if (_ellipse != null && _ellipse is Ellipse ellipseElement)
+            {
+                ellipseElement.Width = height;
+                ellipseElement.Height = width;
+
+                Canvas.SetLeft(_ellipse, newLeft);
+                Canvas.SetTop(_ellipse, newTop);
+            }
+        }
+
     }
 }

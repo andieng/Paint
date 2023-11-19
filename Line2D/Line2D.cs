@@ -259,5 +259,69 @@ namespace Line2D
                 lineElement.Y2 = _end.Y;
             }
         }
+
+        public void RotateRight90Degrees()
+        {
+            int angleDegrees = 90;
+            double midX = (_start.X + _end.X) / 2;
+            double midY = (_start.Y + _end.Y) / 2;
+
+            double startXTranslated = _start.X - midX;
+            double startYTranslated = _start.Y - midY;
+            double endXTranslated = _end.X - midX;
+            double endYTranslated = _end.Y - midY;
+
+            double angleRadians = angleDegrees * (Math.PI / 180.0);
+
+            double startXNew = startXTranslated * Math.Cos(angleRadians) - startYTranslated * Math.Sin(angleRadians);
+            double startYNew = startXTranslated * Math.Sin(angleRadians) + startYTranslated * Math.Cos(angleRadians);
+            double endXNew = endXTranslated * Math.Cos(angleRadians) - endYTranslated * Math.Sin(angleRadians);
+            double endYNew = endXTranslated * Math.Sin(angleRadians) + endYTranslated * Math.Cos(angleRadians);
+
+            _start.X = startXNew + midX;
+            _start.Y = startYNew + midY;
+            _end.X = endXNew + midX;
+            _end.Y = endYNew + midY;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.Y1 = _start.Y;
+                lineElement.X2 = _end.X;
+                lineElement.Y2 = _end.Y;
+            }
+        }
+
+        public void RotateLeft90Degrees()
+        {
+            int angleDegrees = -90;
+            double midX = (_start.X + _end.X) / 2;
+            double midY = (_start.Y + _end.Y) / 2;
+
+            double startXTranslated = _start.X - midX;
+            double startYTranslated = _start.Y - midY;
+            double endXTranslated = _end.X - midX;
+            double endYTranslated = _end.Y - midY;
+
+            double angleRadians = angleDegrees * (Math.PI / 180.0);
+
+            double startXNew = startXTranslated * Math.Cos(angleRadians) - startYTranslated * Math.Sin(angleRadians);
+            double startYNew = startXTranslated * Math.Sin(angleRadians) + startYTranslated * Math.Cos(angleRadians);
+            double endXNew = endXTranslated * Math.Cos(angleRadians) - endYTranslated * Math.Sin(angleRadians);
+            double endYNew = endXTranslated * Math.Sin(angleRadians) + endYTranslated * Math.Cos(angleRadians);
+
+            _start.X = startXNew + midX;
+            _start.Y = startYNew + midY;
+            _end.X = endXNew + midX;
+            _end.Y = endYNew + midY;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.Y1 = _start.Y;
+                lineElement.X2 = _end.X;
+                lineElement.Y2 = _end.Y;
+            }
+        }
     }
 }

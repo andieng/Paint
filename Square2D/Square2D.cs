@@ -206,5 +206,13 @@ namespace Square2D
         public void FlipVertically()
         {
         }
+
+        public void RotateRight90Degrees()
+        {
+        }
+
+        public void RotateLeft90Degrees()
+        {
+        }
     }
 }

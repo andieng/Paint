@@ -1114,6 +1114,7 @@ namespace Paint
             if (_isSelecting && _selectedShape != null)
             {
                 _selectedShape.FlipHorizontally();
+                updateSelectionFrame();
             }
         }
 
@@ -1122,6 +1123,49 @@ namespace Paint
             if (_isSelecting && _selectedShape != null)
             {
                 _selectedShape.FlipHorizontally();
+                updateSelectionFrame();
+            }
+        }
+
+        private void RotateRight90Degrees_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isSelecting && _selectedShape != null)
+            {
+                _selectedShape.RotateRight90Degrees();
+                updateSelectionFrame();
+            }
+        }
+
+        private void RotateLeft90Degrees_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isSelecting && _selectedShape != null)
+            {
+                _selectedShape.RotateLeft90Degrees();
+                updateSelectionFrame();
+            }
+        }
+
+        private void updateSelectionFrame()
+        {
+            if (_selectedShape != null)
+            {
+                canvas.Children.Remove(_selectionFrame);
+                _selectionFrame = null;
+                _selectionFrame = new Rectangle()
+                {
+                    Stroke = Brushes.Blue,
+                    StrokeDashArray = new DoubleCollection() { 4, 4 },
+                    StrokeThickness = 1,
+                    StrokeDashCap = PenLineCap.Round,
+                    Width = _selectedShape.GetWidth() + 5,
+                    Height = _selectedShape.GetHeight() + 5,
+                };
+                addEventsToSelectionFrame();
+                Canvas.SetLeft(_selectionFrame, _selectedShape.GetLeft() - 2.5);
+                Canvas.SetTop(_selectionFrame, _selectedShape.GetTop() - 2.5);
+                originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
+
+                canvas.Children.Add(_selectionFrame);
             }
         }
     }

@@ -26,6 +26,8 @@ namespace Contract
         void ChangePosition(double x, double y);
         void FlipHorizontally();
         void FlipVertically();
+        void RotateRight90Degrees();
+        void RotateLeft90Degrees();
         UIElement Draw();
         IShape Clone();
     }
