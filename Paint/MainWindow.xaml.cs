@@ -48,7 +48,7 @@ namespace Paint
         private double[] _strokeDashArray;
         private Stack<object> _undoStack = new Stack<object>();
         private bool _isSelecting = false;
-        private bool isPreviewAdded = false;
+        private bool _isPreviewAdded = false;
         private Rectangle _selectionFrame;
         private IShape _selectedShape;
         private bool isDragging = false;
@@ -369,7 +369,7 @@ namespace Paint
                 Point pos = e.GetPosition(canvas);
                 _preview.HandleEnd(pos.X, pos.Y);
 
-                if (isPreviewAdded)
+                if (_isPreviewAdded)
                 {
                     // Remove previous preview drawing on canvas
                     canvas.Children.RemoveAt(canvas.Children.Count - 1);
@@ -377,7 +377,7 @@ namespace Paint
 
                 // Add preview object
                 canvas.Children.Add(_preview.Draw());
-                isPreviewAdded = true;
+                _isPreviewAdded = true;
 
                 // Clear undo stack
                 _undoStack.Clear();
@@ -388,12 +388,11 @@ namespace Paint
 
         private void canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (_preview == null)
+            _isDrawing = false;
+            if (_preview == null || !_isPreviewAdded)
             {
                 return;
             }
-
-            _isDrawing = false;
 
             // Add last object to list
             Point pos = e.GetPosition(canvas);
@@ -404,7 +403,7 @@ namespace Paint
 
             // Generate next object
             createPreviewShape();
-            isPreviewAdded = false;
+            _isPreviewAdded = false;
         }
 
         private void addObjectToCanvas(object obj)
@@ -442,28 +441,17 @@ namespace Paint
 
         private bool isBasicShape(IShape s)
         {
-            if (s.Name == (nameof(Shapes.Line)))
+            switch(s.Name)
             {
-                return true;
+                case nameof(Shapes.Line):
+                case nameof(Shapes.Rectangle):
+                case nameof(Shapes.Ellipse):
+                case nameof(Shapes.Square):
+                case nameof(Shapes.Circle):
+                    return true;
+                default:
+                    return false;
             }
-            if (s.Name == (nameof(Shapes.Rectangle)))
-            {
-                return true;
-            }
-            if (s.Name == (nameof(Shapes.Ellipse)))
-            {
-                return true;
-            }
-            if (s.Name == (nameof(Shapes.Square)))
-            {
-                return true;
-            }
-            if (s.Name == (nameof(Shapes.Circle)))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private void popup_Click(object sender, RoutedEventArgs e) 
