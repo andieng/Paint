@@ -25,6 +25,7 @@ using Circle2D;
 using System.Windows.Documents;
 using System.Windows.Media.Converters;
 using System.Data;
+using System.Xml.Linq;
 
 namespace Paint
 {
@@ -50,6 +51,7 @@ namespace Paint
         private bool isPreviewAdded = false;
         private Rectangle _selectionFrame;
         private IShape _selectedShape;
+        private Image _selectedImg;
         private bool isDragging = false;
         private Point offset;
         private Point originalPosition;
@@ -213,28 +215,6 @@ namespace Paint
 
         private void CreateSelectionFrame(Point position)
         {
-            /*AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-            int index = 0;
-            foreach (object obj in _canvasObjects)
-            {
-                if (obj.GetType() != typeof(BitmapImage))
-                {
-                    IShape shape = (IShape)obj;
-                    if (shape.ContainsPoint(position.X, position.Y))
-                    {
-                        if (index >= 0 && index < canvas.Children.Count)
-                        {
-                            UIElement selectedElement = canvas.Children[index];
-                            if (selectedElement != null)
-                            {
-                                adornerLayer.Add(new ResizingAdorner(selectedElement));
-                            }
-                        }
-                        break;
-                    }
-                }
-                index++;
-            }*/
             foreach (object obj in _canvasObjects)
             {
                 if (obj.GetType() != typeof(BitmapImage))
@@ -257,6 +237,32 @@ namespace Paint
                         Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
                         Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
                         originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
+
+                        canvas.Children.Add(_selectionFrame);
+                        break;
+                    }
+                }
+                else
+                {
+                    if (IsPointInsideObject(position, obj))
+                    {
+                        Image img = findImageFromObject(obj);
+                        double imageWidth = img.Width;
+                        double imageHeight = img.Height;
+                        _selectedImg = img;
+
+                        _selectionFrame = new Rectangle()
+                        {
+                            Stroke = Brushes.Blue,
+                            StrokeDashArray = new DoubleCollection() { 4, 4 },
+                            StrokeThickness = 1,
+                            StrokeDashCap = PenLineCap.Round,
+                            Width = imageWidth + 10,
+                            Height = imageHeight + 10,
+                        };
+
+                        Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(img) - 5);
+                        Canvas.SetTop(_selectionFrame, Canvas.GetTop(img) - 5);
 
                         canvas.Children.Add(_selectionFrame);
                         break;
@@ -317,20 +323,52 @@ namespace Paint
             }
         }
 
-        private bool IsPointInsideSelectionFrame(Point point)
+        private Image findImageFromObject(object obj)
         {
-            if (_selectionFrame == null) return false;
-            var left = Canvas.GetLeft(_selectionFrame);
-            var top = Canvas.GetTop(_selectionFrame);
-            var right = left + _selectionFrame.Width;
-            var bottom = top + _selectionFrame.Height;
+            BitmapImage bitmapToFind = obj as BitmapImage;
+            if (bitmapToFind != null)
+            {
+                foreach (var child in canvas.Children)
+                {
+                    if (child is Image image && image.Source == bitmapToFind)
+                    {
+                        return image;
+                    }
+                }
+            }
+            return null;
+        }
 
-            return point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
+        private bool IsPointInsideObject(Point point, object targetObj)
+        {
+            if (targetObj == null) return false;
+            bool isInside = false;
+
+            if (targetObj.GetType() != typeof(BitmapImage))
+            {
+                /*if (_selectionFrame == null) return false;*/
+                var left = Canvas.GetLeft(_selectionFrame);
+                var top = Canvas.GetTop(_selectionFrame);
+                var right = left + _selectionFrame.Width;
+                var bottom = top + _selectionFrame.Height;
+                isInside = point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
+            }
+            else
+            {
+                Image img = findImageFromObject(targetObj);
+                var left = Canvas.GetLeft(img);
+                var top = Canvas.GetTop(img);
+                var right = left + img.Width;
+                var bottom = top + img.Height;
+                isInside = point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
+            }
+
+            return isInside;
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
+            bool isMouseOverSelectionFrame = IsPointInsideObject(e.GetPosition(canvas) , _selectionFrame);
             if (isMouseOverSelectionFrame)
             {
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
@@ -946,6 +984,12 @@ namespace Paint
                 img.Source = bitmap;
                 _canvasObjects.Add(bitmap);
                 canvas.Children.Add(img);
+
+                img.Width = bitmap.PixelWidth;
+                img.Height = bitmap.PixelHeight;
+
+                Canvas.SetLeft(img, 0);
+                Canvas.SetTop(img, 0);
             }
         }
 
