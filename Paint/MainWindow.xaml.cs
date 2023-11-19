@@ -1232,7 +1232,24 @@ namespace Paint
         {
             if (_isSelecting && _selectedShape != null)
             {
-                _selectedShape.RotateLeft90Degrees();
+                _selectedShape.RotateRight90Degrees();
+                updateSelectionFrame();
+            }
+            else if (_isSelecting && _selectedImg != null)
+            {
+                RotateTransform rotateTransform = _selectedImg.RenderTransform as RotateTransform;
+
+                if (rotateTransform != null)
+                {
+                    rotateTransform.Angle -= 90;
+                }
+                else
+                {
+                    rotateTransform = new RotateTransform(90);
+                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
+                    _selectedImg.RenderTransform = rotateTransform;
+                }
+                UpdateImagePositionAfterRotation(_selectedImg, rotateTransform.Angle);
                 updateSelectionFrame();
             }
         }
