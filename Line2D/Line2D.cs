@@ -229,5 +229,35 @@ namespace Line2D
                 lineElement.Y2 = _end.Y;
             }
         }
+
+        public void FlipHorizontally()
+        {
+            double newStartX = _end.X;
+            double newEndX = _start.X;
+
+            _start.X = newStartX;
+            _end.X = newEndX;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.X2 = _end.X;
+            }
+        }
+
+        public void FlipVertically()
+        {
+            double newStartY = _end.Y;
+            double newEndY = _start.Y;
+
+            _start.Y = newStartY;
+            _end.Y = newEndY;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.Y1 = _start.Y;
+                lineElement.Y2 = _end.Y;
+            }
+        }
     }
 }

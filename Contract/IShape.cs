@@ -24,6 +24,8 @@ namespace Contract
         double GetWidth();
         double GetHeight();
         void ChangePosition(double x, double y);
+        void FlipHorizontally();
+        void FlipVertically();
         UIElement Draw();
         IShape Clone();
     }

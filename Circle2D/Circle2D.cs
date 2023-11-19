@@ -185,7 +185,7 @@ namespace Circle2D
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
-            return  bottom - top;
+            return bottom - top;
         }
 
         public void ChangePosition(double x, double y)
@@ -206,6 +206,14 @@ namespace Circle2D
                 _rightBottom.X = newLeft + width;
                 _rightBottom.Y = newTop + height;
             }
+        }
+
+        public void FlipHorizontally()
+        {
+        }
+
+        public void FlipVertically()
+        {
         }
     }
 }

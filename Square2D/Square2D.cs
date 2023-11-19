@@ -198,5 +198,13 @@ namespace Square2D
                 _rightBottom.Y = newTop + height;
             }
         }
+
+        public void FlipHorizontally()
+        {
+        }
+
+        public void FlipVertically()
+        {
+        }
     }
 }

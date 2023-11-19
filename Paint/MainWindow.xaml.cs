@@ -210,6 +210,8 @@ namespace Paint
             {
                 canvas.Children.Remove(_selectionFrame);
                 _selectionFrame = null;
+                _selectedImg = null;
+                _selectedShape = null;
             }
         }
 
@@ -606,7 +608,7 @@ namespace Paint
 
         private void strokeType_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is RadioButton strokeTypeRadioButton && strokeTypeRadioButton.IsChecked == true)
+            if (sender is RadioButton strokeTypeRadioButton && strokeTypeRadioButton.IsChecked == true && _selectedShape != null)
             {
                 _hasStroke = true;
 
@@ -688,7 +690,7 @@ namespace Paint
 
         private void strokeSize_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is RadioButton strokeSizeRadioButton && strokeSizeRadioButton.IsChecked == true)
+            if (sender is RadioButton strokeSizeRadioButton && strokeSizeRadioButton.IsChecked == true && _selectedShape != null)
             {
                 _hasStroke = true;
                 if (strokeSizeRadioButton.Name == "oneThicknessButton")
@@ -711,7 +713,7 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorStroke = selectedColor;
-                if (_isSelecting)
+                if (_isSelecting && _selectedShape != null)
                 {
                     _selectedShape.UpdateColorStroke(new SolidColorBrush(selectedColor));
                 }
@@ -727,7 +729,7 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorFill = selectedColor;
-                if (_isSelecting)
+                if (_isSelecting && _selectedShape != null)
                 {
                     _selectedShape.UpdateColorFill(new SolidColorBrush(selectedColor));
                 }
@@ -864,7 +866,7 @@ namespace Paint
                 fillBtn.Style = Resources["ToggleButtonActiveStyle"] as Style;
                 fillBtn.ToolTip = "Remove fill";
 
-                if (_isSelecting)
+                if (_isSelecting && _selectedShape != null)
                 {
                     _selectedShape.UpdateColorFill(new SolidColorBrush(_colorFill));
                 }
@@ -1105,6 +1107,22 @@ namespace Paint
             _canvasObjects.Clear();
             _undoStack.Clear();
             canvas.Children.Clear();
+        }
+
+        private void FlipHorizontally_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isSelecting && _selectedShape != null)
+            {
+                _selectedShape.FlipHorizontally();
+            }
+        }
+
+        private void FlipVertically_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isSelecting && _selectedShape != null)
+            {
+                _selectedShape.FlipHorizontally();
+            }
         }
     }
 }
