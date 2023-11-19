@@ -260,6 +260,7 @@ namespace Paint
                             Width = imageWidth + 10,
                             Height = imageHeight + 10,
                         };
+                        addEventsToSelectionFrame();
 
                         Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(img) - 5);
                         Canvas.SetTop(_selectionFrame, Canvas.GetTop(img) - 5);
@@ -273,7 +274,7 @@ namespace Paint
 
         private void addEventsToSelectionFrame()
         {
-            if (_selectionFrame != null && _selectedShape!= null)
+            if ((_selectionFrame != null && _selectedShape != null) || (_selectionFrame != null && _selectedImg != null))
             {
                 _selectionFrame.MouseDown += (sender, e) =>
                 {
@@ -284,26 +285,52 @@ namespace Paint
 
                 _selectionFrame.MouseUp += (sender, e) =>
                 {
-                    Point newPosition = e.GetPosition(canvas);
-                    double newX = newPosition.X - offset.X;
-                    double newY = newPosition.Y - offset.Y;
-                    if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
+                    if (isDragging && _selectedShape != null)
                     {
-                        Canvas.SetLeft(_selectionFrame, originalPosition.X);
-                        Canvas.SetTop(_selectionFrame, originalPosition.Y);
+                        Point newPosition = e.GetPosition(canvas);
+                        double newX = newPosition.X - offset.X;
+                        double newY = newPosition.Y - offset.Y;
+                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
+                        {
+                            Canvas.SetLeft(_selectionFrame, originalPosition.X);
+                            Canvas.SetTop(_selectionFrame, originalPosition.Y);
 
-                        _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
+                            _selectedShape.ChangePosition(originalPosition.X, originalPosition.Y);
+                        }
+                        else
+                        {
+                            Canvas.SetLeft(_selectionFrame, newX);
+                            Canvas.SetTop(_selectionFrame, newY);
+
+                            _selectedShape.ChangePosition(newX, newY);
+
+                        }
+                        isDragging = false;
+                        _selectionFrame.ReleaseMouseCapture();
                     }
-                    else
+                    else if (isDragging && _selectedImg != null)
                     {
-                        Canvas.SetLeft(_selectionFrame, newX);
-                        Canvas.SetTop(_selectionFrame, newY);
+                        Point newPosition = e.GetPosition(canvas);
+                        double newX = newPosition.X - offset.X;
+                        double newY = newPosition.Y - offset.Y;
+/*                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
+                        {
+                            Canvas.SetLeft(_selectionFrame, originalPosition.X);
+                            Canvas.SetTop(_selectionFrame, originalPosition.Y);
 
-                        _selectedShape.ChangePosition(newX, newY);
+                            ChangeImagePosition(originalPosition.X, originalPosition.Y);
+                        }
+                        else
+                        {*/
+                            Canvas.SetLeft(_selectionFrame, newX);
+                            Canvas.SetTop(_selectionFrame, newY);
 
+                            ChangeImagePosition(newX, newY);
+
+                        /*}*/
+                        isDragging = false;
+                        _selectionFrame.ReleaseMouseCapture();
                     }
-                    isDragging = false;
-                    _selectionFrame.ReleaseMouseCapture();
                 };
 
                 _selectionFrame.MouseMove += (sender, e) =>
@@ -319,7 +346,33 @@ namespace Paint
 
                         _selectedShape.ChangePosition(newX, newY);
                     }
+                    else if (isDragging && _selectedImg != null)
+                    {
+                        Point newPosition = e.GetPosition(canvas);
+                        double newX = newPosition.X - offset.X;
+                        double newY = newPosition.Y - offset.Y;
+
+                        Canvas.SetLeft(_selectionFrame, newX);
+                        Canvas.SetTop(_selectionFrame, newY);
+
+                        ChangeImagePosition(newX, newY);
+                    }
                 };
+            }
+        }
+
+        private void ChangeImagePosition(double x, double y)
+        {
+            if (_selectedImg != null)
+            {
+                double width = _selectedImg.Width;
+                double height = _selectedImg.Height;
+
+                double newLeft = x + 5;
+                double newTop = y + 5;
+
+                Canvas.SetLeft(_selectedImg, newLeft);
+                Canvas.SetTop(_selectedImg, newTop);
             }
         }
 
