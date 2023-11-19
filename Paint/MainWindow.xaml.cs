@@ -26,6 +26,7 @@ using System.Windows.Documents;
 using System.Windows.Media.Converters;
 using System.Data;
 using System.Xml.Linq;
+using System.Windows.Media.Media3D;
 
 namespace Paint
 {
@@ -238,6 +239,7 @@ namespace Paint
 
                         Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
                         Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
+
                         originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
 
                         canvas.Children.Add(_selectionFrame);
@@ -315,19 +317,33 @@ namespace Paint
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
-/*                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
-                        {
-                            Canvas.SetLeft(_selectionFrame, originalPosition.X);
-                            Canvas.SetTop(_selectionFrame, originalPosition.Y);
+                        /*                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
+                                                {
+                                                    Canvas.SetLeft(_selectionFrame, originalPosition.X);
+                                                    Canvas.SetTop(_selectionFrame, originalPosition.Y);
 
-                            ChangeImagePosition(originalPosition.X, originalPosition.Y);
-                        }
-                        else
-                        {*/
+                                                    ChangeImagePosition(originalPosition.X, originalPosition.Y);
+                                                }
+                                                else
+                                                {*/
+                        double oldWidth = _selectedImg.Width + 10;
+                        ChangeImagePosition(newX, newY);
+
+                        if (_selectionFrame.Width == oldWidth)
+                        {
                             Canvas.SetLeft(_selectionFrame, newX);
                             Canvas.SetTop(_selectionFrame, newY);
-
-                            ChangeImagePosition(newX, newY);
+                        }
+                        else
+                        {
+                            double width = _selectedImg.RenderSize.Width;
+                            double height = _selectedImg.RenderSize.Height;
+                            double newLeft, newTop;
+                            newLeft = Canvas.GetLeft(_selectedImg) - (height - width) / 2;
+                            newTop = Canvas.GetTop(_selectedImg) + (height - width) / 2;
+                            Canvas.SetLeft(_selectionFrame, newLeft - 5);
+                            Canvas.SetTop(_selectionFrame, newTop - 5);
+                        }
 
                         /*}*/
                         isDragging = false;
@@ -354,10 +370,24 @@ namespace Paint
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
 
-                        Canvas.SetLeft(_selectionFrame, newX);
-                        Canvas.SetTop(_selectionFrame, newY);
-
+                        double oldWidth = _selectedImg.Width + 10;
                         ChangeImagePosition(newX, newY);
+
+                        if (_selectionFrame.Width == oldWidth)
+                        {
+                            Canvas.SetLeft(_selectionFrame, newX);
+                            Canvas.SetTop(_selectionFrame, newY);
+                        }
+                        else
+                        {
+                            double width = _selectedImg.RenderSize.Width;
+                            double height = _selectedImg.RenderSize.Height;
+                            double newLeft, newTop;
+                            newLeft = Canvas.GetLeft(_selectedImg) - (height - width) / 2;
+                            newTop = Canvas.GetTop(_selectedImg) + (height - width) / 2;
+                            Canvas.SetLeft(_selectionFrame, newLeft - 5);
+                            Canvas.SetTop(_selectionFrame, newTop - 5);
+                        }
                     }
                 };
             }
@@ -367,9 +397,6 @@ namespace Paint
         {
             if (_selectedImg != null)
             {
-                double width = _selectedImg.Width;
-                double height = _selectedImg.Height;
-
                 double newLeft = x + 5;
                 double newTop = y + 5;
 
@@ -1116,6 +1143,20 @@ namespace Paint
                 _selectedShape.FlipHorizontally();
                 updateSelectionFrame();
             }
+            else if (_isSelecting && _selectedImg != null)
+            {
+                if (_selectedImg.RenderTransform is ScaleTransform flipTransform)
+                {
+                    flipTransform.ScaleX = -flipTransform.ScaleX;
+                }
+                else
+                {
+                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
+                    ScaleTransform newFlipTransform = new ScaleTransform(-1, 1);
+                    _selectedImg.RenderTransform = newFlipTransform;
+                }
+
+            }
         }
 
         private void FlipVertically_Click(object sender, RoutedEventArgs e)
@@ -1124,6 +1165,19 @@ namespace Paint
             {
                 _selectedShape.FlipHorizontally();
                 updateSelectionFrame();
+            }
+            else if (_isSelecting && _selectedImg != null)
+            {
+                if (_selectedImg.RenderTransform is ScaleTransform flipTransform)
+                {
+                    flipTransform.ScaleY = -flipTransform.ScaleY;
+                }
+                else
+                {
+                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
+                    ScaleTransform newFlipTransform = new ScaleTransform(1, -1);
+                    _selectedImg.RenderTransform = newFlipTransform;
+                }
             }
         }
 
@@ -1134,6 +1188,44 @@ namespace Paint
                 _selectedShape.RotateRight90Degrees();
                 updateSelectionFrame();
             }
+            else if (_isSelecting && _selectedImg != null)
+            {
+                RotateTransform rotateTransform = _selectedImg.RenderTransform as RotateTransform;
+
+                if (rotateTransform != null)
+                {
+                    rotateTransform.Angle += 90;
+                }
+                else
+                {
+                    rotateTransform = new RotateTransform(90);
+                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
+                    _selectedImg.RenderTransform = rotateTransform;
+                }
+                UpdateImagePositionAfterRotation(_selectedImg, rotateTransform.Angle);
+                updateSelectionFrame();
+            }
+        }
+
+        private void UpdateImagePositionAfterRotation(UIElement element, double angle)
+        {
+            double width = element.RenderSize.Width;
+            double height = element.RenderSize.Height;
+            double newLeft, newTop;
+
+            if (angle % 360 == 90 || angle % 360 == 270)
+            {
+                newLeft = Canvas.GetLeft(element) - (height - width) / 2;
+                newTop = Canvas.GetTop(element) + (height - width) / 2;
+            }
+            else
+            {
+                newLeft = Canvas.GetLeft(element) - (height - width) / 2;
+                newTop = Canvas.GetTop(element) + (height - width) / 2;
+            }
+
+            Canvas.SetLeft(_selectionFrame, newLeft - 5);
+            Canvas.SetTop(_selectionFrame, newTop - 5);
         }
 
         private void RotateLeft90Degrees_Click(object sender, RoutedEventArgs e)
@@ -1166,6 +1258,19 @@ namespace Paint
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
 
                 canvas.Children.Add(_selectionFrame);
+            }
+            if (_selectedImg != null)
+            {
+                double oldWidth = _selectedImg.Width + 10;
+                double oldHeight = _selectedImg.Height + 10;
+                _selectionFrame.Width = _selectionFrame.Width == oldWidth ? oldHeight : oldWidth;
+                _selectionFrame.Height = _selectionFrame.Height == oldHeight ? oldWidth : oldHeight;
+
+                if(_selectionFrame.Width == oldWidth)
+                {
+                    Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(_selectedImg) - 5);
+                    Canvas.SetTop(_selectionFrame, Canvas.GetTop(_selectedImg) - 5);
+                }
             }
         }
     }
