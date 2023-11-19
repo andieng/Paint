@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Square2D", "Square2D\Square
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circle2D", "Circle2D\Circle2D.csproj", "{56FEA0A2-723D-443C-967B-1E8359E51F73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Text2D", "Text2D\Text2D.csproj", "{2224BE10-0197-42B4-B7B9-4523914CA2CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{56FEA0A2-723D-443C-967B-1E8359E51F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56FEA0A2-723D-443C-967B-1E8359E51F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56FEA0A2-723D-443C-967B-1E8359E51F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2224BE10-0197-42B4-B7B9-4523914CA2CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2224BE10-0197-42B4-B7B9-4523914CA2CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2224BE10-0197-42B4-B7B9-4523914CA2CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2224BE10-0197-42B4-B7B9-4523914CA2CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

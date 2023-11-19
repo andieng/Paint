@@ -26,6 +26,7 @@ using System.Windows.Documents;
 using System.Windows.Media.Converters;
 using System.Data;
 
+
 namespace Paint
 {
     /// <summary>
@@ -200,7 +201,8 @@ namespace Paint
             Rectangle = 2,
             Ellipse = 3,
             Square = 4,
-            Circle = 5
+            Circle = 5,
+            Text = 6
         }
 
         private void deleteAllSelectionFrame()
@@ -459,6 +461,10 @@ namespace Paint
                 return true;
             }
             if (s.Name == (nameof(Shapes.Circle)))
+            {
+                return true;
+            }
+            if (s.Name == (nameof(Shapes.Text)))
             {
                 return true;
             }
