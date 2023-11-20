@@ -56,6 +56,8 @@ namespace Paint
         private bool isDragging = false;
         private Point offset;
         private Point originalPosition;
+        private bool _isFlipped = false;
+        private double _currentRotationAngle = 0.0;
 
         public MainWindow()
         {
@@ -1145,17 +1147,13 @@ namespace Paint
             }
             else if (_isSelecting && _selectedImg != null)
             {
-                if (_selectedImg.RenderTransform is ScaleTransform flipTransform)
-                {
-                    flipTransform.ScaleX = -flipTransform.ScaleX;
-                }
-                else
-                {
-                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
-                    ScaleTransform newFlipTransform = new ScaleTransform(-1, 1);
-                    _selectedImg.RenderTransform = newFlipTransform;
-                }
+                BitmapSource bmpSource = (BitmapSource)_selectedImg.Source;
 
+                TransformedBitmap transformedBitmap = new TransformedBitmap(
+                    bmpSource,
+                    new ScaleTransform(-1, 1, _selectedImg.Width / 2.0, 0));
+
+                _selectedImg.Source = transformedBitmap;
             }
         }
 
@@ -1168,16 +1166,13 @@ namespace Paint
             }
             else if (_isSelecting && _selectedImg != null)
             {
-                if (_selectedImg.RenderTransform is ScaleTransform flipTransform)
-                {
-                    flipTransform.ScaleY = -flipTransform.ScaleY;
-                }
-                else
-                {
-                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
-                    ScaleTransform newFlipTransform = new ScaleTransform(1, -1);
-                    _selectedImg.RenderTransform = newFlipTransform;
-                }
+                BitmapSource bmpSource = (BitmapSource)_selectedImg.Source;
+
+                TransformedBitmap transformedBitmap = new TransformedBitmap(
+                    bmpSource,
+                    new ScaleTransform(1, -1, _selectedImg.Width / 2.0, 0));
+
+                _selectedImg.Source = transformedBitmap;
             }
         }
 
@@ -1190,19 +1185,41 @@ namespace Paint
             }
             else if (_isSelecting && _selectedImg != null)
             {
-                RotateTransform rotateTransform = _selectedImg.RenderTransform as RotateTransform;
+                double oldWidth = _selectedImg.Width;
+                double oldHeight = _selectedImg.Height;
 
-                if (rotateTransform != null)
-                {
-                    rotateTransform.Angle += 90;
-                }
-                else
-                {
-                    rotateTransform = new RotateTransform(90);
-                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
-                    _selectedImg.RenderTransform = rotateTransform;
-                }
-                UpdateImagePositionAfterRotation(_selectedImg, rotateTransform.Angle);
+                BitmapSource bmpSource = (BitmapSource)_selectedImg.Source; 
+
+                TransformedBitmap transformedBitmap = new TransformedBitmap(
+                    bmpSource,
+                    new RotateTransform(90));
+
+                _selectedImg.Source = transformedBitmap;
+                _selectedImg.Width = oldHeight; _selectedImg.Height = oldWidth;
+                updateSelectionFrame();
+            }
+        }
+
+        private void RotateLeft90Degrees_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isSelecting && _selectedShape != null)
+            {
+                _selectedShape.RotateRight90Degrees();
+                updateSelectionFrame();
+            }
+            else if (_isSelecting && _selectedImg != null)
+            {
+                double oldWidth = _selectedImg.Width;
+                double oldHeight = _selectedImg.Height;
+
+                BitmapSource bmpSource = (BitmapSource)_selectedImg.Source;
+
+                TransformedBitmap transformedBitmap = new TransformedBitmap(
+                    bmpSource,
+                    new RotateTransform(-90));
+
+                _selectedImg.Source = transformedBitmap;
+                _selectedImg.Width = oldHeight; _selectedImg.Height = oldWidth;
                 updateSelectionFrame();
             }
         }
@@ -1226,32 +1243,6 @@ namespace Paint
 
             Canvas.SetLeft(_selectionFrame, newLeft - 5);
             Canvas.SetTop(_selectionFrame, newTop - 5);
-        }
-
-        private void RotateLeft90Degrees_Click(object sender, RoutedEventArgs e)
-        {
-            if (_isSelecting && _selectedShape != null)
-            {
-                _selectedShape.RotateRight90Degrees();
-                updateSelectionFrame();
-            }
-            else if (_isSelecting && _selectedImg != null)
-            {
-                RotateTransform rotateTransform = _selectedImg.RenderTransform as RotateTransform;
-
-                if (rotateTransform != null)
-                {
-                    rotateTransform.Angle -= 90;
-                }
-                else
-                {
-                    rotateTransform = new RotateTransform(90);
-                    _selectedImg.RenderTransformOrigin = new Point(0.5, 0.5);
-                    _selectedImg.RenderTransform = rotateTransform;
-                }
-                UpdateImagePositionAfterRotation(_selectedImg, rotateTransform.Angle);
-                updateSelectionFrame();
-            }
         }
 
         private void updateSelectionFrame()
