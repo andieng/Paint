@@ -766,7 +766,7 @@
                     <TextBlock Text="Text color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <syncfusion:ColorPicker DockPanel.Dock="Top" Width="45" Height="34" Margin="0,5,0,0" x:Name="colorPickerText"
-                                                ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1"
+                                                ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1" Color="Black"
                                                 Cursor="Hand" BorderBrush="#FFAEAEAE"/>
                 </DockPanel>
 
@@ -799,7 +799,7 @@
         
 
         <Grid Grid.Row="2" Background="#FFECF6F6" >
-            <Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" HorizontalAlignment="Center" />
+			<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" HorizontalAlignment="Center" ClipToBounds="True"/>
             <Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
                     MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
         </Grid>

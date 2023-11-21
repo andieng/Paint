@@ -417,6 +417,14 @@ namespace Paint
                     {
                         _textContent += args.Key.ToString();
                     };
+                    textBox.LostFocus += (s, args) =>
+                    {
+                        textBox.IsReadOnly = true;
+                        _textContent = "";
+                        textBox.BorderBrush = Brushes.Transparent;
+                    };
+
+                   
                 }
             }
             else
@@ -463,7 +471,6 @@ namespace Paint
                 colorFill = _colorText;
             }
             _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize,_textContent);
-            _textContent = "";
         }
 
         private bool isBasicShape(IShape s)

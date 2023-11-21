@@ -3,7 +3,6 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
-using System.Windows.Shapes;
 
 namespace Text2D
 {
@@ -76,28 +75,23 @@ namespace Text2D
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
 
             var right = Math.Max(_rightBottom.X, _leftTop.X);
-            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
-
             var width = right - left;
-            var height = bottom - top;
 
             _text = new TextBox()
             {
                 Width = width,
                 Foreground = ColorFill,
-                IsReadOnly = false, // Allow user input
-                //BorderBrush = ColorFill, // Add a border for better visibility
+                IsReadOnly = false, 
                 BorderThickness = new Thickness(1),
                 Text = TextContent,
                 TextWrapping = TextWrapping.Wrap,
                 Height = double.NaN,
-                Background = Brushes.Transparent
-            };
-            _text.LostFocus += (s, args) =>
-            {
-                (_text as TextBox).BorderBrush = Brushes.Transparent;
-                TextContent = "";
-            };
+                Background = Brushes.Transparent,
+                AcceptsReturn = true,
+                AcceptsTab = true,
+
+        };
+
             Canvas.SetLeft(_text, left);
             Canvas.SetTop(_text, top);
             _text.Focus();
