@@ -75,7 +75,10 @@ namespace Text2D
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
 
             var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
             var width = right - left;
+            var height = bottom - top;
 
             _text = new TextBox()
             {
@@ -85,39 +88,36 @@ namespace Text2D
                 BorderThickness = new Thickness(1),
                 Text = TextContent,
                 TextWrapping = TextWrapping.Wrap,
-                Height = double.NaN,
+                Height = height,
                 Background = Brushes.Transparent,
                 AcceptsReturn = true,
                 AcceptsTab = true,
 
-        };
+            };
+
+            if (_text is TextBox textBox)
+            {
+                textBox.TextChanged += (s, args) =>
+                {
+                    int lineCount = textBox.LineCount;
+                    if (lineCount * 18 > textBox.Height)
+                    {
+                        textBox.Height = double.NaN;
+                        return;
+                    };
+                };
+            }
 
             Canvas.SetLeft(_text, left);
             Canvas.SetTop(_text, top);
-            _text.Focus();
             return _text;
         }
 
         public void HandleEnd(double x, double y)
         {
+
             _rightBottom.X = x;
             _rightBottom.Y = y;
-            double width = Math.Abs(_rightBottom.X - _leftTop.X);
-            double height = Math.Abs(_rightBottom.Y - _leftTop.Y);
-
-            if (width < height)
-            {
-                if (_rightBottom.Y < _leftTop.Y)
-                    _rightBottom.Y = _leftTop.Y - width;
-                else
-                    _rightBottom.Y = _leftTop.Y + width;
-            }
-            else if (width > height)
-            {
-                if (_rightBottom.X < _leftTop.X)
-                    _rightBottom.X = _leftTop.X - height;
-                else _rightBottom.X = _leftTop.X + height;
-            }
         }
 
         public void HandleStart(double x, double y)
