@@ -413,16 +413,16 @@ namespace Paint
                 {
                     canvas.Children.Add(text);
                     textBox.Focus();
-
-                    // Attach KeyDown event handler
                     textBox.KeyDown += (s, args) =>
                     {
-                        // Handle KeyDown event
                         _textContent += args.Key.ToString();
                     };
                 }
             }
-         
+            else
+            {
+                addObjectToCanvas(_preview);
+            }
             // Generate next object
             createPreviewShape();
             _isPreviewAdded = false;
@@ -443,6 +443,7 @@ namespace Paint
                 element = shape.Draw();
             }
             canvas.Children.Add(element);
+
         }
 
         private void createPreviewShape()
@@ -457,7 +458,10 @@ namespace Paint
             {
                 colorFill = _colorFill;
             }
-
+            if (_selectedShapeName=="Text")
+            {
+                colorFill = _colorText;
+            }
             _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize,_textContent);
             _textContent = "";
         }

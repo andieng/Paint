@@ -84,17 +84,19 @@ namespace Text2D
             _text = new TextBox()
             {
                 Width = width,
-                Foreground = Brushes.Black,
+                Foreground = ColorFill,
                 IsReadOnly = false, // Allow user input
                 //BorderBrush = ColorFill, // Add a border for better visibility
                 BorderThickness = new Thickness(1),
-                Text =TextContent,
+                Text = TextContent,
                 TextWrapping = TextWrapping.Wrap,
                 Height = double.NaN,
+                Background = Brushes.Transparent
             };
             _text.LostFocus += (s, args) =>
             {
                 (_text as TextBox).BorderBrush = Brushes.Transparent;
+                TextContent = "";
             };
             Canvas.SetLeft(_text, left);
             Canvas.SetTop(_text, top);
