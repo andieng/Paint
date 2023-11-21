@@ -12,7 +12,6 @@ namespace Rectangle2D
         private UIElement _rectangle;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
-
         public Point2D LeftTop
         {
             get => _leftTop;
@@ -86,7 +85,7 @@ namespace Rectangle2D
         }
 
         public string Name => "Rectangle";
-
+        public string TextContent { get; set; }
         public UIElement Draw()
         {
             var left = Math.Min(_rightBottom.X, _leftTop.X);

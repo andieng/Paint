@@ -12,7 +12,6 @@ namespace Text2D
         private UIElement _text;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
-
         public Point2D LeftTop
         {
             get => _leftTop;
@@ -68,7 +67,9 @@ namespace Text2D
         }
 
         public string Name => "Text";
+        public string TextContent {get;set;}
 
+ 
         public UIElement Draw()
         {
             var left = Math.Min(_rightBottom.X, _leftTop.X);
@@ -83,11 +84,21 @@ namespace Text2D
             _text = new TextBox()
             {
                 Width = width,
-                Height = height,
-                Foreground = ColorFill,
+                Foreground = Brushes.Black,
+                IsReadOnly = false, // Allow user input
+                //BorderBrush = ColorFill, // Add a border for better visibility
+                BorderThickness = new Thickness(1),
+                Text =TextContent,
+                TextWrapping = TextWrapping.Wrap,
+                Height = double.NaN,
+            };
+            _text.LostFocus += (s, args) =>
+            {
+                (_text as TextBox).BorderBrush = Brushes.Transparent;
             };
             Canvas.SetLeft(_text, left);
             Canvas.SetTop(_text, top);
+            _text.Focus();
             return _text;
         }
 
@@ -177,5 +188,6 @@ namespace Text2D
                 _rightBottom.Y = newTop + height;
             }
         }
+
     }
 }
