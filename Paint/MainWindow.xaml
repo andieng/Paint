@@ -453,7 +453,13 @@
                     </Style>
                 </Button.Style>
             </Button>
-        </DockPanel>
+			<!--Slider-->
+			<DockPanel VerticalAlignment="Center" Margin="10">
+				<Label DockPanel.Dock="Left">Size:</Label>
+				<TextBox Text="{Binding ElementName=scaleValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="30" BorderBrush="Transparent"/>
+				<Slider Maximum="1000" Minimum="20" Value="100" Width="100" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Name="scaleValue" ValueChanged="scaleValue_ValueChanged" />
+			</DockPanel>
+		</DockPanel>
         
         <!--Toolbox-->
         <Border Grid.Row="1" Background="#FFFCFCFC" BorderThickness="0.6" BorderBrush="#FFD7D7D7">
@@ -796,12 +802,16 @@
                 </DockPanel>
             </Grid>
         </Border>
-        
 
-        <Grid Grid.Row="2" Background="#FFECF6F6" >
-			<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" HorizontalAlignment="Center" ClipToBounds="True"/>
-            <Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
+
+		<Grid x:Name="interactive" Grid.Row="2" Background="#FFECF6F6" >
+			<ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+
+				<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" Height="500" HorizontalAlignment="Center" ClipToBounds="True"/>
+			</ScrollViewer>
+				<Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
                     MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
-        </Grid>
+		
+		</Grid>
     </Grid>
 </Window>

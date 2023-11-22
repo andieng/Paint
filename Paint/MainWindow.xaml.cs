@@ -58,6 +58,8 @@ namespace Paint
         private Point offset;
         private Point originalPosition;
         private string _textContent = "";
+        private bool isText = false;
+        private UIElement _textShape;
         public MainWindow()
         {
             InitializeComponent();
@@ -351,6 +353,15 @@ namespace Paint
                     Point pos = e.GetPosition(canvas);
                     CreateSelectionFrame(pos);
                 }
+                else if (isText)
+                {
+                    if (_textShape is TextBox textBox)
+                    {
+                        Keyboard.ClearFocus();
+                        isText = false;
+                        textBox.BorderThickness = new Thickness(0);
+                    }
+                }
                 else
                 {
                     if (_preview != null)
@@ -408,23 +419,16 @@ namespace Paint
 
             if(_selectedShapeName == "Text")
             {
-                UIElement text = _preview.Draw();
-                if (text is TextBox textBox)
+                isText = true;
+                _textShape = _preview.Draw();
+                if (_textShape is TextBox textBox)
                 {
-                    canvas.Children.Add(text);
+                    canvas.Children.Add(_textShape);
                     textBox.Focus();
                     textBox.KeyDown += (s, args) =>
                     {
                         _textContent += args.Key.ToString();
                     };
-                    textBox.LostFocus += (s, args) =>
-                    {
-                        textBox.IsReadOnly = true;
-                        _textContent = "";
-                        textBox.BorderBrush = Brushes.Transparent;
-                    };
-
-                   
                 }
             }
             else
@@ -858,7 +862,7 @@ namespace Paint
                 selectToggleBtn.Style = Resources["ToggleButtonDisableStyle"] as Style;
             }
         }
-
+        
         private void saveObjectsButton_Click(object sender, RoutedEventArgs e)
         {
             saveObjects();
@@ -1041,6 +1045,25 @@ namespace Paint
             _canvasObjects.Clear();
             _undoStack.Clear();
             canvas.Children.Clear();
+        }
+
+        private void scaleValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var temp = scaleValue.Value / 100.0;
+            if (temp > 0.0&&canvas!=null )
+            {
+                ScaleTransform scaleTransform = new ScaleTransform(temp, temp);
+                canvas.LayoutTransform = scaleTransform;
+                if (temp <= 1)
+                {
+                    var margin = 40/temp;
+                    canvas.Margin = new Thickness(0, margin, 0, margin);
+                }
+                else
+                {
+                    canvas.Margin = new Thickness(0, 0, 0, 0);
+                }
+            }
         }
 
     }
