@@ -803,15 +803,12 @@
             </Grid>
         </Border>
 
-
-		<Grid x:Name="interactive" Grid.Row="2" Background="#FFECF6F6" >
-			<ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-
+		<ScrollViewer x:Name="scrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+			<Grid x:Name="interactive"  Background="#FFECF6F6" >
 				<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" Height="500" HorizontalAlignment="Center" ClipToBounds="True"/>
-			</ScrollViewer>
-				<Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
+				<Border x:Name="border" Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
                     MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
-		
-		</Grid>
+			</Grid>
+		</ScrollViewer>
     </Grid>
 </Window>

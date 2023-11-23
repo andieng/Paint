@@ -1054,14 +1054,19 @@ namespace Paint
             {
                 ScaleTransform scaleTransform = new ScaleTransform(temp, temp);
                 canvas.LayoutTransform = scaleTransform;
+                border.LayoutTransform = scaleTransform;
                 if (temp <= 1)
                 {
                     var margin = 40/temp;
                     canvas.Margin = new Thickness(0, margin, 0, margin);
+                    border.Margin = new Thickness(0, margin, 0, margin);
+
                 }
                 else
                 {
                     canvas.Margin = new Thickness(0, 0, 0, 0);
+                    border.Margin = new Thickness(0, 0, 0, 0);
+
                 }
             }
         }
