@@ -37,6 +37,30 @@ namespace Ellipse2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _leftTop;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _rightBottom;
+        }
+
+        public void SetInCanvas()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            Canvas.SetLeft(_ellipse, left);
+            Canvas.SetTop(_ellipse, top);
+        }
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
@@ -112,8 +136,8 @@ namespace Ellipse2D
 
             return _ellipse;
         }
-
-        public void HandleEnd(double x, double y)
+      
+            public void HandleEnd(double x, double y)
         {
             _rightBottom.X = x;
             _rightBottom.Y = y;

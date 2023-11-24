@@ -28,6 +28,9 @@ namespace Contract
         void FlipVertically();
         void RotateRight90Degrees();
         void RotateLeft90Degrees();
+        Point2D GetStart();
+        Point2D GetEnd();
+        void SetInCanvas();
         UIElement Draw();
         IShape Clone();
     }

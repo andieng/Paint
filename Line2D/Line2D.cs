@@ -38,6 +38,20 @@ namespace Line2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _start;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _end;
+        }
+
+        public void SetInCanvas()
+        {
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 

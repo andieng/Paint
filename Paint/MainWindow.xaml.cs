@@ -448,9 +448,9 @@ namespace Paint
             }
         }
 
-        private bool IsPointInsideSelectionFrame(Point point, object targetObj)
+        private bool IsPointInsideSelectionFrame(Point point)
         {
-            if (targetObj == null) return false;
+            if (_selectionFrame == null) return false;
 
             if (_selectionFrame == null) return false;
             var left = Canvas.GetLeft(_selectionFrame);
@@ -462,7 +462,7 @@ namespace Paint
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas) , _selectionFrame);
+            bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas));
             if (isMouseOverSelectionFrame)
             {
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
@@ -1309,10 +1309,12 @@ namespace Paint
                         Height = _selectedImg.Height,
                     };
                 }
+
+                _clipboardShape = null;
             }
             else if (_isSelecting && _selectedShape != null)
             {
-                _clipboardShape = _selectedShape.Clone();
+                _clipboardShape = _selectedShape;
                 _clipboardImage = null;
             }
         }
@@ -1341,7 +1343,17 @@ namespace Paint
             }
             else if (_clipboardShape != null)
             {
-                canvas.Children.Add(_clipboardShape.Draw());
+                IShape shape = (IShape)_clipboardShape;
+                IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize);
+                pastedShape.UpdateStrokeDashArray(shape.StrokeDashArray);
+                pastedShape.HandleStart(_clipboardShape.GetStart().X, _clipboardShape.GetStart().Y);
+                pastedShape.HandleEnd(_clipboardShape.GetEnd().X, _clipboardShape.GetEnd().Y);
+
+                UIElement pastedShapeView = pastedShape.Draw();
+                pastedShape.SetInCanvas();
+
+                canvas.Children.Add(pastedShapeView);
+                _canvasObjects.Add(pastedShape);
             }
         }
 
@@ -1372,18 +1384,43 @@ namespace Paint
                         }
                     }
                 }
-                deleteAllSelectionFrame();
 
                 if (_clipboardImage.Source is BitmapSource bitmapSource)
                 {
                     _canvasObjects.Add(bitmapSource);
                 }
+
+                _clipboardShape = null;
+
             }
             else if (_isSelecting && _selectedShape != null)
             {
-                _clipboardShape = _selectedShape.Clone();
+                _clipboardShape = _selectedShape;
                 _clipboardImage = null;
+
+                int index = 0;
+                foreach (object obj in _canvasObjects)
+                {
+                    if (obj.GetType().ToString() == "Circle2D.Circle2D"
+                        || obj.GetType().ToString() == "Ellipse2D.Ellipse2D"
+                        || obj.GetType().ToString() == "Rectangle2D.Rectangle2D"
+                        || obj.GetType().ToString() == "Square2D.Square2D"
+                        || obj.GetType().ToString() == "Line2D.Line2D")
+                    {
+                        IShape shape = (IShape)obj;
+                        {
+                            if (shape == _clipboardShape)
+                            {
+                                _canvasObjects.RemoveAt(index);
+                                break;
+                            }
+                        }
+                        index++;
+                    }
+                }            
+                canvas.Children.RemoveAt(index);
             }
+            deleteAllSelectionFrame();
         }
     }
 }
