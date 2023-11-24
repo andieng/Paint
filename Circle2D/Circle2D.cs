@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace Circle2D
 {
@@ -35,6 +36,31 @@ namespace Circle2D
                     _rightBottom = value;
                 }
             }
+        }
+
+        public Point2D GetStart()
+        {
+            return _leftTop;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _rightBottom;
+        }
+
+        public void SetInCanvas()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            Canvas.SetLeft(_circle, left);
+            Canvas.SetTop(_circle, top);
         }
 
         public SolidColorBrush ColorStroke { get; set; }
@@ -185,7 +211,7 @@ namespace Circle2D
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
-            return  bottom - top;
+            return bottom - top;
         }
 
         public void ChangePosition(double x, double y)
@@ -206,6 +232,22 @@ namespace Circle2D
                 _rightBottom.X = newLeft + width;
                 _rightBottom.Y = newTop + height;
             }
+        }
+
+        public void FlipHorizontally()
+        {
+        }
+
+        public void FlipVertically()
+        {
+        }
+
+        public void RotateRight90Degrees()
+        {
+        }
+
+        public void RotateLeft90Degrees()
+        {
         }
     }
 }

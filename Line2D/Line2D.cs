@@ -38,6 +38,20 @@ namespace Line2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _start;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _end;
+        }
+
+        public void SetInCanvas()
+        {
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
@@ -220,6 +234,100 @@ namespace Line2D
                 default:
                     break;
             }
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.Y1 = _start.Y;
+                lineElement.X2 = _end.X;
+                lineElement.Y2 = _end.Y;
+            }
+        }
+
+        public void FlipHorizontally()
+        {
+            double newStartX = _end.X;
+            double newEndX = _start.X;
+
+            _start.X = newStartX;
+            _end.X = newEndX;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.X2 = _end.X;
+            }
+        }
+
+        public void FlipVertically()
+        {
+            double newStartY = _end.Y;
+            double newEndY = _start.Y;
+
+            _start.Y = newStartY;
+            _end.Y = newEndY;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.Y1 = _start.Y;
+                lineElement.Y2 = _end.Y;
+            }
+        }
+
+        public void RotateRight90Degrees()
+        {
+            int angleDegrees = 90;
+            double midX = (_start.X + _end.X) / 2;
+            double midY = (_start.Y + _end.Y) / 2;
+
+            double startXTranslated = _start.X - midX;
+            double startYTranslated = _start.Y - midY;
+            double endXTranslated = _end.X - midX;
+            double endYTranslated = _end.Y - midY;
+
+            double angleRadians = angleDegrees * (Math.PI / 180.0);
+
+            double startXNew = startXTranslated * Math.Cos(angleRadians) - startYTranslated * Math.Sin(angleRadians);
+            double startYNew = startXTranslated * Math.Sin(angleRadians) + startYTranslated * Math.Cos(angleRadians);
+            double endXNew = endXTranslated * Math.Cos(angleRadians) - endYTranslated * Math.Sin(angleRadians);
+            double endYNew = endXTranslated * Math.Sin(angleRadians) + endYTranslated * Math.Cos(angleRadians);
+
+            _start.X = startXNew + midX;
+            _start.Y = startYNew + midY;
+            _end.X = endXNew + midX;
+            _end.Y = endYNew + midY;
+
+            if (_line != null && _line is Line lineElement)
+            {
+                lineElement.X1 = _start.X;
+                lineElement.Y1 = _start.Y;
+                lineElement.X2 = _end.X;
+                lineElement.Y2 = _end.Y;
+            }
+        }
+
+        public void RotateLeft90Degrees()
+        {
+            int angleDegrees = -90;
+            double midX = (_start.X + _end.X) / 2;
+            double midY = (_start.Y + _end.Y) / 2;
+
+            double startXTranslated = _start.X - midX;
+            double startYTranslated = _start.Y - midY;
+            double endXTranslated = _end.X - midX;
+            double endYTranslated = _end.Y - midY;
+
+            double angleRadians = angleDegrees * (Math.PI / 180.0);
+
+            double startXNew = startXTranslated * Math.Cos(angleRadians) - startYTranslated * Math.Sin(angleRadians);
+            double startYNew = startXTranslated * Math.Sin(angleRadians) + startYTranslated * Math.Cos(angleRadians);
+            double endXNew = endXTranslated * Math.Cos(angleRadians) - endYTranslated * Math.Sin(angleRadians);
+            double endYNew = endXTranslated * Math.Sin(angleRadians) + endYTranslated * Math.Cos(angleRadians);
+
+            _start.X = startXNew + midX;
+            _start.Y = startYNew + midY;
+            _end.X = endXNew + midX;
+            _end.Y = endYNew + midY;
 
             if (_line != null && _line is Line lineElement)
             {

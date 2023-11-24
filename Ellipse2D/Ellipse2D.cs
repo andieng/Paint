@@ -37,6 +37,30 @@ namespace Ellipse2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _leftTop;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _rightBottom;
+        }
+
+        public void SetInCanvas()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            Canvas.SetLeft(_ellipse, left);
+            Canvas.SetTop(_ellipse, top);
+        }
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
@@ -112,8 +136,8 @@ namespace Ellipse2D
 
             return _ellipse;
         }
-
-        public void HandleEnd(double x, double y)
+      
+            public void HandleEnd(double x, double y)
         {
             _rightBottom.X = x;
             _rightBottom.Y = y;
@@ -190,5 +214,74 @@ namespace Ellipse2D
                 _rightBottom.Y = newTop + height;
             }
         }
+
+        public void FlipHorizontally()
+        {
+        }
+
+        public void FlipVertically()
+        {
+        }
+
+        public void RotateRight90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            // Tính toán tọa độ mới sau khi quay phải 90 độ
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            // Cập nhật lại vị trí và kích thước cho Ellipse
+            if (_ellipse != null && _ellipse is Ellipse ellipseElement)
+            {
+                ellipseElement.Width = height;
+                ellipseElement.Height = width;
+
+                Canvas.SetLeft(_ellipse, newLeft);
+                Canvas.SetTop(_ellipse, newTop);
+            }
+        }
+
+        public void RotateLeft90Degrees()
+        {
+            double centerX = (_leftTop.X + _rightBottom.X) / 2;
+            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
+
+            double width = GetWidth();
+            double height = GetHeight();
+
+            // Tính toán tọa độ mới sau khi quay trái 90 độ
+            double newLeft = centerX - height / 2;
+            double newTop = centerY - width / 2;
+            double newRight = centerX + height / 2;
+            double newBottom = centerY + width / 2;
+
+            _leftTop.X = newLeft;
+            _leftTop.Y = newTop;
+            _rightBottom.X = newRight;
+            _rightBottom.Y = newBottom;
+
+            // Cập nhật lại vị trí và kích thước cho Ellipse
+            if (_ellipse != null && _ellipse is Ellipse ellipseElement)
+            {
+                ellipseElement.Width = height;
+                ellipseElement.Height = width;
+
+                Canvas.SetLeft(_ellipse, newLeft);
+                Canvas.SetTop(_ellipse, newTop);
+            }
+        }
+
     }
 }

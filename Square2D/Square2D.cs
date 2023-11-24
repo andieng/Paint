@@ -37,6 +37,31 @@ namespace Square2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _leftTop;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _rightBottom;
+        }
+
+        public void SetInCanvas()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            Canvas.SetLeft(_square, left);
+            Canvas.SetTop(_square, top);
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
@@ -197,6 +222,22 @@ namespace Square2D
                 _rightBottom.X = newLeft + width;
                 _rightBottom.Y = newTop + height;
             }
+        }
+
+        public void FlipHorizontally()
+        {
+        }
+
+        public void FlipVertically()
+        {
+        }
+
+        public void RotateRight90Degrees()
+        {
+        }
+
+        public void RotateLeft90Degrees()
+        {
         }
     }
 }
