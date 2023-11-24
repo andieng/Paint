@@ -56,8 +56,8 @@ namespace Paint
         private bool isDragging = false;
         private Point offset;
         private Point originalPosition;
-        private bool _isFlipped = false;
-        private double _currentRotationAngle = 0.0;
+        private IShape _clipboardShape;
+        private Image _clipboardImage;
 
         public MainWindow()
         {
@@ -84,6 +84,16 @@ namespace Paint
 
             // Import image hotkey
             HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.I, loadImage));
+
+            // Copy hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.C, copy));
+
+            // Paste hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.V, paste));
+
+            // Cut hotkey
+            HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.X, cut));
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -218,41 +228,38 @@ namespace Paint
             }
         }
 
+        private Image findImageFromName(string name)
+        {
+            foreach (var child in canvas.Children)
+            {
+                if (child is Image image && image.Name == name)
+                {
+                    return image;
+                }
+            }
+            return null;
+        }
+
+        private bool IsPointInsideImage(Point point, string imgName)
+        {
+            Image img = findImageFromName(imgName);
+            var left = Canvas.GetLeft(img);
+            var top = Canvas.GetTop(img);
+            var right = left + img.Width;
+            var bottom = top + img.Height;
+            return point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
+        }
+
         private void CreateSelectionFrame(Point position)
         {
-            foreach (object obj in _canvasObjects)
+            foreach (object obj in canvas.Children)
             {
-                if (obj.GetType() != typeof(BitmapImage))
+                if (obj.GetType() == typeof(Image))
                 {
-                    IShape shape = (IShape)obj;
-                    if (shape.ContainsPoint(position.X, position.Y))
+                    Image curImage = (Image)obj;
+                    if (IsPointInsideImage(position, curImage.Name))
                     {
-                        _selectedShape= shape;
-                        _selectionFrame = new Rectangle()
-                        {
-                            Stroke = Brushes.Blue,
-                            StrokeDashArray = new DoubleCollection() { 4, 4 },
-                            StrokeThickness = 1,
-                            StrokeDashCap = PenLineCap.Round,
-                            Width = shape.GetWidth() + 5,
-                            Height = shape.GetHeight() + 5,
-                        };
-                        addEventsToSelectionFrame();
-
-                        Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
-                        Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
-
-                        originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
-
-                        canvas.Children.Add(_selectionFrame);
-                        break;
-                    }
-                }
-                else
-                {
-                    if (IsPointInsideObject(position, obj))
-                    {
-                        Image img = findImageFromObject(obj);
+                        Image img = findImageFromName(curImage.Name);
                         double imageWidth = img.Width;
                         double imageHeight = img.Height;
                         _selectedImg = img;
@@ -270,6 +277,39 @@ namespace Paint
 
                         Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(img) - 5);
                         Canvas.SetTop(_selectionFrame, Canvas.GetTop(img) - 5);
+
+                        canvas.Children.Add(_selectionFrame);
+                        return;
+                    }
+                }
+            }
+            foreach (object obj in _canvasObjects)
+            {
+                if (obj.GetType().ToString() == "Circle2D.Circle2D" 
+                    || obj.GetType().ToString() == "Ellipse2D.Ellipse2D"
+                    || obj.GetType().ToString() == "Rectangle2D.Rectangle2D"
+                    || obj.GetType().ToString() == "Square2D.Square2D"
+                    || obj.GetType().ToString() == "Line2D.Line2D")
+                {
+                    IShape shape = (IShape)obj;
+                    if (shape.ContainsPoint(position.X, position.Y))
+                    {
+                        _selectedShape = shape;
+                        _selectionFrame = new Rectangle()
+                        {
+                            Stroke = Brushes.Blue,
+                            StrokeDashArray = new DoubleCollection() { 4, 4 },
+                            StrokeThickness = 1,
+                            StrokeDashCap = PenLineCap.Round,
+                            Width = shape.GetWidth() + 5,
+                            Height = shape.GetHeight() + 5,
+                        };
+                        addEventsToSelectionFrame();
+
+                        Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
+                        Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
+
+                        originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
 
                         canvas.Children.Add(_selectionFrame);
                         break;
@@ -319,6 +359,7 @@ namespace Paint
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
+                        // code để giới hạn drop của image
                         /*                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
                                                 {
                                                     Canvas.SetLeft(_selectionFrame, originalPosition.X);
@@ -407,52 +448,21 @@ namespace Paint
             }
         }
 
-        private Image findImageFromObject(object obj)
-        {
-            BitmapImage bitmapToFind = obj as BitmapImage;
-            if (bitmapToFind != null)
-            {
-                foreach (var child in canvas.Children)
-                {
-                    if (child is Image image && image.Source == bitmapToFind)
-                    {
-                        return image;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private bool IsPointInsideObject(Point point, object targetObj)
+        private bool IsPointInsideSelectionFrame(Point point, object targetObj)
         {
             if (targetObj == null) return false;
-            bool isInside = false;
 
-            if (targetObj.GetType() != typeof(BitmapImage))
-            {
-                /*if (_selectionFrame == null) return false;*/
-                var left = Canvas.GetLeft(_selectionFrame);
-                var top = Canvas.GetTop(_selectionFrame);
-                var right = left + _selectionFrame.Width;
-                var bottom = top + _selectionFrame.Height;
-                isInside = point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
-            }
-            else
-            {
-                Image img = findImageFromObject(targetObj);
-                var left = Canvas.GetLeft(img);
-                var top = Canvas.GetTop(img);
-                var right = left + img.Width;
-                var bottom = top + img.Height;
-                isInside = point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
-            }
-
-            return isInside;
+            if (_selectionFrame == null) return false;
+            var left = Canvas.GetLeft(_selectionFrame);
+            var top = Canvas.GetTop(_selectionFrame);
+            var right = left + _selectionFrame.Width;
+            var bottom = top + _selectionFrame.Height;
+            return point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom;
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            bool isMouseOverSelectionFrame = IsPointInsideObject(e.GetPosition(canvas) , _selectionFrame);
+            bool isMouseOverSelectionFrame = IsPointInsideSelectionFrame(e.GetPosition(canvas) , _selectionFrame);
             if (isMouseOverSelectionFrame)
             {
                 originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
@@ -1054,6 +1064,29 @@ namespace Paint
             loadImage();
         }
 
+        private string GenerateUniqueImageName()
+        {
+            string name;
+            Random random = new Random();
+            do
+            {
+                name = "Image_" + random.Next(1000, 9999); 
+            } while (ImageNameExists(name)); 
+            return name;
+        }
+
+        private bool ImageNameExists(string name)
+        {
+            foreach (var child in canvas.Children)
+            {
+                if (child is Image image && image.Name == name)
+                {
+                    return true; 
+                }
+            }
+            return false;
+        }
+
         private async void loadImage()
         {
             await Task.Delay(100);
@@ -1066,6 +1099,7 @@ namespace Paint
                 var bitmap = new BitmapImage(new Uri(filename, UriKind.Absolute));
                 Image img = new Image();
                 img.Source = bitmap;
+                img.Name = GenerateUniqueImageName();
                 _canvasObjects.Add(bitmap);
                 canvas.Children.Add(img);
 
@@ -1224,27 +1258,6 @@ namespace Paint
             }
         }
 
-        private void UpdateImagePositionAfterRotation(UIElement element, double angle)
-        {
-            double width = element.RenderSize.Width;
-            double height = element.RenderSize.Height;
-            double newLeft, newTop;
-
-            if (angle % 360 == 90 || angle % 360 == 270)
-            {
-                newLeft = Canvas.GetLeft(element) - (height - width) / 2;
-                newTop = Canvas.GetTop(element) + (height - width) / 2;
-            }
-            else
-            {
-                newLeft = Canvas.GetLeft(element) - (height - width) / 2;
-                newTop = Canvas.GetTop(element) + (height - width) / 2;
-            }
-
-            Canvas.SetLeft(_selectionFrame, newLeft - 5);
-            Canvas.SetTop(_selectionFrame, newTop - 5);
-        }
-
         private void updateSelectionFrame()
         {
             if (_selectedShape != null)
@@ -1279,6 +1292,97 @@ namespace Paint
                     Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(_selectedImg) - 5);
                     Canvas.SetTop(_selectionFrame, Canvas.GetTop(_selectedImg) - 5);
                 }
+            }
+        }
+
+        private void copy()
+        {
+            if(_isSelecting && _selectedImg != null)
+            {
+                BitmapSource source = (BitmapSource)_selectedImg.Source;
+                if (source != null)
+                {
+                    _clipboardImage = new Image()
+                    {
+                        Source = source.Clone(),
+                        Width = _selectedImg.Width,
+                        Height = _selectedImg.Height,
+                    };
+                }
+            }
+            else if (_isSelecting && _selectedShape != null)
+            {
+                _clipboardShape = _selectedShape.Clone();
+                _clipboardImage = null;
+            }
+        }
+
+        private async void paste()
+        {
+            await Task.Delay(100);
+            if (_clipboardImage != null)
+            {
+                Image pastedImage = new Image()
+                {
+                    Source = _clipboardImage.Source.Clone(),
+                    Width = _clipboardImage.Width,
+                    Height = _clipboardImage.Height,
+                    Name = GenerateUniqueImageName()
+                };
+
+                Canvas.SetLeft(pastedImage, 0);
+                Canvas.SetTop(pastedImage, 0);
+
+                canvas.Children.Add(pastedImage);
+                if (pastedImage.Source is BitmapSource bitmapSource)
+                {
+                    _canvasObjects.Add(bitmapSource);
+                }
+            }
+            else if (_clipboardShape != null)
+            {
+                canvas.Children.Add(_clipboardShape.Draw());
+            }
+        }
+
+        private void cut()
+        {
+            if (_isSelecting && _selectedImg != null)
+            {
+                BitmapSource source = (BitmapSource)_selectedImg.Source;
+                if (source != null)
+                {
+                    _clipboardImage = new Image()
+                    {
+                        Source = source.Clone(),
+                        Width = _selectedImg.Width,
+                        Height = _selectedImg.Height,
+                    };
+                }
+                foreach (object obj in canvas.Children)
+                {
+                    if (obj.GetType() == typeof(Image))
+                    {
+                        Image curImage = (Image)obj;
+                        if (curImage.Name == _selectedImg.Name)
+                        {
+                            canvas.Children.Remove(curImage);
+                            canvas.InvalidateVisual();
+                            break;
+                        }
+                    }
+                }
+                deleteAllSelectionFrame();
+
+                if (_clipboardImage.Source is BitmapSource bitmapSource)
+                {
+                    _canvasObjects.Add(bitmapSource);
+                }
+            }
+            else if (_isSelecting && _selectedShape != null)
+            {
+                _clipboardShape = _selectedShape.Clone();
+                _clipboardImage = null;
             }
         }
     }
