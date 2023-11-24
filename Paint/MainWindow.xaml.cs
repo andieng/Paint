@@ -58,6 +58,7 @@ namespace Paint
         private Point originalPosition;
         private IShape _clipboardShape;
         private Image _clipboardImage;
+        private int distance = 10;
 
         public MainWindow()
         {
@@ -1297,6 +1298,7 @@ namespace Paint
 
         private void copy()
         {
+            distance = 10;
             if(_isSelecting && _selectedImg != null)
             {
                 BitmapSource source = (BitmapSource)_selectedImg.Source;
@@ -1346,8 +1348,9 @@ namespace Paint
                 IShape shape = (IShape)_clipboardShape;
                 IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize);
                 pastedShape.UpdateStrokeDashArray(shape.StrokeDashArray);
-                pastedShape.HandleStart(_clipboardShape.GetStart().X - 10, _clipboardShape.GetStart().Y - 10);
-                pastedShape.HandleEnd(_clipboardShape.GetEnd().X - 10, _clipboardShape.GetEnd().Y - 10);
+                pastedShape.HandleStart(_clipboardShape.GetStart().X - distance, _clipboardShape.GetStart().Y - distance);
+                pastedShape.HandleEnd(_clipboardShape.GetEnd().X - distance, _clipboardShape.GetEnd().Y - distance);
+                distance += 10;
 
                 UIElement pastedShapeView = pastedShape.Draw();
                 pastedShape.SetInCanvas();
@@ -1359,6 +1362,7 @@ namespace Paint
 
         private void cut()
         {
+            distance = 10;
             if (_isSelecting && _selectedImg != null)
             {
                 BitmapSource source = (BitmapSource)_selectedImg.Source;
