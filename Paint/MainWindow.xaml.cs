@@ -1346,8 +1346,8 @@ namespace Paint
                 IShape shape = (IShape)_clipboardShape;
                 IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize);
                 pastedShape.UpdateStrokeDashArray(shape.StrokeDashArray);
-                pastedShape.HandleStart(_clipboardShape.GetStart().X, _clipboardShape.GetStart().Y);
-                pastedShape.HandleEnd(_clipboardShape.GetEnd().X, _clipboardShape.GetEnd().Y);
+                pastedShape.HandleStart(_clipboardShape.GetStart().X - 10, _clipboardShape.GetStart().Y - 10);
+                pastedShape.HandleEnd(_clipboardShape.GetEnd().X - 10, _clipboardShape.GetEnd().Y - 10);
 
                 UIElement pastedShapeView = pastedShape.Draw();
                 pastedShape.SetInCanvas();
