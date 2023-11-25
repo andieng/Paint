@@ -530,13 +530,13 @@
                             <UserControl Background="Transparent">
                                 <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
                                     <StackPanel Background="Transparent">
-                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Click="RotateRight90Degrees_Click">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <Image DockPanel.Dock="Left" Source="./Resources/rotate-right.png" Width="18" Height="18"/>
                                                 <TextBlock DockPanel.Dock="Left" Text="Rotate right 90°" Margin="12 0 0 0" FontSize="14" />
                                             </DockPanel>
                                         </Button>
-                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="RotateLeft90Degrees_Click">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <Image DockPanel.Dock="Left" Source="./Resources/rotate-left.png" Width="18" Height="18"/>
                                                 <TextBlock DockPanel.Dock="Left" Text="Rotate left 90°" Margin="12 0 0 0" FontSize="14" />
@@ -563,13 +563,13 @@
                             <UserControl Background="Transparent">
                                 <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
                                     <StackPanel Background="Transparent">
-                                        <Button Style="{StaticResource PopUpButtonStyle}">
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Click="FlipHorizontally_Click">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <Image DockPanel.Dock="Left" Source="./Resources/flip-horizontal.png" Width="18" Height="18"/>
                                                 <TextBlock DockPanel.Dock="Left" Text="Flip horizontal" Margin="12 0 0 0" FontSize="14" />
                                             </DockPanel>
                                         </Button>
-                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0">
+                                        <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="FlipVertically_Click">
                                             <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
                                                 <Image DockPanel.Dock="Left" Source="./Resources/flip-vertical.png" Width="18" Height="18"/>
                                                 <TextBlock DockPanel.Dock="Left" Text="Flip vertical" Margin="12 0 0 0" FontSize="14" />
