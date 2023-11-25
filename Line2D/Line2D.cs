@@ -87,7 +87,6 @@ namespace Line2D
         }
 
         public string Name => "Line";
-        public string TextContent { get; set; }
 
         public void HandleEnd(double x, double y)
         {

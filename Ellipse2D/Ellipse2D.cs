@@ -10,7 +10,6 @@ namespace Ellipse2D
     public class Ellipse2D : IShape
     {
         private UIElement _ellipse;
-        public string TextContent { get; set; }
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
 

@@ -85,7 +85,6 @@ namespace Square2D
         }
 
         public string Name => "Square";
-        public string TextContent { get; set; }
         public UIElement Draw()
         {
             var left = Math.Min(_rightBottom.X, _leftTop.X);

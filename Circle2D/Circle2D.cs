@@ -10,7 +10,6 @@ namespace Circle2D
     public class Circle2D : IShape
     {
         private UIElement _circle;
-        public string TextContent { get; set; }
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         public Point2D LeftTop

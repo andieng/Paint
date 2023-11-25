@@ -490,7 +490,6 @@ namespace Paint
                 element = shape.Draw();
             }
             canvas.Children.Add(element);
-
         }
 
         private void createPreviewShape()
@@ -509,7 +508,7 @@ namespace Paint
             {
                 colorFill = _colorText;
             }
-            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize,_textContent);
+            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize);
         }
 
         private bool isBasicShape(IShape s)
