@@ -301,7 +301,6 @@ namespace Paint
                         Canvas.SetTop(_selectionFrame, newY);
 
                         _selectedShape.ChangePosition(newX, newY);
-
                     }
                     isDragging = false;
                     _selectionFrame.ReleaseMouseCapture();
@@ -370,7 +369,7 @@ namespace Paint
                         _isDrawing = true;
                         _preview.StrokeSize = _strokeSize;
                         if (_hasStroke)
-                            _preview.StrokeDashArray = _strokeDashArray;
+                        _preview.StrokeDashArray = _strokeDashArray;
                         _preview.HandleStart(pos.X, pos.Y);
                     }
                 }
@@ -412,22 +411,31 @@ namespace Paint
             // Add last object to list
             Point pos = e.GetPosition(canvas);
             _preview.HandleEnd(pos.X, pos.Y);
-
-
             _canvasObjects.Add(_preview);
             canvas.Children.RemoveAt(canvas.Children.Count - 1);
-
-            if(_selectedShapeName == "Text")
+            if (_selectedShapeName == "Text")
             {
                 isText = true;
+                var left = _preview.GetLeft();
+                var top = _preview.GetTop();
                 _textShape = _preview.Draw();
                 if (_textShape is TextBox textBox)
                 {
                     canvas.Children.Add(_textShape);
                     textBox.Focus();
+                    textBox.Foreground = new SolidColorBrush(_colorText);
                     textBox.KeyDown += (s, args) =>
                     {
                         _textContent += args.Key.ToString();
+                    };
+
+                    textBox.LostFocus += (s, args) =>
+                    {
+                        Keyboard.ClearFocus();
+                        isText = false;
+                        textBox.BorderThickness = new Thickness(0);
+                        updateActualSizeForTextBox(textBox,left,top);
+                        return;
                     };
                 }
             }
@@ -440,6 +448,33 @@ namespace Paint
             _isPreviewAdded = false;
         }
 
+        private void updateActualSizeForTextBox(TextBox textBox,double left, double top)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Text = textBox.Text,
+                TextWrapping = TextWrapping.Wrap,
+                FontFamily = textBox.FontFamily,
+                FontStyle = textBox.FontStyle,
+                FontWeight = textBox.FontWeight,
+                FontStretch = textBox.FontStretch,
+                FontSize = textBox.FontSize,
+            };
+
+            textBlock.Measure(new Size(textBox.ActualWidth, double.PositiveInfinity));
+            textBlock.Arrange(new Rect(new Point(0, 0), textBlock.DesiredSize));
+
+            var X = left + textBlock.ActualWidth;
+            var Y = top + textBlock.ActualHeight;
+
+            Object m = _canvasObjects[_canvasObjects.Count - 1];
+            if( m is IShape shape)
+            {
+                shape.HandleStart(left, top);
+                shape.HandleEnd(X, Y + 5);
+                _canvasObjects[_canvasObjects.Count - 1] = m;
+            }
+        }
         private void addObjectToCanvas(object obj)
         {
             UIElement element;
@@ -1060,7 +1095,6 @@ namespace Paint
                     var margin = 40/temp;
                     canvas.Margin = new Thickness(0, margin, 0, margin);
                     border.Margin = new Thickness(0, margin, 0, margin);
-
                 }
                 else
                 {
