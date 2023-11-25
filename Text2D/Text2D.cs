@@ -213,12 +213,12 @@ namespace Text2D
 
         public void FlipHorizontally()
         {
-
+            // unsupported error
         }
 
         public void FlipVertically()
         {
-
+            // unsupported error
         }
 
         public void RotateLeft90Degrees()

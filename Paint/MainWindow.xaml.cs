@@ -47,8 +47,6 @@ namespace Paint
         private IShape _clipboardShape;
         private Image _clipboardImage;
         private int distance = 10;
-
-        private string _textContent = "";
         private bool isText = false;
         private UIElement _textShape;
 
@@ -103,7 +101,7 @@ namespace Paint
                 var shape = item.Value as IShape;
                 ToggleButton button;
 
-                // Basic shapes: line, rectangle, ellipse, square, circle
+                // Basic shapes: line, rectangle, ellipse, square, circle, text
                 if (isBasicShape(shape))
                 {
                     button = new ToggleButton()
@@ -113,14 +111,26 @@ namespace Paint
                         Margin = new Thickness(15, 0, 0, 0),
                         Height = 35,
                         Width = 35,
-                        Content = new Image()
+                        Tag = shape
+                    };
+
+                    if (shape.Name == nameof(Shapes.Text))
+                    {
+                        button.Content = new Image()
+                        {
+                            Source = new BitmapImage(new Uri($"./Resources/{shape.Name.ToLower()}.png", UriKind.Relative)),
+                            Width = 20,
+                            Height = 20,
+                        };
+                    } else
+                    {
+                        button.Content = new Image()
                         {
                             Source = new BitmapImage(new Uri($"./Resources/{shape.Name.ToLower()}.png", UriKind.Relative)),
                             Width = 23,
                             Height = 23,
-                        },
-                        Tag = shape
-                    };
+                        };
+                    }
                 }
                 else
                 {
@@ -532,10 +542,6 @@ namespace Paint
                     canvas.Children.Add(_textShape);
                     textBox.Focus();
                     textBox.Foreground = new SolidColorBrush(_colorText);
-                    textBox.KeyDown += (s, args) =>
-                    {
-                        _textContent += args.Key.ToString();
-                    };
 
                     textBox.LostFocus += (s, args) =>
                     {
@@ -648,27 +654,63 @@ namespace Paint
 
         private void fileButton_Click(object sender, RoutedEventArgs e)
         {
+            fileButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            fileButton.IsChecked = true;
             popupFile.IsOpen = true;
             popupFile.Closed += (senderClosed, eClosed) =>
             {
+                fileButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
                 fileButton.IsChecked = false;
             };
         }
 
+        private void editButton_Click(object sender, RoutedEventArgs e)
+        {
+            editButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            editButton.IsChecked = true;
+            popupEdit.IsOpen = true;
+            popupEdit.Closed += (senderClosed, eClosed) =>
+            {
+                editButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
+                editButton.IsChecked = false;
+            };
+        }
+
+        private void cutButton_Click(object sender, RoutedEventArgs e)
+        {
+            cut();
+        }
+
+        private void copyButton_Click(object sender, RoutedEventArgs e)
+        {
+            copy();
+        }
+
+        private void pasteButton_Click(object sender, RoutedEventArgs e)
+        {
+            paste();
+        }
+
         private void rotateButton_Click(object sender, RoutedEventArgs e)
         {
+            rotateButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            rotateButton.IsChecked = true;
             popupRotate.IsOpen = true;
             popupRotate.Closed += (senderClosed, eClosed) =>
             {
+                rotateButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
                 rotateButton.IsChecked = false;
             };
         }
 
         private void flipButton_Click(object sender, RoutedEventArgs e)
         {
+            flipButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            flipButton.IsChecked = true;
             popupFlip.IsOpen = true;
             popupFlip.Closed += (senderClosed, eClosed) =>
             {
+                flipButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
                 flipButton.IsChecked = false;
             };
         }
@@ -1473,29 +1515,46 @@ namespace Paint
             deleteAllSelectionFrame();
         }
 
-        private void scaleValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var temp = scaleValue.Value / 100.0;
-            if (temp > 0.0&&canvas!=null )
+            var temp = slider.Value / 100.0;
+            if (temp > 0.0 && canvas != null)
             {
                 ScaleTransform scaleTransform = new ScaleTransform(temp, temp);
                 canvas.LayoutTransform = scaleTransform;
                 border.LayoutTransform = scaleTransform;
-                if (temp <= 1)
-                {
-                    var margin = 40/temp;
-                    canvas.Margin = new Thickness(0, margin, 0, margin);
-                    border.Margin = new Thickness(0, margin, 0, margin);
-                }
-                else
-                {
-                    canvas.Margin = new Thickness(0, 0, 0, 0);
-                    border.Margin = new Thickness(0, 0, 0, 0);
 
+                if (scrollViewer != null)
+                {
+                    // center the Scroll Viewer
+                    scrollViewer.ScrollToVerticalOffset(scrollViewer.ScrollableHeight / 2.0);
+                    scrollViewer.ScrollToHorizontalOffset(scrollViewer.ScrollableWidth / 2.0);
                 }
             }
         }
 
+        private void zoomInButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (slider.Value + 10 > 1000)
+            {
+                slider.Value = 1000;
+            } else
+            {
+                slider.Value += 10;
+            }
+        }
+
+        private void zoomOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (slider.Value - 10 < 10)
+            {
+                slider.Value = 10;
+            }
+            else
+            {
+                slider.Value -= 10;
+            }
+        }
     }
 
 }
