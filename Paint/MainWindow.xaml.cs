@@ -7,28 +7,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Line2D;
 using System.IO;
-using System.Reflection;
 using System.Windows.Controls.Primitives;
-using System.Security.Cryptography;
-using System.Linq;
-using System.ComponentModel;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
-using System.Reflection.Metadata;
 using Microsoft.Win32;
 using Paint.Keys;
 using System.Threading.Tasks;
-using Circle2D;
-using System.Windows.Documents;
-using System.Windows.Media.Converters;
-using System.Data;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 using Image = System.Windows.Controls.Image;
-using System.Windows.Media.Media3D;
 
 namespace Paint
 {
@@ -261,8 +246,9 @@ namespace Paint
 
         private void CreateSelectionFrame(Point position)
         {
-            foreach (object obj in canvas.Children)
+            for (int i = canvas.Children.Count - 1; i >= 0; i--)
             {
+                var obj = canvas.Children[i];
                 if (obj.GetType() == typeof(Image))
                 {
                     Image curImage = (Image)obj;
@@ -287,18 +273,16 @@ namespace Paint
                         Canvas.SetLeft(_selectionFrame, Canvas.GetLeft(img) - 5);
                         Canvas.SetTop(_selectionFrame, Canvas.GetTop(img) - 5);
 
-                        canvas.Children.Add(_selectionFrame);
+                        canvas.Children.Insert(i, _selectionFrame);
                         return;
                     }
                 }
             }
-            foreach (object obj in _canvasObjects)
+
+            for (int i = _canvasObjects.Count - 1; i >= 0; i--)
             {
-                if (obj.GetType().ToString() == "Circle2D.Circle2D" 
-                    || obj.GetType().ToString() == "Ellipse2D.Ellipse2D"
-                    || obj.GetType().ToString() == "Rectangle2D.Rectangle2D"
-                    || obj.GetType().ToString() == "Square2D.Square2D"
-                    || obj.GetType().ToString() == "Line2D.Line2D")
+                var obj = _canvasObjects[i];
+                if (obj.GetType() != typeof(BitmapImage))
                 {
                     IShape shape = (IShape)obj;
                     if (shape.ContainsPoint(position.X, position.Y))
@@ -320,7 +304,7 @@ namespace Paint
 
                         originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
 
-                        canvas.Children.Add(_selectionFrame);
+                        canvas.Children.Insert(i, _selectionFrame);
                         break;
                     }
                 }
@@ -368,16 +352,6 @@ namespace Paint
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
-                        // code để giới hạn drop của image
-                        /*                        if (newX < 0 || newY < 0 || newX > canvas.ActualWidth || newY > canvas.ActualHeight)
-                                                {
-                                                    Canvas.SetLeft(_selectionFrame, originalPosition.X);
-                                                    Canvas.SetTop(_selectionFrame, originalPosition.Y);
-
-                                                    ChangeImagePosition(originalPosition.X, originalPosition.Y);
-                                                }
-                                                else
-                                                {*/
                         double oldWidth = _selectedImg.Width + 10;
                         ChangeImagePosition(newX, newY);
 
@@ -397,7 +371,6 @@ namespace Paint
                             Canvas.SetTop(_selectionFrame, newTop - 5);
                         }
 
-                        /*}*/
                         isDragging = false;
                         _selectionFrame.ReleaseMouseCapture();
                     }
@@ -641,9 +614,11 @@ namespace Paint
             }
             if (_selectedShapeName == "Text")
             {
-                colorFill = _colorText;
+                _preview = _shapeFactory.Create(_selectedShapeName, _colorText, colorFill, strokeSize, _strokeDashArray);
+            } else
+            {
+                _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize, _strokeDashArray);
             }
-            _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize);
         }
 
         private bool isBasicShape(IShape s)
@@ -712,10 +687,8 @@ namespace Paint
 
         private void strokeType_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is RadioButton strokeTypeRadioButton && strokeTypeRadioButton.IsChecked == true && _selectedShape != null)
+            if (sender is RadioButton strokeTypeRadioButton)
             {
-                _hasStroke = true;
-
                 if (strokeTypeRadioButton.Name == "solidStrokeButton")
                     _strokeDashArray = null;
                 else if (strokeTypeRadioButton.Name == "dashedStrokeButton")
@@ -777,6 +750,7 @@ namespace Paint
                 {
                     _selectedShape.UpdateStrokeDashArray(_strokeDashArray);
                 }
+                createPreviewShape();
             }
         }
 
@@ -794,9 +768,8 @@ namespace Paint
 
         private void strokeSize_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is RadioButton strokeSizeRadioButton && strokeSizeRadioButton.IsChecked == true && _selectedShape != null)
+            if (sender is RadioButton strokeSizeRadioButton)
             {
-                _hasStroke = true;
                 if (strokeSizeRadioButton.Name == "oneThicknessButton")
                     _strokeSize = 1; 
                 else if (strokeSizeRadioButton.Name == "threeThicknessButton")
@@ -809,6 +782,7 @@ namespace Paint
                 {
                     _selectedShape.UpdateStrokeSize(_strokeSize);
                 }
+                createPreviewShape();
             }
         }
 
@@ -821,10 +795,7 @@ namespace Paint
                 {
                     _selectedShape.UpdateColorStroke(new SolidColorBrush(selectedColor));
                 }
-                else
-                {
-                    createPreviewShape();
-                }
+                createPreviewShape();
             }
         }
 
@@ -837,10 +808,7 @@ namespace Paint
                 {
                     _selectedShape.UpdateColorFill(new SolidColorBrush(selectedColor));
                 }
-                else
-                {
-                    createPreviewShape();
-                }
+                createPreviewShape();
             }
         }
 
@@ -849,6 +817,11 @@ namespace Paint
             if (e.NewValue is Color selectedColor)
             {
                 _colorText = selectedColor;
+                if (_isSelecting && _selectedShape != null)
+                {
+                    _selectedShape.UpdateColorStroke(new SolidColorBrush(selectedColor));
+                }
+                createPreviewShape();
             }
         }
 
@@ -1419,7 +1392,7 @@ namespace Paint
             else if (_clipboardShape != null)
             {
                 IShape shape = (IShape)_clipboardShape;
-                IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize);
+                IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize, shape.StrokeDashArray);
                 pastedShape.UpdateStrokeDashArray(shape.StrokeDashArray);
                 pastedShape.HandleStart(_clipboardShape.GetStart().X - distance, _clipboardShape.GetStart().Y - distance);
                 pastedShape.HandleEnd(_clipboardShape.GetEnd().X - distance, _clipboardShape.GetEnd().Y - distance);

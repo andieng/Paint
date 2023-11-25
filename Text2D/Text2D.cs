@@ -9,6 +9,7 @@ namespace Text2D
     public class Text2D : IShape
     {
         private UIElement _text;
+        private Border _border;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         public Point2D LeftTop
@@ -35,23 +36,48 @@ namespace Text2D
             }
         }
 
+        public Point2D GetStart()
+        {
+            return _leftTop;
+        }
+
+        public Point2D GetEnd()
+        {
+            return _rightBottom;
+        }
+
+        public void SetInCanvas()
+        {
+            var left = Math.Min(_rightBottom.X, _leftTop.X);
+            var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
+            var right = Math.Max(_rightBottom.X, _leftTop.X);
+            var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
+
+            var width = right - left;
+            var height = bottom - top;
+
+            Canvas.SetLeft(_text, left);
+            Canvas.SetTop(_text, top);
+        }
+
         public SolidColorBrush ColorStroke { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
         public void UpdateColorStroke(SolidColorBrush colorStroke)
         {
+            if (colorStroke != null)
+            {
+                ColorStroke = colorStroke;
+                if (_text != null)
+                {
+                    (_text as TextBox).Foreground = colorStroke;
+                }
+            }
         }
 
         public void UpdateColorFill(SolidColorBrush colorFill)
         {
-            if (colorFill != null)
-            {
-                ColorFill = colorFill;
-                if (_text != null)
-                {
-                    (_text as TextBox).Foreground = colorFill;
-                }
-            }
         }
 
         public int StrokeSize { get; set; }
@@ -185,5 +211,24 @@ namespace Text2D
             }
         }
 
+        public void FlipHorizontally()
+        {
+
+        }
+
+        public void FlipVertically()
+        {
+
+        }
+
+        public void RotateLeft90Degrees()
+        {
+
+        }
+
+        public void RotateRight90Degrees()
+        {
+
+        }
     }
 }
