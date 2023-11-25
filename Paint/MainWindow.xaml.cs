@@ -505,7 +505,7 @@ namespace Paint
             {
                 colorFill = _colorFill;
             }
-            if (_selectedShapeName=="Text")
+            if (_selectedShapeName == "Text")
             {
                 colorFill = _colorText;
             }
