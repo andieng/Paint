@@ -453,7 +453,13 @@
                     </Style>
                 </Button.Style>
             </Button>
-        </DockPanel>
+			<!--Slider-->
+			<DockPanel VerticalAlignment="Center" Margin="10">
+				<Label DockPanel.Dock="Left">Size:</Label>
+				<TextBox Text="{Binding ElementName=scaleValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="30" BorderBrush="Transparent"/>
+				<Slider Maximum="1000" Minimum="20" Value="100" Width="100" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Name="scaleValue" ValueChanged="scaleValue_ValueChanged" />
+			</DockPanel>
+		</DockPanel>
         
         <!--Toolbox-->
         <Border Grid.Row="1" Background="#FFFCFCFC" BorderThickness="0.6" BorderBrush="#FFD7D7D7">
@@ -766,7 +772,7 @@
                     <TextBlock Text="Text color" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <syncfusion:ColorPicker DockPanel.Dock="Top" Width="45" Height="34" Margin="0,5,0,0" x:Name="colorPickerText"
-                                                ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1"
+                                                ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1" Color="Black"
                                                 Cursor="Hand" BorderBrush="#FFAEAEAE"/>
                 </DockPanel>
 
@@ -796,12 +802,13 @@
                 </DockPanel>
             </Grid>
         </Border>
-        
 
-        <Grid Grid.Row="2" Background="#FFECF6F6" >
-            <Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" HorizontalAlignment="Center" />
-            <Border Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
+		<ScrollViewer x:Name="scrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+			<Grid x:Name="interactive"  Background="#FFECF6F6" >
+				<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" Height="500" HorizontalAlignment="Center" ClipToBounds="True"/>
+				<Border x:Name="border" Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
                     MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
-        </Grid>
+			</Grid>
+		</ScrollViewer>
     </Grid>
 </Window>

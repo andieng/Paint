@@ -1,15 +1,15 @@
-using Contract;
+﻿using Contract;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
-using System.Windows.Shapes;
 
-namespace Rectangle2D
+namespace Text2D
 {
-    public class Rectangle2D : IShape
+    public class Text2D : IShape
     {
-        private UIElement _rectangle;
+        private UIElement _text;
+        private Border _border;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
         public Point2D LeftTop
@@ -57,8 +57,8 @@ namespace Rectangle2D
             var width = right - left;
             var height = bottom - top;
 
-            Canvas.SetLeft(_rectangle, left);
-            Canvas.SetTop(_rectangle, top);
+            Canvas.SetLeft(_text, left);
+            Canvas.SetTop(_text, top);
         }
 
         public SolidColorBrush ColorStroke { get; set; }
@@ -69,23 +69,15 @@ namespace Rectangle2D
             if (colorStroke != null)
             {
                 ColorStroke = colorStroke;
-                if (_rectangle != null)
+                if (_text != null)
                 {
-                    (_rectangle as Rectangle).Stroke = colorStroke;
+                    (_text as TextBox).Foreground = colorStroke;
                 }
             }
         }
 
         public void UpdateColorFill(SolidColorBrush colorFill)
         {
-            if (colorFill != null)
-            {
-                ColorFill = colorFill;
-                if (_rectangle != null)
-                {
-                    (_rectangle as Rectangle).Fill = colorFill;
-                }
-            }
         }
 
         public int StrokeSize { get; set; }
@@ -93,49 +85,63 @@ namespace Rectangle2D
 
         public void UpdateStrokeDashArray(double[] dashArray)
         {
-            StrokeDashArray = dashArray;
-            if (_rectangle != null)
-            {
-                (_rectangle as Rectangle).StrokeDashArray = dashArray != null ? new DoubleCollection(dashArray) : null;
-            }
         }
 
         public void UpdateStrokeSize(int strokeSize)
         {
-            StrokeSize = strokeSize;
-            if (_rectangle != null)
-            {
-                (_rectangle as Rectangle).StrokeThickness = strokeSize;
-            }
         }
 
-        public string Name => "Rectangle";
+        public string Name => "Text";
+        public string TextContent {get;set;}
+
+ 
         public UIElement Draw()
         {
             var left = Math.Min(_rightBottom.X, _leftTop.X);
             var top = Math.Min(_rightBottom.Y, _leftTop.Y);
+
             var right = Math.Max(_rightBottom.X, _leftTop.X);
             var bottom = Math.Max(_rightBottom.Y, _leftTop.Y);
 
             var width = right - left;
             var height = bottom - top;
 
-            _rectangle = new Rectangle()
+            _text = new TextBox()
             {
                 Width = width,
+                Foreground = ColorFill,
+                IsReadOnly = false, 
+                BorderThickness = new Thickness(1),
+                Text = TextContent,
+                TextWrapping = TextWrapping.Wrap,
                 Height = height,
-                StrokeThickness = StrokeSize,
-                Stroke = ColorStroke,
-                Fill = ColorFill,
-                StrokeDashArray = StrokeDashArray != null ? new DoubleCollection(StrokeDashArray) : null,
+                Background = Brushes.Transparent,
+                AcceptsReturn = true,
+                AcceptsTab = true,
+
             };
-            Canvas.SetLeft(_rectangle, left);
-            Canvas.SetTop(_rectangle, top);
-            return _rectangle;
+
+            if (_text is TextBox textBox)
+            {
+                textBox.TextChanged += (s, args) =>
+                {
+                    int lineCount = textBox.LineCount;
+                    if (lineCount * 18 > textBox.Height)
+                    {
+                        textBox.Height = double.NaN;
+                        return;
+                    };
+                };
+            }
+
+            Canvas.SetLeft(_text, left);
+            Canvas.SetTop(_text, top);
+            return _text;
         }
 
         public void HandleEnd(double x, double y)
         {
+
             _rightBottom.X = x;
             _rightBottom.Y = y;
         }
@@ -148,7 +154,7 @@ namespace Rectangle2D
 
         public IShape Clone()
         {
-            return new Rectangle2D();
+            return new Text2D();
         }
 
         public bool ContainsPoint(double x, double y)
@@ -161,6 +167,7 @@ namespace Rectangle2D
 
             return x >= left && x <= right && y >= top && y <= bottom;
         }
+
         public double GetTop()
         {
             return Math.Min(_rightBottom.Y, _leftTop.Y); ;
@@ -186,7 +193,7 @@ namespace Rectangle2D
 
         public void ChangePosition(double x, double y)
         {
-            if (_rectangle != null)
+            if (_text != null)
             {
                 double width = GetWidth();
                 double height = GetHeight();
@@ -194,8 +201,8 @@ namespace Rectangle2D
                 double newLeft = x + 2.5;
                 double newTop = y + 2.5;
 
-                Canvas.SetLeft(_rectangle, newLeft);
-                Canvas.SetTop(_rectangle, newTop);
+                Canvas.SetLeft(_text, newLeft);
+                Canvas.SetTop(_text, newTop);
 
                 _leftTop.X = newLeft;
                 _leftTop.Y = newTop;
@@ -206,66 +213,22 @@ namespace Rectangle2D
 
         public void FlipHorizontally()
         {
+
         }
 
         public void FlipVertically()
         {
-        }
 
-        public void RotateRight90Degrees()
-        {
-            double centerX = (_leftTop.X + _rightBottom.X) / 2;
-            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
-
-            double width = GetWidth();
-            double height = GetHeight();
-
-            double newLeft = centerX - height / 2;
-            double newTop = centerY - width / 2;
-            double newRight = centerX + height / 2;
-            double newBottom = centerY + width / 2;
-
-            _leftTop.X = newLeft;
-            _leftTop.Y = newTop;
-            _rightBottom.X = newRight;
-            _rightBottom.Y = newBottom;
-
-            if (_rectangle != null && _rectangle is Rectangle rectangleElement)
-            {
-                rectangleElement.Width = height;
-                rectangleElement.Height = width;
-
-                Canvas.SetLeft(_rectangle, newLeft);
-                Canvas.SetTop(_rectangle, newTop);
-            }
         }
 
         public void RotateLeft90Degrees()
         {
-            double centerX = (_leftTop.X + _rightBottom.X) / 2;
-            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
 
-            double width = GetWidth();
-            double height = GetHeight();
+        }
 
-            double newLeft = centerX - height / 2;
-            double newTop = centerY - width / 2;
-            double newRight = centerX + height / 2;
-            double newBottom = centerY + width / 2;
+        public void RotateRight90Degrees()
+        {
 
-            _leftTop.X = newLeft;
-            _leftTop.Y = newTop;
-            _rightBottom.X = newRight;
-            _rightBottom.Y = newBottom;
-
-            if (_rectangle != null && _rectangle is Rectangle rectangleElement)
-            {
-                rectangleElement.Width = height;
-                rectangleElement.Height = width;
-
-                Canvas.SetLeft(_rectangle, newLeft);
-                Canvas.SetTop(_rectangle, newTop);
-            }
         }
     }
 }

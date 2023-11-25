@@ -62,6 +62,8 @@
     <ProjectReference Include="..\Line2D\Line2D.csproj" />
     <ProjectReference Include="..\Rectangle2D\Rectangle2D.csproj" />
     <ProjectReference Include="..\Square2D\Square2D.csproj" />
+    <ProjectReference Include="..\Text2D\Text2D.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>

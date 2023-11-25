@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Media.Media3D;
 
 namespace Circle2D
 {
@@ -13,7 +12,6 @@ namespace Circle2D
         private UIElement _circle;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
-
         public Point2D LeftTop
         {
             get => _leftTop;
@@ -70,6 +68,7 @@ namespace Circle2D
         {
             if (colorStroke != null)
             {
+
                 ColorStroke = colorStroke;
                 if (_circle != null)
                 {
