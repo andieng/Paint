@@ -10,7 +10,9 @@
   <ItemGroup>
     <None Remove="Resources\circle.png" />
     <None Remove="Resources\close.png" />
+    <None Remove="Resources\copy.png" />
     <None Remove="Resources\cursor.png" />
+    <None Remove="Resources\cut.png" />
     <None Remove="Resources\dry-clean.png" />
     <None Remove="Resources\ellipse.png" />
     <None Remove="Resources\fill.png" />
@@ -23,6 +25,7 @@
     <None Remove="Resources\no-stroke.png" />
     <None Remove="Resources\paint-32x32.png" />
     <None Remove="Resources\paint-64x64.png" />
+    <None Remove="Resources\paste.png" />
     <None Remove="Resources\picture.png" />
     <None Remove="Resources\rectangle.png" />
     <None Remove="Resources\redo-disable.png" />
@@ -40,6 +43,8 @@
     <None Remove="Resources\text.png" />
     <None Remove="Resources\undo-disable.png" />
     <None Remove="Resources\undo.png" />
+    <None Remove="Resources\zoom-in.png" />
+    <None Remove="Resources\zoom-out.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +54,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\copy.png" />
+    <Resource Include="Resources\cut.png" />
     <Resource Include="Resources\fill.png" />
     <Resource Include="Resources\flip-horizontal.png" />
     <Resource Include="Resources\flip-vertical.png" />
@@ -75,6 +82,7 @@
     <Resource Include="Resources\no-stroke.png" />
     <Resource Include="Resources\paint-32x32.png" />
     <Resource Include="Resources\paint-64x64.png" />
+    <Resource Include="Resources\paste.png" />
     <Resource Include="Resources\picture.png" />
     <Resource Include="Resources\rectangle.png" />
     <Resource Include="Resources\redo-disable.png" />
@@ -91,6 +99,8 @@
     <Resource Include="Resources\text.png" />
     <Resource Include="Resources\undo-disable.png" />
     <Resource Include="Resources\undo.png" />
+    <Resource Include="Resources\zoom-in.png" />
+    <Resource Include="Resources\zoom-out.png" />
   </ItemGroup>
 
 </Project>

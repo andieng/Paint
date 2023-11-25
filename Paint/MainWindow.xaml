@@ -9,7 +9,7 @@
         Icon="./Resources/paint-32x32.png"
         Loaded="Window_Loaded"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="PATE Paint" Height="750" Width="1000">
+        Title="PATE Paint" Height="750" Width="1050">
     <Window.Resources>
         <Style x:Key="TransparentStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
@@ -30,55 +30,21 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="UndoButtonStyle" TargetType="{x:Type Button}">
+        <Style x:Key="TransparentActionButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Image Source="./Resources/undo-disable.png" Width="20" Height="20" />
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-
-        <Style x:Key="RedoButtonStyle" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Image Source="./Resources/redo-disable.png" Width="20" Height="20" />
-                        </Setter.Value>
-                    </Setter>
+                    <Setter Property="Background" Value="#FFE1E2FA"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -97,7 +63,26 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
+                    <Setter Property="Background" Value="#FFF3F4FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TransparentToggleActionButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFE1E2FA"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -116,19 +101,19 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
+                    <Setter Property="Background" Value="#FFF3F4FF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="ToggleButtonActiveStyle" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Background" Value="#eaeaea"/>
+            <Setter Property="Background" Value="#FFF8F8FD"/>
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#535353" />
+            <Setter Property="BorderBrush" Value="#FFB8BDF9" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="#535353" BorderThickness="1">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#FFB8BDF9" BorderThickness="1.4">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -136,7 +121,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FFF0F0F0"/>
+                    <Setter Property="Background" Value="#FFECEEFF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -158,21 +143,21 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
+                    <Setter Property="Background" Value="#FFF3F4FF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="ToggleButtonPluginActiveStyle" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Background" Value="#eaeaea"/>
+            <Setter Property="Background" Value="#FFF8F8FD"/>
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#535353" />
+            <Setter Property="BorderBrush" Value="#FFB8BDF9" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="#535353" BorderThickness="1">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#FFB8BDF9" BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -180,59 +165,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FFF0F0F0"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="TransparentFocusStyle" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="#535353" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                    <Setter Property="BorderThickness" Value="1" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="TransparentFocusToggleButtonStyle" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="#535353" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="Background" Value="#eaeaea"/>
-                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Background" Value="#FFECEEFF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -298,20 +231,123 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="0" Background="#FFAEAEAE" Height="4"
+                                 CornerRadius="0,2,2,0"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="#FF8C91E8" BorderThickness="0" 
+                                Height="4" CornerRadius="2,0,0,2" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border CornerRadius="20" Width="22" Height="22" Background="#fff">
+                            <Ellipse x:Name="thumbEllipse" Height="10.5" Width="10.5" Fill="#FF8C91E8">
+                                <Ellipse.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="thumbEllipse"
+                                                    Storyboard.TargetProperty="Width" To="14" Duration="0:0:0.1" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="thumbEllipse"
+                                                    Storyboard.TargetProperty="Height" To="14" Duration="0:0:0.1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="thumbEllipse"
+                                                    Storyboard.TargetProperty="Width" To="10.5" Duration="0:0:0.1" />
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="thumbEllipse"
+                                                    Storyboard.TargetProperty="Height" To="10.5" Duration="0:0:0.1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="HorizontalSliderStyle" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="42" />
             <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <!--Action box-->
-        <DockPanel Grid.Row="0" Background="#FFECF6F6" LastChildFill="False">
-        
+        <DockPanel Grid.Row="0" Background="#FFEEEFFD" LastChildFill="False">
+
             <!--File button - Toggle file menu-->
-            <ToggleButton x:Name="fileButton" DockPanel.Dock="Left" Style="{StaticResource TransparentToggleButtonStyle}" Margin="8 5 5 5"
+            <ToggleButton x:Name="fileButton" DockPanel.Dock="Left" Style="{StaticResource TransparentToggleActionButtonStyle}" Margin="8,5,0,5"
                     Width="50" Content="File" FontSize="14" Click="fileButton_Click">
                 <ToggleButton.Resources>
                     <Style TargetType="Border">
@@ -319,7 +355,7 @@
                     </Style>
                 </ToggleButton.Resources>
             </ToggleButton>
-            
+
             <!--Drop down menu for File button-->
             <Popup x:Name="popupFile" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=fileButton}">
                 <UserControl Background="Transparent">
@@ -367,37 +403,78 @@
                 </UserControl>
             </Popup>
 
+            <!--Edit button - Toggle edit menu-->
+            <ToggleButton x:Name="editButton" DockPanel.Dock="Left" Style="{StaticResource TransparentToggleActionButtonStyle}" Margin="5,5,8,5"
+                    Width="50" Content="Edit" FontSize="14" Click="editButton_Click">
+                <ToggleButton.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </ToggleButton.Resources>
+            </ToggleButton>
+
+            <!--Drop down menu for Edit button-->
+            <Popup x:Name="popupEdit" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=editButton}">
+                <UserControl Background="Transparent">
+                    <Border Style="{StaticResource PopUpBorderStyle}" Width="190">
+                        <StackPanel Background="Transparent">
+                            <Button Style="{StaticResource PopUpButtonStyle}" Click="cutButton_Click">
+                                <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                    <Image DockPanel.Dock="Left" Source="./Resources/cut.png" Width="18" Height="18"/>
+                                    <TextBlock DockPanel.Dock="Right" Text="Ctrl+X" FontSize="13" Style="{StaticResource ToolTextStyle}" />
+                                    <TextBlock DockPanel.Dock="Left" Text="Cut" Margin="12 0 0 0" FontSize="14" />
+                                </DockPanel>
+                            </Button>
+                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="copyButton_Click">
+                                <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                    <Image DockPanel.Dock="Left" Source="./Resources/copy.png" Width="18" Height="18"/>
+                                    <TextBlock DockPanel.Dock="Right" Text="Ctrl+C" FontSize="13" Style="{StaticResource ToolTextStyle}" />
+                                    <TextBlock DockPanel.Dock="Left" Text="Copy" Margin="12 0 0 0" FontSize="14" />
+                                </DockPanel>
+                            </Button>
+                            <Button Style="{StaticResource PopUpButtonStyle}" Margin="0 5 0 0" Click="pasteButton_Click">
+                                <DockPanel VerticalAlignment="Center" Margin="8 5 8 5">
+                                    <Image DockPanel.Dock="Left" Source="./Resources/paste.png" Width="18" Height="18"/>
+                                    <TextBlock DockPanel.Dock="Right" Text="Ctrl+V" FontSize="13" Style="{StaticResource ToolTextStyle}" />
+                                    <TextBlock DockPanel.Dock="Left" Text="Paste" Margin="12 0 0 0" FontSize="14" />
+                                </DockPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </UserControl>
+            </Popup>
+
             <!--Separator-->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                <Separator Background="#FFD8DAFC" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                            Height="25">
                     <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.6" />
+                        <ScaleTransform ScaleX="0.7" />
                     </Separator.RenderTransform>
                 </Separator>
             </StackPanel>
 
             <!--Save button-->
-            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentStyle}" Margin="5 5 5 5"
+            <Button DockPanel.Dock="Left" Style="{StaticResource TransparentActionButtonStyle}" Margin="6,5,6,5"
                     Width="32" ToolTip="Save (Ctrl+S)" Click="saveImageButton_Click">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
                     </Style>
                 </Button.Resources>
-                <Image Source="./Resources/save.png" Width="16" Height="16" />
+                <Image Source="./Resources/save.png" Width="22" Height="22" />
             </Button>
-            
+
             <!--Separator-->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Center">
-                <Separator Background="#e5e5e5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                <Separator Background="#FFD8DAFC" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                            Height="25">
                     <Separator.RenderTransform>
-                        <ScaleTransform ScaleX="0.6" />
+                        <ScaleTransform ScaleX="0.7" />
                     </Separator.RenderTransform>
                 </Separator>
             </StackPanel>
-            
+
             <!--Undo button-->
             <Button DockPanel.Dock="Left" x:Name="undoButton" IsEnabled="False"
                     Margin="5 5 5 5" Width="32" ToolTip="Undo (Ctrl+Z)" Click="undoButton_Click">
@@ -407,7 +484,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentStyle}">
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentActionButtonStyle}">
                         <Setter Property="Content">
                             <Setter.Value>
                                 <Image Source="./Resources/undo-disable.png" Width="20" Height="20" />
@@ -425,7 +502,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            
+
             <!--Redo button-->
             <Button DockPanel.Dock="Left" x:Name="redoButton" IsEnabled="False"
                     Margin="5 5 5 5" Width="32" ToolTip="Redo (Ctrl+Y)" Click="redoButton_Click">
@@ -435,7 +512,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentStyle}">
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentActionButtonStyle}">
                         <Setter Property="Content">
                             <Setter.Value>
                                 <Image Source="./Resources/redo-disable.png" Width="20" Height="20" />
@@ -453,16 +530,45 @@
                     </Style>
                 </Button.Style>
             </Button>
-			<!--Slider-->
-			<DockPanel VerticalAlignment="Center" Margin="10">
-				<Label DockPanel.Dock="Left">Size:</Label>
-				<TextBox Text="{Binding ElementName=scaleValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="30" BorderBrush="Transparent"/>
-				<Slider Maximum="1000" Minimum="20" Value="100" Width="100" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Name="scaleValue" ValueChanged="scaleValue_ValueChanged" />
-			</DockPanel>
-		</DockPanel>
-        
+            
+            <!--Slider-->
+            <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,20,0" 
+                        Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox Text="{Binding ElementName=slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" 
+                         TextAlignment="Right" Width="40" VerticalContentAlignment="Center" BorderBrush="#535353"
+                         BorderThickness="0.5" Padding="4 0 4 0" Height="22">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Button Margin="15,0,0,0" Click="zoomOutButton_Click" Style="{StaticResource TransparentActionButtonStyle}"
+                        Width="30" Height="30">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                    <Image Source="Resources/zoom-out.png" Width="18" Height="18" />
+                </Button>
+                <Slider x:Name="slider" Maximum="1000" Minimum="10" Value="100" Width="180"
+                        TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="slider_ValueChanged" 
+                        Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource HorizontalSliderStyle}" />
+                <Button Margin="8,0,0,0" Click="zoomInButton_Click" Style="{StaticResource TransparentActionButtonStyle}"
+                        Width="30" Height="30">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                    <Image Source="Resources/zoom-in.png" Width="18" Height="18" />
+                </Button>
+            </StackPanel>
+        </DockPanel>
+
         <!--Toolbox-->
-        <Border Grid.Row="1" Background="#FFFCFCFC" BorderThickness="0.6" BorderBrush="#FFD7D7D7">
+        <Border Grid.Row="1" BorderThickness="0,0.4,0,0.4" BorderBrush="#FFD7D7D7">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90" />
@@ -472,9 +578,9 @@
                     <ColumnDefinition Width="227" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="140" />
-                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="90" />
-                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -598,7 +704,7 @@
                     <TextBlock Text="Stroke" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" >
-                        
+
                         <!--Stroke button-->
                         <ToggleButton x:Name="strokeToggleButton" Style="{StaticResource ToggleButtonActiveStyle}" 
                                       Margin="5,5,5,0" Width="34" Height="34" Checked="strokeToggleButton_Checked"
@@ -720,7 +826,7 @@
                         <!--Color picker stroke-->
                         <syncfusion:ColorPicker Width="45" Height="34" Margin="12,5,5,0" x:Name="colorPickerStroke"
                                                 ColorChanged="ColorPickerStroke_ColorChanged" BorderThickness="1"
-                                                Cursor="Hand" BorderBrush="#FFAEAEAE" Color="Black"/>
+                                                Cursor="Hand" BorderBrush="#FFB8BDF9" Color="Black" Background="White" />
                     </StackPanel>
                 </DockPanel>
 
@@ -735,8 +841,8 @@
                 </StackPanel>
 
                 <!--Fill-->
-				<DockPanel Grid.Column="6">
-					<!--Fill title-->
+                <DockPanel Grid.Column="6">
+                    <!--Fill title-->
                     <TextBlock Text="Fill" DockPanel.Dock="Bottom" VerticalAlignment="Center" HorizontalAlignment="Center"
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -753,7 +859,7 @@
                         </ToggleButton>
                         <syncfusion:ColorPicker Width="45" Height="34" Margin="20,5,5,0" x:Name="colorPickerFill"
                                                 ColorChanged="ColorPickerFill_ColorChanged" BorderThickness="1"
-                                                Cursor="Hand" BorderBrush="#FFAEAEAE"/>
+                                                Cursor="Hand" BorderBrush="#FFB8BDF9" Background="White"/>
                     </StackPanel>
                 </DockPanel>
 
@@ -773,7 +879,7 @@
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
                     <syncfusion:ColorPicker DockPanel.Dock="Top" Width="45" Height="34" Margin="0,5,0,0" x:Name="colorPickerText"
                                                 ColorChanged="ColorPickerText_ColorChanged" BorderThickness="1" Color="Black"
-                                                Cursor="Hand" BorderBrush="#FFAEAEAE"/>
+                                                Cursor="Hand" BorderBrush="#FFB8BDF9" Background="White"/>
                 </DockPanel>
 
                 <!--Separator-->
@@ -803,12 +909,12 @@
             </Grid>
         </Border>
 
-		<ScrollViewer x:Name="scrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-			<Grid x:Name="interactive"  Background="#FFECF6F6" >
-				<Canvas x:Name="canvas" Margin="0 40 0 40" Background="#fff" Width="800" Height="500" HorizontalAlignment="Center" ClipToBounds="True"/>
-				<Border x:Name="border" Background="Transparent" Margin="0 40 0 40" MouseDown="canvas_MouseDown"
-                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="800" HorizontalAlignment="Center" />
-			</Grid>
-		</ScrollViewer>
+        <ScrollViewer x:Name="scrollViewer" Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid x:Name="interactive" Background="#FFEEEFFD" >
+                <Canvas x:Name="canvas" Background="#fff" Width="850" Height="490" HorizontalAlignment="Center" ClipToBounds="True"/>
+                <Border x:Name="border" Background="Transparent" MouseDown="canvas_MouseDown" Height="490"
+                    MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="850" HorizontalAlignment="Center" />
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>
