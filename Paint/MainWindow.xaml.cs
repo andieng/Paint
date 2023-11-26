@@ -14,6 +14,7 @@ using Microsoft.Win32;
 using Paint.Keys;
 using System.Threading.Tasks;
 using Image = System.Windows.Controls.Image;
+using System.Linq;
 
 namespace Paint
 {
@@ -256,8 +257,10 @@ namespace Paint
 
         private void CreateSelectionFrame(Point position)
         {
-            foreach (object obj in canvas.Children)
+            object[] childrenArray = canvas.Children.Cast<object>().ToArray();
+            for (int i = childrenArray.Length - 1; i >= 0; i--)
             {
+                object obj = childrenArray[i];
                 if (obj.GetType() == typeof(Image))
                 {
                     Image curImage = (Image)obj;
@@ -287,8 +290,11 @@ namespace Paint
                     }
                 }
             }
-            foreach (object obj in _canvasObjects)
+            object[] objectArray = _canvasObjects.Cast<object>().ToArray();
+            for (int i = objectArray.Length - 1; i >= 0; i--)
             {
+                object obj = objectArray[i];
+
                 if (obj.GetType().ToString() == "Circle2D.Circle2D"
                     || obj.GetType().ToString() == "Ellipse2D.Ellipse2D"
                     || obj.GetType().ToString() == "Rectangle2D.Rectangle2D"
