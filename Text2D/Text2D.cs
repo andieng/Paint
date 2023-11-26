@@ -3,6 +3,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Media.Media3D;
 
 namespace Text2D
 {
@@ -221,12 +222,32 @@ namespace Text2D
             // unsupported error
         }
 
-        public void RotateLeft90Degrees()
-        {
-
-        }
-
+        private double _rotationAngle = 0;
         public void RotateRight90Degrees()
+        {
+            if (_text != null && _text is TextBox textElement)
+            {
+                _rotationAngle += 90;
+
+                double width = GetWidth();
+                double height = GetHeight();
+
+                RotateTransform rotateTransform = new RotateTransform(_rotationAngle, height, 0);
+                textElement.RenderTransform = rotateTransform;
+
+                double newLeft = _leftTop.X;
+                double newTop = _leftTop.Y;
+
+                Canvas.SetLeft(_text, newLeft);
+                Canvas.SetTop(_text, newTop);
+
+                _leftTop.X = newLeft;
+                _leftTop.Y = newTop;
+                _rightBottom.X = newLeft + height;
+                _rightBottom.Y = newTop + width - height;
+            }
+        }
+        public void RotateLeft90Degrees()
         {
 
         }
