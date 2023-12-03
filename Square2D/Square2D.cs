@@ -12,6 +12,7 @@ namespace Square2D
         private UIElement _square;
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
+        public string textContent { get; set; }
         public Point2D LeftTop
         {
             get => _leftTop;

@@ -14,6 +14,10 @@ using Microsoft.Win32;
 using Paint.Keys;
 using System.Threading.Tasks;
 using Image = System.Windows.Controls.Image;
+using System.Xml.Linq;
+using System.Reflection;
+using System.Linq;
+using System.Windows.Documents;
 
 namespace Paint
 {
@@ -49,6 +53,12 @@ namespace Paint
         private int distance = 10;
         private bool isText = false;
         private UIElement _textShape;
+        private List<IShape> _listOrderShapeEdit = new List<IShape>();
+        private List<IShape> _listOrderShapeEdited = new List<IShape>();
+        private List<object> indexPairChangedInUndoStack = new List<object>();
+        private int isAddAfterEdit = 0;
+        private int numRedo = 0;
+        private Stack<object> _redoStack = new Stack<object>();
 
         public MainWindow()
         {
@@ -294,28 +304,39 @@ namespace Paint
                 var obj = _canvasObjects[i];
                 if (obj.GetType() != typeof(BitmapImage))
                 {
-                    IShape shape = (IShape)obj;
-                    if (shape.ContainsPoint(position.X, position.Y))
+                    if (obj is IShape shape)
                     {
-                        _selectedShape = shape;
-                        _selectionFrame = new Rectangle()
+                        shape = (IShape)obj;
+
+
+                        if (shape.ContainsPoint(position.X, position.Y))
                         {
-                            Stroke = Brushes.Blue,
-                            StrokeDashArray = new DoubleCollection() { 4, 4 },
-                            StrokeThickness = 1,
-                            StrokeDashCap = PenLineCap.Round,
-                            Width = shape.GetWidth() + 5,
-                            Height = shape.GetHeight() + 5,
-                        };
-                        addEventsToSelectionFrame();
+                            _selectedShape = shape;
+                            _selectionFrame = new Rectangle()
+                            {
+                                Stroke = Brushes.Blue,
+                                StrokeDashArray = new DoubleCollection() { 4, 4 },
+                                StrokeThickness = 1,
+                                StrokeDashCap = PenLineCap.Round,
+                                Width = shape.GetWidth() + 5,
+                                Height = shape.GetHeight() + 5,
+                            };
+                            addEventsToSelectionFrame();
 
-                        Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
-                        Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
+                            Canvas.SetLeft(_selectionFrame, shape.GetLeft() - 2.5);
+                            Canvas.SetTop(_selectionFrame, shape.GetTop() - 2.5);
 
-                        originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
-
-                        canvas.Children.Insert(i, _selectionFrame);
-                        break;
+                            originalPosition = new Point(Canvas.GetLeft(_selectionFrame), Canvas.GetTop(_selectionFrame));
+                            if (_undoStack.Count > 0)
+                            {
+                                canvas.Children.Insert(i+1, _selectionFrame);
+                            }
+                            else
+                            {
+                                canvas.Children.Insert(i, _selectionFrame);
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -560,6 +581,7 @@ namespace Paint
             // Generate next object
             createPreviewShape();
             _isPreviewAdded = false;
+            if(_listOrderShapeEdit.Count > 0) { isAddAfterEdit++; }
         }
 
         private void updateActualSizeForTextBox(TextBox textBox,double left, double top)
@@ -582,10 +604,15 @@ namespace Paint
             var Y = top + textBlock.ActualHeight;
 
             Object m = _canvasObjects[_canvasObjects.Count - 1];
+            
             if( m is IShape shape)
             {
+                var temp = shape as Text2D.Text2D;
                 shape.HandleStart(left, top);
-                shape.HandleEnd(X, Y + 5);
+                shape.HandleEnd(X+7, Y + 5);
+                shape.textContent = textBox.Text;
+                shape.ColorFill = new SolidColorBrush(_colorText);
+                shape.ColorStroke = new SolidColorBrush(Colors.Transparent);
                 _canvasObjects[_canvasObjects.Count - 1] = m;
             }
         }
@@ -835,7 +862,11 @@ namespace Paint
                 _colorStroke = selectedColor;
                 if (_isSelecting && _selectedShape != null)
                 {
+                    cloneShapeBeforeEdit(_selectedShape);
+                   // _listOrderShapeEdited.Add(_selectedShape);
                     _selectedShape.UpdateColorStroke(new SolidColorBrush(selectedColor));
+                    _listOrderShapeEdited.Add(_selectedShape);
+
                 }
                 createPreviewShape();
             }
@@ -848,7 +879,10 @@ namespace Paint
                 _colorFill = selectedColor;
                 if (_isSelecting && _selectedShape != null)
                 {
+                    //cloneShapeBeforeEdit(_selectedShape);
+                    
                     _selectedShape.UpdateColorFill(new SolidColorBrush(selectedColor));
+                    //_listOrderShapeEdited.Add(_selectedShape);
                 }
                 createPreviewShape();
             }
@@ -874,14 +908,71 @@ namespace Paint
 
         private async void undo()
         {
+            
             await Task.Delay(100);
+           // numRedo--;
             if (_canvasObjects.Count > 0 && canvas.Children.Count > 0)
             {
+                numRedo=0;
                 var lastIndex = _canvasObjects.Count - 1;
-                _undoStack.Push(_canvasObjects[lastIndex]);
-                canvas.Children.RemoveAt(lastIndex);
-                _canvasObjects.RemoveAt(lastIndex);
-                redoButton.IsEnabled = true;
+                if (_listOrderShapeEdit.Count > 0 && isAddAfterEdit <= 0)
+                {
+                    var temp = _listOrderShapeEdit[_listOrderShapeEdit.Count - 1];
+
+                    int index = _canvasObjects.FindIndex(obj =>
+                    {
+                        if (obj is IShape shape)
+                        {
+                            return object.ReferenceEquals(shape, _listOrderShapeEdited[_listOrderShapeEdited.Count - 1]);
+                        }
+                        return false;
+                    });
+
+                    _canvasObjects[index] = temp;
+                    _undoStack.Push(_listOrderShapeEdited[_listOrderShapeEdited.Count - 1]);
+
+                    int undoStackLength = _undoStack.Count;
+                    var indexPair = new { Pre = index, Now = undoStackLength - 1 };
+                    indexPairChangedInUndoStack.Add(indexPair);
+                    var m = _listOrderShapeEdit[_listOrderShapeEdit.Count - 1];
+                    UIElement element = m.Draw();
+
+                    if (index > -1)
+                    {
+                        canvas.Children.RemoveAt(index);
+                        canvas.Children.Insert(index, element);
+
+                    }
+
+                    isAddAfterEdit++;
+                    _listOrderShapeEdit.RemoveAt(_listOrderShapeEdit.Count - 1);
+                    _listOrderShapeEdited.RemoveAt(_listOrderShapeEdited.Count - 1);
+                }               
+                else
+                {
+                    int i =  lastIndex;
+                    if (_redoStack.Count > 0) {
+                        var check = _redoStack.Pop();
+                        int index = _canvasObjects.FindIndex(obj =>
+                        {
+                            if (obj is IShape shape)
+                            {
+                                return object.ReferenceEquals(shape, check);
+                            }
+                            return false;
+                        });
+                        if(index > -1) { i = index; }
+                    }
+
+                   
+                    _undoStack.Push(_canvasObjects[i]);
+                    _canvasObjects.RemoveAt(i);
+                    canvas.Children.RemoveAt(i);
+                    int undoStackLength = _undoStack.Count;
+                    isAddAfterEdit--;
+                }
+
+                 redoButton.IsEnabled = true;
 
                 // Disable when not able to undo
                 if (_canvasObjects.Count == 0)
@@ -901,9 +992,79 @@ namespace Paint
             await Task.Delay(100);
             if (_undoStack.Count > 0)
             {
+                Object n = new object();
                 object obj = _undoStack.Pop();
-                _canvasObjects.Add(obj);
+                int lastIndex = _undoStack.Count;
+                for (int i=0;i<indexPairChangedInUndoStack.Count;i++)
+                {
+                    var lastItem = indexPairChangedInUndoStack[i];
+                    if (lastItem != null)
+                    {
+                        if (lastItem is var item && item.GetType().GetProperty("Now") != null)
+                        {
+                            int nowValue = (int)item.GetType().GetProperty("Now").GetValue(item);
+                            int preValue = (int)item.GetType().GetProperty("Pre").GetValue(item);
+
+                            if (lastIndex== nowValue)
+                            {
+                                MessageBox.Show(lastIndex.ToString());
+                                var k = (IShape)_canvasObjects[nowValue];
+                                n = k;
+
+                                var m = (IShape)obj;
+                                UIElement element = m.Draw();
+                                
+                                if (canvas.Children.Count >= preValue)
+                                {
+                                    
+                                    if (numRedo > 0)
+                                    {
+                                        canvas.Children.RemoveAt(Math.Abs(preValue - numRedo));
+                                    }
+                                    else{
+                                        canvas.Children.RemoveAt(preValue);
+                                    }
+                                    numRedo++;
+
+
+                                    //_canvasObjects.Add(element);
+                                    isAddAfterEdit =0;
+                                    cloneShapeBeforeEdit(k);
+                                    
+                                }
+                                indexPairChangedInUndoStack.Remove(i);
+                                i++;
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+
                 addObjectToCanvas(obj);
+                int index = _canvasObjects.FindIndex(can =>
+                {
+                    if (can is IShape shape)
+                    {
+                        return object.ReferenceEquals(shape, n);
+                    }
+                    return false;
+                });
+
+
+                if (index > -1)
+                {
+                    _canvasObjects.RemoveAt(index);
+                    _canvasObjects.Add(obj);
+                    _listOrderShapeEdited.Add((IShape)obj);
+                }
+                else
+                {
+                    _canvasObjects.Add(obj);
+                    _redoStack.Push(obj);
+                }
+               
+
                 undoButton.IsEnabled = true;
 
                 // Disable when not able to redo
@@ -995,7 +1156,10 @@ namespace Paint
 
                 if (_isSelecting && _selectedShape != null)
                 {
+                    cloneShapeBeforeEdit(_selectedShape);
                     _selectedShape.UpdateColorFill(new SolidColorBrush(_colorFill));
+                    _listOrderShapeEdited.Add(_selectedShape);
+                    
                 }
             }
         }
@@ -1265,7 +1429,9 @@ namespace Paint
         {
             if (_isSelecting && _selectedShape != null)
             {
+                cloneShapeBeforeEdit(_selectedShape);
                 _selectedShape.FlipHorizontally();
+                _listOrderShapeEdited.Add(_selectedShape);
                 updateSelectionFrame();
             }
             else if (_isSelecting && _selectedImg != null)
@@ -1284,7 +1450,10 @@ namespace Paint
         {
             if (_isSelecting && _selectedShape != null)
             {
+                cloneShapeBeforeEdit(_selectedShape);
+
                 _selectedShape.FlipHorizontally();
+                _listOrderShapeEdited.Add(_selectedShape);
                 updateSelectionFrame();
             }
             else if (_isSelecting && _selectedImg != null)
@@ -1303,7 +1472,9 @@ namespace Paint
         {
             if (_isSelecting && _selectedShape != null)
             {
+                cloneShapeBeforeEdit(_selectedShape);
                 _selectedShape.RotateRight90Degrees();
+                _listOrderShapeEdited.Add(_selectedShape);
                 updateSelectionFrame();
             }
             else if (_isSelecting && _selectedImg != null)
@@ -1325,10 +1496,14 @@ namespace Paint
 
         private void RotateLeft90Degrees_Click(object sender, RoutedEventArgs e)
         {
+            
             if (_isSelecting && _selectedShape != null)
             {
-                _selectedShape.RotateRight90Degrees();
+               cloneShapeBeforeEdit(_selectedShape);
+                _selectedShape.RotateLeft90Degrees();
+                _listOrderShapeEdited.Add(_selectedShape);
                 updateSelectionFrame();
+                
             }
             else if (_isSelecting && _selectedImg != null)
             {
@@ -1345,6 +1520,21 @@ namespace Paint
                 _selectedImg.Width = oldHeight; _selectedImg.Height = oldWidth;
                 updateSelectionFrame();
             }
+        }
+
+        private void cloneShapeBeforeEdit(IShape _selectedShape)
+        {
+            if(_selectedShape!= null)
+            {
+                IShape _oldShape = _shapeFactory.Create(_selectedShape.Name, _selectedShape.ColorStroke.Color, _selectedShape.ColorFill.Color, _selectedShape.StrokeSize, _selectedShape.StrokeDashArray);
+
+                _oldShape.HandleStart(_selectedShape.GetStart().X, _selectedShape.GetStart().Y);
+                _oldShape.HandleEnd(_selectedShape.GetEnd().X, _selectedShape.GetEnd().Y);
+                _listOrderShapeEdit.Add(_oldShape);
+                isAddAfterEdit--;
+
+            }
+
         }
 
         private void updateSelectionFrame()

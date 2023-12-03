@@ -13,7 +13,7 @@ namespace Line2D
         private UIElement _line;
         private Point2D _start = new Point2D();
         private Point2D _end = new Point2D();
-
+        public string textContent { get; set; }
         public Point2D Start
         {
             get => _start;

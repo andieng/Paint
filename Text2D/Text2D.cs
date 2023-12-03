@@ -10,7 +10,10 @@ namespace Text2D
     {
         private UIElement _text;
         private Border _border;
+        public string textContent { get; set; }
+
         private Point2D _leftTop = new Point2D();
+        public string TextContent { get; set; }
         private Point2D _rightBottom = new Point2D();
         public Point2D LeftTop
         {
@@ -61,7 +64,7 @@ namespace Text2D
             Canvas.SetTop(_text, top);
         }
 
-        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorStroke  { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
         public void UpdateColorStroke(SolidColorBrush colorStroke)
@@ -78,6 +81,7 @@ namespace Text2D
 
         public void UpdateColorFill(SolidColorBrush colorFill)
         {
+
         }
 
         public int StrokeSize { get; set; }
@@ -92,7 +96,6 @@ namespace Text2D
         }
 
         public string Name => "Text";
-        public string TextContent {get;set;}
 
  
         public UIElement Draw()
@@ -110,15 +113,15 @@ namespace Text2D
             {
                 Width = width,
                 Foreground = ColorFill,
-                IsReadOnly = false, 
+                IsReadOnly = false,
                 BorderThickness = new Thickness(1),
-                Text = TextContent,
+                Text = textContent,
                 TextWrapping = TextWrapping.Wrap,
                 Height = height,
                 Background = Brushes.Transparent,
                 AcceptsReturn = true,
                 AcceptsTab = true,
-
+                BorderBrush = ColorStroke
             };
 
             if (_text is TextBox textBox)
@@ -136,6 +139,7 @@ namespace Text2D
 
             Canvas.SetLeft(_text, left);
             Canvas.SetTop(_text, top);
+            
             return _text;
         }
 
@@ -144,6 +148,9 @@ namespace Text2D
 
             _rightBottom.X = x;
             _rightBottom.Y = y;
+
+            
+
         }
 
         public void HandleStart(double x, double y)
@@ -223,7 +230,7 @@ namespace Text2D
 
         public void RotateLeft90Degrees()
         {
-
+            
         }
 
         public void RotateRight90Degrees()
