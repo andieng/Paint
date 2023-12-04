@@ -12,7 +12,7 @@ namespace Contract
         double[] StrokeDashArray { get; set; }
         SolidColorBrush ColorStroke { get; set; }
         SolidColorBrush ColorFill { get; set; }
-        string textContent { get; set; }
+        string TextContent { get; set; }
 
         void UpdateColorStroke(SolidColorBrush colorStroke);
         void UpdateColorFill(SolidColorBrush colorFill);

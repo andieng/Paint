@@ -16,7 +16,6 @@ namespace Paint
         {
             _prototypes = new Dictionary<string, IShape>();
             loadDlls();
-
         }
 
         public static ShapeFactory Instance
@@ -36,7 +35,7 @@ namespace Paint
             return _prototypes;
         }
 
-        public IShape Create(string shapeName, Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray)
+        public IShape Create(string shapeName, Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
         {
             IShape shape = null;
             if (_prototypes.ContainsKey(shapeName))
@@ -45,6 +44,7 @@ namespace Paint
                 shape.ColorStroke = new SolidColorBrush(colorStroke);
                 shape.ColorFill = new SolidColorBrush(colorFill);
                 shape.StrokeSize = strokeSize;
+                shape.TextContent = textContent;
                 if (strokeDashArray != null)
                 {
                     shape.StrokeDashArray = strokeDashArray;
