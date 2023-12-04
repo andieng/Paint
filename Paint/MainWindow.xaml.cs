@@ -240,7 +240,7 @@ namespace Paint
                 _selectedIndex = -1;
             }
         }
-
+        
         private Image findImageFromName(string name)
         {
             foreach (var child in canvas.Children)
@@ -343,7 +343,7 @@ namespace Paint
                 {
                     if (isDragging && _selectedShape != null)
                     {
-                        pushUndoClearRedo(_cloneSelected);
+                        pushUndoClearRedo(_cloneSelected, true);
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
@@ -367,7 +367,7 @@ namespace Paint
                     }
                     else if (isDragging && _selectedImg != null)
                     {
-                        pushUndoClearRedo(_cloneSelected);
+                        pushUndoClearRedo(_cloneSelected, true);
                         Point newPosition = e.GetPosition(canvas);
                         double newX = newPosition.X - offset.X;
                         double newY = newPosition.Y - offset.Y;
@@ -1641,64 +1641,28 @@ namespace Paint
             if (_isSelecting && _selectedImg != null)
             {
                 BitmapSource source = (BitmapSource)_selectedImg.Source;
-                if (source != null)
-                {
-                    _clipboardImage = new Image()
-                    {
-                        Source = source.Clone(),
-                        Width = _selectedImg.Width,
-                        Height = _selectedImg.Height,
-                    };
-                }
-                foreach (object obj in canvas.Children)
-                {
-                    if (obj.GetType() == typeof(Image))
-                    {
-                        Image curImage = (Image)obj;
-                        if (curImage.Name == _selectedImg.Name)
-                        {
-                            canvas.Children.Remove(curImage);
-                            canvas.InvalidateVisual();
-                            break;
-                        }
-                    }
-                }
 
-                if (_clipboardImage.Source is BitmapSource bitmapSource)
+                _clipboardImage = new Image()
                 {
-                    _canvasObjects.Add(bitmapSource);
-                }
-
+                    Source = source.Clone(),
+                    Width = _selectedImg.Width,
+                    Height = _selectedImg.Height,
+                    Name = GenerateUniqueImageName()
+                };
                 _clipboardShape = null;
-
+                _canvasObjects.RemoveAt(_selectedIndex);
+                canvas.Children.RemoveAt(_selectedIndex + 1);
+                pushUndoClearRedo(_selectedImg);
             }
             else if (_isSelecting && _selectedShape != null)
             {
                 _clipboardShape = _selectedShape;
                 _clipboardImage = null;
-
-                int index = 0;
-                foreach (object obj in _canvasObjects)
-                {
-                    if (obj.GetType().ToString() == "Circle2D.Circle2D"
-                        || obj.GetType().ToString() == "Ellipse2D.Ellipse2D"
-                        || obj.GetType().ToString() == "Rectangle2D.Rectangle2D"
-                        || obj.GetType().ToString() == "Square2D.Square2D"
-                        || obj.GetType().ToString() == "Line2D.Line2D")
-                    {
-                        IShape shape = (IShape)obj;
-                        {
-                            if (shape == _clipboardShape)
-                            {
-                                _canvasObjects.RemoveAt(index);
-                                break;
-                            }
-                        }
-                        index++;
-                    }
-                }            
-                canvas.Children.RemoveAt(index);
+                _canvasObjects.RemoveAt(_selectedIndex);
+                canvas.Children.RemoveAt(_selectedIndex + 1);
+                pushUndoClearRedo(_selectedShape);
             }
+
             deleteAllSelectionFrame();
         }
 
@@ -1743,18 +1707,24 @@ namespace Paint
             }
         }
 
-        private void pushUndoClearRedo(object obj)
+        private void pushUndoClearRedo(object obj, bool isCloned = false)
         {
             if (obj.GetType() == typeof (Image))
             {
                 Image img = (Image)obj;
-                Image cloneImg = cloneImage(img);
-                _undoStack.Push((cloneImg, _selectedIndex));
+                if (!isCloned)
+                {
+                    img = cloneImage(img);
+                }
+                _undoStack.Push((img, _selectedIndex));
             } else
             {
                 IShape shape = (IShape)obj;
-                IShape cloneShape = cloneShapeWithPosition(shape);
-                _undoStack.Push((cloneShape, _selectedIndex));
+                if (!isCloned)
+                {
+                    shape = cloneShapeWithPosition(shape);
+                }
+                _undoStack.Push((shape, _selectedIndex));
             }
             _redoStack.Clear();
             undoButton.IsEnabled = true;
