@@ -9,9 +9,11 @@ namespace Text2D
     public class Text2D : IShape
     {
         private UIElement _text;
-        private Border _border;
+        public string TextContent { get; set; }
+
         private Point2D _leftTop = new Point2D();
         private Point2D _rightBottom = new Point2D();
+
         public Point2D LeftTop
         {
             get => _leftTop;
@@ -61,7 +63,7 @@ namespace Text2D
             Canvas.SetTop(_text, top);
         }
 
-        public SolidColorBrush ColorStroke { get; set; }
+        public SolidColorBrush ColorStroke  { get; set; }
         public SolidColorBrush ColorFill { get; set; }
 
         public void UpdateColorStroke(SolidColorBrush colorStroke)
@@ -78,6 +80,7 @@ namespace Text2D
 
         public void UpdateColorFill(SolidColorBrush colorFill)
         {
+
         }
 
         public int StrokeSize { get; set; }
@@ -92,7 +95,6 @@ namespace Text2D
         }
 
         public string Name => "Text";
-        public string TextContent {get;set;}
 
  
         public UIElement Draw()
@@ -106,11 +108,11 @@ namespace Text2D
             var width = right - left;
             var height = bottom - top;
 
-            _text = new TextBox()
+            var textBox = new TextBox()
             {
                 Width = width,
                 Foreground = ColorFill,
-                IsReadOnly = false, 
+                IsReadOnly = false,
                 BorderThickness = new Thickness(1),
                 Text = TextContent,
                 TextWrapping = TextWrapping.Wrap,
@@ -118,30 +120,29 @@ namespace Text2D
                 Background = Brushes.Transparent,
                 AcceptsReturn = true,
                 AcceptsTab = true,
-
+                BorderBrush = ColorStroke
             };
 
-            if (_text is TextBox textBox)
+            textBox.TextChanged += (s, args) =>
             {
-                textBox.TextChanged += (s, args) =>
+                TextContent = textBox.Text;
+                int lineCount = textBox.LineCount;
+                if (lineCount * 18 > textBox.Height)
                 {
-                    int lineCount = textBox.LineCount;
-                    if (lineCount * 18 > textBox.Height)
-                    {
-                        textBox.Height = double.NaN;
-                        return;
-                    };
+                    textBox.Height = double.NaN;
+                    return;
                 };
-            }
+            };
 
-            Canvas.SetLeft(_text, left);
-            Canvas.SetTop(_text, top);
+            Canvas.SetLeft(textBox, left);
+            Canvas.SetTop(textBox, top);
+
+            _text = textBox;
             return _text;
         }
 
         public void HandleEnd(double x, double y)
         {
-
             _rightBottom.X = x;
             _rightBottom.Y = y;
         }
@@ -223,7 +224,7 @@ namespace Text2D
 
         public void RotateLeft90Degrees()
         {
-
+            
         }
 
         public void RotateRight90Degrees()
