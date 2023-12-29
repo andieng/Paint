@@ -1802,6 +1802,7 @@ namespace Paint
                 };
                 _clipboardShape = null;
                 _canvasObjects.RemoveAt(_selectedIndex);
+                canvas.Children.RemoveAt(_selectedIndex);
                 pushUndoClearRedo(_selectedImg);
             }
             else if (_isSelecting && _selectedShape != null)
@@ -1809,6 +1810,7 @@ namespace Paint
                 _clipboardShape = _selectedShape;
                 _clipboardImage = null;
                 _canvasObjects.RemoveAt(_selectedIndex);
+                canvas.Children.RemoveAt(_selectedIndex);
                 pushUndoClearRedo(_selectedShape);
             }
 

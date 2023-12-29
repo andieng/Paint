@@ -9,7 +9,7 @@ namespace Paint
     {
         public App()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NHaF5cWWdCf1FpRGNGfV5yd0VPalhZTnVaUiweQnxTdEZiWH5ccXRUQWVZUUx1WQ==");
+            //Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf0x0TXxbf1x0ZFRGalxRTnReUiweQnxTdEZiW31XcXRVRmJeUEx0Wg==");
         }
     }
 }
