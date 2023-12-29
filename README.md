@@ -16,7 +16,7 @@ Mở file solution **Paint.sln** và nhấn F5 để chạy project
 
 #### Technical details
 
-- [x] Design patterns: Singleton, Factory, prototype
+- [x] Design patterns: Singleton, Factory, Prototype
 - [x] Plugin architecture
 
 #### Core requirements (5 points)
@@ -38,14 +38,15 @@ Mở file solution **Paint.sln** và nhấn F5 để chạy project
 
 #### Improvements
 
-- [x] 1. Allow the user to change the color, pen width, stroke type
-- [x] 2. Adding text to the list of drawable objects
-- [x] 3. Adding image to the canvas
-- [x] 4. Select a single element for editing again: Transforming horizontally and vertically, rotate the image, drag & drop
-- [x] 5. Zooming
-- [x] 6. Cut / Copy / Paste
-- [x] 7. Undo, Redo
-- [x] 8. Add hooking to support global shortcut key for save objects/image, import objects/image, create new file, undo & redo
+- [x] 1. Allow user to change the color, pen width, stroke type
+- [x] 2. Allow user to fill object, change object's fill color
+- [x] 3. Adding text to the list of drawable objects
+- [x] 4. Adding image to the canvas
+- [x] 5. Select a single element for editing again: Transforming horizontally and vertically, rotate the image, drag & drop
+- [x] 6. Zooming
+- [x] 7. Cut / Copy / Paste
+- [x] 8. Undo, Redo
+- [x] 9. Add hooking to support global shortcut key for save objects/image, import objects/image, create new file, undo & redo
 
 ### Những phần để xem xét cộng điểm
 
@@ -53,4 +54,4 @@ Mở file solution **Paint.sln** và nhấn F5 để chạy project
 
 ### Điểm đề nghị: 10
 
-### Link demo: 
+### Link demo: https://youtu.be/G3rFeXqLlCs
