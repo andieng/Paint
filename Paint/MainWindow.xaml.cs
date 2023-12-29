@@ -1563,7 +1563,7 @@ namespace Paint
             undoButton.IsEnabled = false;
             redoButton.IsEnabled = false;
             _isSelecting = false;
-            selectToggleButton.IsEnabled = false;
+            selectToggleButton.IsChecked = false;
             canvas.Children.Clear();
         }
 
