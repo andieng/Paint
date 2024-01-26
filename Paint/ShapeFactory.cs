@@ -35,20 +35,20 @@ namespace Paint
             return _prototypes;
         }
 
+
         public IShape Create(string shapeName, Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
         {
-            IShape shape = null;
-            if (_prototypes.ContainsKey(shapeName))
+            if (!_prototypes.ContainsKey(shapeName))
+                return null;
+
+            var shape = _prototypes[shapeName].Create();
+            shape.ColorStroke = new SolidColorBrush(colorStroke);
+            shape.ColorFill = new SolidColorBrush(colorFill);
+            shape.StrokeSize = strokeSize;
+            shape.TextContent = textContent;
+            if (strokeDashArray != null)
             {
-                shape = _prototypes[shapeName].Clone();
-                shape.ColorStroke = new SolidColorBrush(colorStroke);
-                shape.ColorFill = new SolidColorBrush(colorFill);
-                shape.StrokeSize = strokeSize;
-                shape.TextContent = textContent;
-                if (strokeDashArray != null)
-                {
-                    shape.StrokeDashArray = strokeDashArray;
-                }
+                shape.StrokeDashArray = strokeDashArray;
             }
             return shape;
         }

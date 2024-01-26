@@ -797,7 +797,8 @@ namespace Paint
             if (_selectedShapeName == "Text")
             {
                 _preview = _shapeFactory.Create(_selectedShapeName, _colorText, colorFill, strokeSize, _strokeDashArray);
-            } else
+            }
+            else
             {
                 _preview = _shapeFactory.Create(_selectedShapeName, _colorStroke, colorFill, strokeSize, _strokeDashArray);
             }
@@ -1671,9 +1672,7 @@ namespace Paint
 
         private IShape cloneShapeWithPosition(IShape shape)
         {
-            IShape cloneShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, 
-                shape.ColorFill.Color, shape.StrokeSize, shape.StrokeDashArray);
-
+            IShape cloneShape = shape.Clone();
             cloneShape.HandleStart(shape.GetStart().X, shape.GetStart().Y);
             cloneShape.HandleEnd(shape.GetEnd().X, shape.GetEnd().Y);
             cloneShape.TextContent = shape.TextContent;
@@ -1770,7 +1769,7 @@ namespace Paint
             else if (_clipboardShape != null)
             {
                 IShape shape = (IShape)_clipboardShape;
-                IShape pastedShape = _shapeFactory.Create(shape.Name, shape.ColorStroke.Color, shape.ColorFill.Color, shape.StrokeSize, shape.StrokeDashArray);
+                IShape pastedShape = shape.Clone();
                 pastedShape.UpdateStrokeDashArray(shape.StrokeDashArray);
                 pastedShape.HandleStart(_clipboardShape.GetStart().X - distance, _clipboardShape.GetStart().Y - distance);
                 pastedShape.HandleEnd(_clipboardShape.GetEnd().X - distance, _clipboardShape.GetEnd().Y - distance);

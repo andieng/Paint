@@ -147,7 +147,28 @@ namespace Rectangle2D
             _leftTop.Y = y;
         }
 
+        public Rectangle2D(Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
+        {
+            ColorStroke = new SolidColorBrush(colorStroke);
+            ColorFill = new SolidColorBrush(colorFill);
+            StrokeSize = strokeSize;
+            TextContent = textContent;
+            if (strokeDashArray != null)
+            {
+                StrokeDashArray = strokeDashArray;
+            }
+        }
+
+        public Rectangle2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return new Rectangle2D(ColorStroke.Color, ColorFill.Color, StrokeSize, StrokeDashArray, TextContent);
+        }
+
+        public IShape Create()
         {
             return new Rectangle2D();
         }

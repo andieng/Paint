@@ -111,7 +111,7 @@ namespace Text2D
             var textBox = new TextBox()
             {
                 Width = width,
-                Foreground = ColorFill,
+                Foreground = ColorStroke,
                 IsReadOnly = false,
                 BorderThickness = new Thickness(1),
                 Text = TextContent,
@@ -120,7 +120,6 @@ namespace Text2D
                 Background = Brushes.Transparent,
                 AcceptsReturn = true,
                 AcceptsTab = true,
-                BorderBrush = ColorStroke
             };
 
             textBox.TextChanged += (s, args) =>
@@ -153,7 +152,28 @@ namespace Text2D
             _leftTop.Y = y;
         }
 
+        public Text2D(Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
+        {
+            ColorStroke = new SolidColorBrush(colorStroke);
+            ColorFill = new SolidColorBrush(colorFill);
+            StrokeSize = strokeSize;
+            TextContent = textContent;
+            if (strokeDashArray != null)
+            {
+                StrokeDashArray = strokeDashArray;
+            }
+        }
+
+        public Text2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return new Text2D(ColorStroke.Color, ColorFill.Color, StrokeSize, StrokeDashArray, TextContent);
+        }
+
+        public IShape Create()
         {
             return new Text2D();
         }
