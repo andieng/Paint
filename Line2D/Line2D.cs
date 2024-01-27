@@ -128,25 +128,13 @@ namespace Line2D
             return _line;
         }
 
-        public Line2D(Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
-        {
-            ColorStroke = new SolidColorBrush(colorStroke);
-            ColorFill = new SolidColorBrush(colorFill);
-            StrokeSize = strokeSize;
-            TextContent = textContent;
-            if (strokeDashArray != null)
-            {
-                StrokeDashArray = strokeDashArray;
-            }
-        }
-
         public Line2D()
         {
         }
 
         public IShape Clone()
         {
-            return new Line2D(ColorStroke.Color, ColorFill.Color, StrokeSize, StrokeDashArray, TextContent);
+            return (Line2D)this.MemberwiseClone();
         }
 
         public IShape Create()

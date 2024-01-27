@@ -1089,7 +1089,7 @@ namespace Paint
                     }
                 } else
                 {
-                    IShape cloneShape = cloneShapeWithPosition((IShape)_canvasObjects[undoItem.Item2]);
+                    IShape cloneShape = ((IShape)_canvasObjects[undoItem.Item2]).Clone();
                     _redoStack.Push((cloneShape, undoItem.Item2));
 
                     canvas.Children.RemoveAt(undoItem.Item2);
@@ -1175,7 +1175,7 @@ namespace Paint
                         canvas.Children.Insert(redoItem.Item2, newImg);
                     } else
                     {
-                        IShape cloneShape = cloneShapeWithPosition((IShape)_canvasObjects[redoItem.Item2]);
+                        IShape cloneShape = ((IShape)_canvasObjects[redoItem.Item2]).Clone();
                         _undoStack.Push((cloneShape, redoItem.Item2));
                         canvas.Children.RemoveAt(redoItem.Item2);
                         _canvasObjects.RemoveAt(redoItem.Item2);
@@ -1670,16 +1670,6 @@ namespace Paint
             }
         }
 
-        private IShape cloneShapeWithPosition(IShape shape)
-        {
-            IShape cloneShape = shape.Clone();
-            cloneShape.HandleStart(shape.GetStart().X, shape.GetStart().Y);
-            cloneShape.HandleEnd(shape.GetEnd().X, shape.GetEnd().Y);
-            cloneShape.TextContent = shape.TextContent;
-            
-            return cloneShape;
-        }
-
         private void updateSelectionFrame()
         {
             if (_selectedShape != null)
@@ -1871,9 +1861,7 @@ namespace Paint
             {
                 IShape shape = (IShape)obj;
                 if (!isCloned)
-                {
-                    shape = cloneShapeWithPosition(shape);
-                }
+                    shape = shape.Clone();
                 _undoStack.Push((shape, _selectedIndex));
             }
             _redoStack.Clear();
@@ -1900,7 +1888,7 @@ namespace Paint
         {
             if (_selectedShape != null)
             {
-                _cloneSelected = cloneShapeWithPosition(_selectedShape);
+                _cloneSelected = _selectedShape.Clone();
             }
             if (_selectedImg != null)
             {

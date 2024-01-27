@@ -164,25 +164,13 @@ namespace Square2D
             _leftTop.Y = y;
         }
 
-        public Square2D(Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
-        {
-            ColorStroke = new SolidColorBrush(colorStroke);
-            ColorFill = new SolidColorBrush(colorFill);
-            StrokeSize = strokeSize;
-            TextContent = textContent;
-            if (strokeDashArray != null)
-            {
-                StrokeDashArray = strokeDashArray;
-            }
-        }
-
         public Square2D()
         {
         }
 
         public IShape Clone()
         {
-            return new Square2D(ColorStroke.Color, ColorFill.Color, StrokeSize, StrokeDashArray, TextContent);
+            return (Square2D)this.MemberwiseClone();
         }
 
         public IShape Create()

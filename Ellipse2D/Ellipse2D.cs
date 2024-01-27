@@ -149,25 +149,13 @@ namespace Ellipse2D
             _leftTop.Y = y;
         }
 
-        public Ellipse2D(Color colorStroke, Color colorFill, int strokeSize, double[]? strokeDashArray, string textContent = "")
-        {
-            ColorStroke = new SolidColorBrush(colorStroke);
-            ColorFill = new SolidColorBrush(colorFill);
-            StrokeSize = strokeSize;
-            TextContent = textContent;
-            if (strokeDashArray != null)
-            {
-                StrokeDashArray = strokeDashArray;
-            }
-        }
-
         public Ellipse2D()
         {
         }
 
         public IShape Clone()
         {
-            return new Ellipse2D(ColorStroke.Color, ColorFill.Color, StrokeSize, StrokeDashArray, TextContent);
+            return (Ellipse2D)this.MemberwiseClone();
         }
 
         public IShape Create()
