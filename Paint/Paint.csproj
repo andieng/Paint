@@ -41,6 +41,7 @@
     <None Remove="Resources\stroke-type.png" />
     <None Remove="Resources\stroke.png" />
     <None Remove="Resources\text.png" />
+    <None Remove="Resources\toImage.png" />
     <None Remove="Resources\undo-disable.png" />
     <None Remove="Resources\undo.png" />
     <None Remove="Resources\zoom-in.png" />
@@ -98,6 +99,7 @@
     <Resource Include="Resources\stroke-type.png" />
     <Resource Include="Resources\stroke.png" />
     <Resource Include="Resources\text.png" />
+    <Resource Include="Resources\toImage.png" />
     <Resource Include="Resources\undo-disable.png" />
     <Resource Include="Resources\undo.png" />
     <Resource Include="Resources\zoom-in.png" />

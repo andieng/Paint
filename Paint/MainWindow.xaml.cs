@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using Syncfusion.Windows.Shared;
 
 namespace Paint
 {
@@ -1912,7 +1913,7 @@ namespace Paint
 
         private async void TextToImageProcess()
         {
-            string prompt = "a girl playing piano at resaurant";
+            string prompt = inputTextBox.Text;
             string result = await _textToImage.MakeApiCallAsync(prompt, 1);
             if (result != null)
             {
@@ -1957,10 +1958,26 @@ namespace Paint
             }
         }
 
+        private void InputTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                e.Handled = true;
+                spinner.Visibility = Visibility.Visible;
+                TextToImageProcess();
+            }
+        }
+
         private void textToImgToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            spinner.Visibility = Visibility.Visible;
-            TextToImageProcess();
+            textToImgToggleButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            textToImgToggleButton.IsChecked = true;
+            popupTextToImg.IsOpen = true;
+            popupTextToImg.Closed += (senderClosed, eClosed) =>
+            {
+                textToImgToggleButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
+                textToImgToggleButton.IsChecked = false;
+            };
         }
     }
 

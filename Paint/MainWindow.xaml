@@ -10,7 +10,7 @@
         Icon="./Resources/paint-32x32.png"
         Loaded="Window_Loaded"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="PATE Paint" Height="750" Width="1050">
+        Title="PATE Paint" Height="750" Width="1150">
     <Window.Resources>
         <Style x:Key="TransparentStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
@@ -926,16 +926,28 @@
                            Style="{StaticResource ToolTextStyle}" Margin="0,0,0,18" />
 					<!--Select button-->
 					<ToggleButton x:Name="textToImgToggleButton" DockPanel.Dock="Top" Style="{StaticResource ToggleButtonDisableStyle}"
-              Margin="5,8,5,0" Width="37" ToolTip="Select" Height="37" Click="textToImgToggleButton_Click"
+              Margin="5,18,5,0" Width="37" ToolTip="Text to Image" Height="37" Click="textToImgToggleButton_Click"
               Unchecked="selectToggleButton_Unchecked">
 						<ToggleButton.Resources>
 							<Style TargetType="Border">
 								<Setter Property="CornerRadius" Value="5"/>
 							</Style>
 						</ToggleButton.Resources>
-						<Image Source="./Resources/close.png" Width="26" Height="26" />
+						<Image Source="./Resources/toImage.png" Width="26" Height="26" />
 					</ToggleButton>
-				</DockPanel>
+
+                    <Popup x:Name="popupTextToImg" AllowsTransparency="True" Style="{StaticResource DefaultStyle}" PlacementTarget="{Binding ElementName=textToImgToggleButton}">
+                        <UserControl Background="Transparent">
+                            <Border Style="{StaticResource PopUpBorderStyle}" Width="200">
+                                <StackPanel Background="Transparent">
+                                    <TextBlock DockPanel.Dock="Left" Text="Enter text" Margin="12 0 0 0" FontSize="14" />
+                                    <TextBox x:Name="inputTextBox" Margin="8 5 8 5" FontSize="14" KeyUp="InputTextBox_KeyUp"/>
+                                </StackPanel>
+                            </Border>
+                        </UserControl>
+                    </Popup>
+
+                </DockPanel>
 			</Grid>
         </Border>
 
@@ -945,8 +957,8 @@
 				<Border x:Name="border" Background="Transparent" MouseDown="canvas_MouseDown" Height="490"
                     MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Width="850" HorizontalAlignment="Center" />
 				<!-- Loading -->
-				<fa:ImageAwesome x:Name="spinner" Visibility="Hidden" Icon="Spinner" Spin="True" Height="40" Width="40" Foreground="#ffe1e2fa"/>
-			</Grid>
+                <fa:ImageAwesome x:Name="spinner" Visibility="Hidden" Icon="Spinner" Spin="True" Height="40" Width="40" Foreground="#ffe1e2fa"/>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Window>
