@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using Syncfusion.Windows.Shared;
 
 namespace Paint
 {
@@ -57,6 +58,7 @@ namespace Paint
         private UIElement _textShape;
         private Stack<(object?, int)> _undoStack = new Stack<(object?, int)>();
         private Stack<(object, int)> _redoStack = new Stack<(object, int)>();
+        private TextToImage _textToImage = TextToImage.Instance;
 
         public MainWindow()
         {
@@ -92,7 +94,6 @@ namespace Paint
 
             // Cut hotkey
             HotkeysManager.AddHotkey(new GlobalHotkey(ModifierKeys.Control, Key.X, cut));
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -1474,6 +1475,7 @@ namespace Paint
             {
                 string filename = dialog.FileName;
                 var bitmap = new BitmapImage(new Uri(filename, UriKind.Absolute));
+                
                 Image img = new Image();
                 img.Source = bitmap;
                 img.Name = GenerateUniqueImageName();
@@ -1894,6 +1896,75 @@ namespace Paint
             {
                 _cloneSelected = cloneImage(_selectedImg);
             }
+        }
+
+        private async void TextToImageProcess()
+        {
+            string prompt = inputTextBox.Text;
+            string result = await _textToImage.MakeApiCallAsync(prompt, 1);
+            if (result != null)
+            {
+                DisplayImage(result);
+
+            }
+            else
+            {
+                Console.WriteLine("API call failed");
+            }
+        }
+
+        private void DisplayImage(string imageUrl)
+        {
+            try
+            {
+                var bitmap = new BitmapImage(new Uri(imageUrl, UriKind.Absolute));
+
+                bitmap.CreateOptions = BitmapCreateOptions.None;
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+
+                Image img = new Image();
+                img.Source = bitmap;
+                _canvasObjects.Add(bitmap);
+                canvas.Children.Add(img);
+
+                _undoStack.Push((null, _canvasObjects.Count - 1));
+                undoButton.IsEnabled = true;
+                _redoStack.Clear();
+                redoButton.IsEnabled = false;
+
+                img.Width =350;
+                img.Height = 400;
+
+                Canvas.SetLeft(img, 0);
+                Canvas.SetTop(img, 0);
+                spinner.Visibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void InputTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                e.Handled = true;
+                spinner.Visibility = Visibility.Visible;
+                TextToImageProcess();
+            }
+        }
+
+        private void textToImgToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            textToImgToggleButton.Style = Resources["ToggleButtonActiveStyle"] as Style;
+            textToImgToggleButton.IsChecked = true;
+            popupTextToImg.IsOpen = true;
+            popupTextToImg.Closed += (senderClosed, eClosed) =>
+            {
+                textToImgToggleButton.Style = Resources["TransparentToggleButtonStyle"] as Style;
+                textToImgToggleButton.IsChecked = false;
+            };
         }
     }
 
