@@ -147,7 +147,16 @@ namespace Rectangle2D
             _leftTop.Y = y;
         }
 
+        public Rectangle2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Rectangle2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Rectangle2D();
         }

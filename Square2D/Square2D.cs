@@ -164,10 +164,20 @@ namespace Square2D
             _leftTop.Y = y;
         }
 
+        public Square2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Square2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Square2D();
         }
+
 
         public bool ContainsPoint(double x, double y)
         {

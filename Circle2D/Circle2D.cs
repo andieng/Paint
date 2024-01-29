@@ -167,7 +167,16 @@ namespace Circle2D
             _leftTop.Y = y;
         }
 
+        public Circle2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Circle2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Circle2D();
         }

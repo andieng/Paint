@@ -111,7 +111,7 @@ namespace Text2D
             var textBox = new TextBox()
             {
                 Width = width,
-                Foreground = ColorFill,
+                Foreground = ColorStroke,
                 IsReadOnly = false,
                 BorderThickness = new Thickness(1),
                 Text = TextContent,
@@ -120,7 +120,6 @@ namespace Text2D
                 Background = Brushes.Transparent,
                 AcceptsReturn = true,
                 AcceptsTab = true,
-                BorderBrush = ColorStroke
             };
 
             textBox.TextChanged += (s, args) =>
@@ -153,7 +152,16 @@ namespace Text2D
             _leftTop.Y = y;
         }
 
+        public Text2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Text2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Text2D();
         }

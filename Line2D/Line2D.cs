@@ -128,7 +128,16 @@ namespace Line2D
             return _line;
         }
 
+        public Line2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Line2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Line2D();
         }

@@ -149,7 +149,16 @@ namespace Ellipse2D
             _leftTop.Y = y;
         }
 
+        public Ellipse2D()
+        {
+        }
+
         public IShape Clone()
+        {
+            return (Ellipse2D)this.MemberwiseClone();
+        }
+
+        public IShape Create()
         {
             return new Ellipse2D();
         }

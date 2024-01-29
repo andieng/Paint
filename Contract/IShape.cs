@@ -13,7 +13,6 @@ namespace Contract
         SolidColorBrush ColorStroke { get; set; }
         SolidColorBrush ColorFill { get; set; }
         string TextContent { get; set; }
-
         void UpdateColorStroke(SolidColorBrush colorStroke);
         void UpdateColorFill(SolidColorBrush colorFill);
         void UpdateStrokeDashArray(double[] dashArray);
@@ -35,6 +34,6 @@ namespace Contract
         void SetInCanvas();
         UIElement Draw();
         IShape Clone();
-
+        IShape Create();
     }
 }
